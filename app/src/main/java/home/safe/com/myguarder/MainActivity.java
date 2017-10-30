@@ -11,5 +11,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
     // 나는야 종하찡
+    // 나는야 준규찡
 }
 
