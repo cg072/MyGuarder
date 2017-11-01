@@ -13,9 +13,6 @@ public class ProGuardian extends AppCompatActivity {
     private SQLiteOpenHelper sqLiteOpenHelper;
     public static boolean loginCheck;
 
-    private ProGuardian() {
-    }
-
     public SQLiteOpenHelper getSqLiteOpenHelper() {
         return  sqLiteOpenHelper;
     }
