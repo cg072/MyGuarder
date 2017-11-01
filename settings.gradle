@@ -1,1 +1,1 @@
-include ':app', ':member'
+include ':app', ':member', ':location', ':trans', ':guarder', ':notice'

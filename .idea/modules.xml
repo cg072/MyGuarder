@@ -4,7 +4,11 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyGuarder.iml" filepath="$PROJECT_DIR$/MyGuarder.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/guarder/guarder.iml" filepath="$PROJECT_DIR$/guarder/guarder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/location/location.iml" filepath="$PROJECT_DIR$/location/location.iml" />
       <module fileurl="file://$PROJECT_DIR$/member/member.iml" filepath="$PROJECT_DIR$/member/member.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notice/notice.iml" filepath="$PROJECT_DIR$/notice/notice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/trans/trans.iml" filepath="$PROJECT_DIR$/trans/trans.iml" />
     </modules>
   </component>
 </project>
