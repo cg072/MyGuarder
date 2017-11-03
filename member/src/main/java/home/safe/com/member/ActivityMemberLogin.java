@@ -1,25 +1,24 @@
 package home.safe.com.member;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ActivityMemberLogin extends AppCompatActivity implements View.OnClickListener{
+public class ActivityMemberLogin extends AppCompatActivity {
 
     // 변수 설정
-    private EditText memberLogin_et_id;
-    private EditText memberLogin_et_pwd;
-    private CheckBox memberLogin_cbox_keep;
-    private Button memberLogin_btn_login;
-    private TextView memberLogin_tv_signup;
-    private TextView memberLogin_tv_findpwd;
+    private EditText etID;
+    private EditText etPWD;
+    private CheckBox cboxKeep;
+    private Button btnLogin;
+    private TextView tvSignup;
+    private TextView tvFindPWD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,18 +26,34 @@ public class ActivityMemberLogin extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_member_login);
 
         // 변수에 아이디 연동
-        memberLogin_et_id = (EditText)findViewById(R.id.login_et_id);
-        memberLogin_et_pwd = (EditText)findViewById(R.id.login_et_pwd);
-        memberLogin_cbox_keep = (CheckBox)findViewById(R.id.login_cbox_check);
-        memberLogin_btn_login = (Button)findViewById(R.id.login_btn_login);
-        memberLogin_tv_signup = (TextView)findViewById(R.id.login_tv_signup);
-        memberLogin_tv_findpwd = (TextView)findViewById(R.id.login_tv_findpwd);
+        etID = (EditText)findViewById(R.id.etID);
+        etPWD = (EditText)findViewById(R.id.etPWD);
+        cboxKeep = (CheckBox)findViewById(R.id.cboxCheck);
+        btnLogin = (Button)findViewById(R.id.btnLogin);
+        tvSignup = (TextView)findViewById(R.id.tvSignup);
+        tvFindPWD = (TextView)findViewById(R.id.tvFindpwd);
 
+        // touch값에 대한 ClickListener를 설정정
+       btnLogin.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-    }
+            }
+        });
 
-    @Override
-    public void onClick(View view) {
+        tvSignup.setOnClickListener(new TextView.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ActivityMemberLogin.this, ActivityMemberSignup.class);
+                startActivity(intent);
+            }
+        });
 
+        tvFindPWD.setOnClickListener(new TextView.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 }

@@ -7,4 +7,6 @@
     <color name="colorAppbar">#CDDC39</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorLoginBtn">#231e52</color>
+    <color name="colorSignupTv">#a2a29e</color>
+    <color name="colorBackground">#dddddd</color>
 </resources>

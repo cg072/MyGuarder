@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="home.safe.com.member.ActivityMemberModify"
-    tools:showIn="@layout/activity_member_modify">
+    tools:showIn="@layout/activity_member_modify_check">
 
 </android.support.constraint.ConstraintLayout>

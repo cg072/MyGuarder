@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center"
-
+    android:background="@color/colorBackground"
     >
 
     <LinearLayout
@@ -23,61 +23,50 @@
             >
 
             <EditText
-                android:id="@+id/login_et_id"
+                android:id="@+id/etID"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/textHeight"
                 android:textSize="@dimen/textConfig"
                 android:text="ID"
-                android:background="@drawable/round_edittext"
+                android:background="@drawable/et_round_login"
                 android:paddingStart="10dp"
+                android:layout_marginBottom="10dp"
                 />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="10dp"></LinearLayout>
-
             <EditText
-                android:id="@+id/login_et_pwd"
+                android:id="@+id/etPWD"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/textHeight"
                 android:textSize="@dimen/textConfig"
                 android:text="PWD"
-                android:background="@drawable/round_edittext"
+                android:background="@drawable/et_round_login"
                 android:paddingStart="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp"></LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp">
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp">
                 <CheckBox
-                    android:id="@+id/login_cbox_check"
+                    android:id="@+id/cboxCheck"
                     android:layout_width="30dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:checked="true"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="로그인 상태 유지"/>
            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"></LinearLayout>
-
             <Button
-                android:id="@+id/login_btn_login"
+                android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/round_loginbtn"
+                android:background="@drawable/btn_round_login"
                 android:text="로  그  인"
                 android:textSize="20dp"
-                android:textColor="@color/colorWhite"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="10dp"></LinearLayout>
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,38 +74,33 @@
                 android:text="또는"
                 android:layout_gravity="center"
                 android:textSize="20dp"
+                android:layout_marginBottom="10dp"
                  />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="10dp"></LinearLayout>
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/round_loginbtn2"
+                android:background="@drawable/btn2_round_login"
                 android:text="카카오 계정으로 로그인"
                 android:textSize="20dp"
-                android:textColor="@color/colorLoginBtn"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="10dp"></LinearLayout>
+                android:textColor="@color/colorLoginBtn"
+                android:layout_marginBottom="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center|bottom"
-                android:paddingTop="80dp"
+                android:layout_marginTop="75dp"
                 >
 
                 <TextView
-                    android:id="@+id/login_tv_signup"
+                    android:id="@+id/tvSignup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textConfig"
-                    android:text="회원가입"/>
+                    android:text="회원가입"
+                    android:clickable="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -127,15 +111,13 @@
                     android:paddingLeft="10dp"/>
 
                 <TextView
-                    android:id="@+id/login_tv_findpwd"
+                    android:id="@+id/tvFindpwd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textConfig"
-                    android:text="비밀번호 찾기"/>
+                    android:text="비밀번호 찾기"
+                    android:clickable="true"/>
             </LinearLayout>
-
-
-
 
         </LinearLayout>
 

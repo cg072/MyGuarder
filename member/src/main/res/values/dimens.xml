@@ -5,4 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="textConfig">20dp</dimen>
+    <dimen name="textHeight">45dp</dimen>
+    <dimen name="login_EmptyDistance">10dp</dimen>
+    <dimen name="signup_EmptyDistance">2dp</dimen>
 </resources>
