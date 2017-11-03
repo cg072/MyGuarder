@@ -18,24 +18,19 @@
             android:layout_height="0dp"
             android:layout_weight="3"
             android:orientation="vertical">
-            <!--
-            1.리니어 말고 콘스트레인트 레이아웃으로 바꿔야 할거 같음
-            2.주석 방식
-
-            -->
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:text="피지킴이명"/>
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:text="이동수단명"/>
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:text="메모"/>
@@ -43,10 +38,27 @@
         </LinearLayout>
 
 
-        <ImageView
+        <!--
+        * @author 경창현
+        * @version 1.0.0
+        * @text ImageView에 지도를 넣어야함 -> Fragment로 해야 할 것 같다.
+        * @since 2017-11-03 오후 5:20
+        -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"/>
+            android:layout_weight="5">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"/>
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:textSize="13dp"
+                android:text="지난위치보기"/>
+        </RelativeLayout>
+
 
         <Button
             android:layout_width="match_parent"
