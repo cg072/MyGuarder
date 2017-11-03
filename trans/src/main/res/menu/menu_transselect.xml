@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/transWalk"
+        android:title="도보"/>
+    <item
+        android:id="@+id/transBus"
+        android:title="버스"/>
+    <item
+        android:id="@+id/transTaxi"
+        android:title="택시"/>
+    <item
+        android:id="@+id/transSub"
+        android:title="지하철"/>
+    <item
+        android:id="@+id/transEtc"
+        android:title="기타"/>
+
+</menu>
