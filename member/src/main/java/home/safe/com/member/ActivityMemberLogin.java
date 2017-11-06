@@ -52,7 +52,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
         tvFindPWD.setOnClickListener(new TextView.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(ActivityMemberLogin.this, ActivityMemberFindPWD.class);
+                startActivity(intent);
             }
         });
     }

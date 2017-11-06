@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorBackground"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="비밀번호 변경"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:layout_marginTop="100dp"></TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/signup_EmptyDistance">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
+                    android:text="ID"
+                    android:textSize="@dimen/textConfig"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:background="@drawable/tv_round_signup"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+                    <EditText
+                        android:id="@+id/etID"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/textHeight"
+                        android:textSize="@dimen/textConfig"
+                        android:paddingStart="10dp"
+                        android:background="@color/colorWhite"
+                        android:layout_weight="2"
+                        />
+                    <Button
+                        android:id="@+id/btnFindID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/textHeight"
+                        android:layout_weight="0.5"
+                        android:textSize="@dimen/textConfig"
+                        android:text="확 인"
+                        android:background="@drawable/btn_round_signup"/>
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/signup_EmptyDistance">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:text="Phone"
+                    android:textSize="@dimen/textConfig"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:background="@drawable/tv_round_signup"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+                    <EditText
+                        android:id="@+id/etPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/textHeight"
+                        android:textSize="@dimen/textConfig"
+                        android:paddingStart="10dp"
+                        android:background="@color/colorWhite"
+                        android:layout_weight="2"
+                        />
+                    <Button
+                        android:id="@+id/btnPhoneCertification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/textHeight"
+                        android:layout_weight="0.5"
+                        android:textSize="@dimen/textConfig"
+                        android:text="인증"
+                        android:background="@drawable/btn_round_signup"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="*ID 확인 후에 전화번호 인증을 하여 주십시오"
+                android:textSize="15dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="*전화번호가 바뀌었다면 1:1문의로 해주세요"
+                android:textSize="15dp"
+                android:gravity="" />
+
+
+                <EditText
+                    android:id="@+id/etPWD"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
+                    android:textSize="@dimen/textConfig"
+                    android:paddingStart="10dp"
+                    android:background="@color/colorWhite"
+                    android:layout_marginTop="20dp"
+                    android:enabled="true"
+                    />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="*인증 후에 새로운 비밀번호를 설정하여 주세요"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/btnCheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_round_login"
+                android:text="확   인"
+                android:textSize="20dp"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="50dp">
+
+            </Button>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
