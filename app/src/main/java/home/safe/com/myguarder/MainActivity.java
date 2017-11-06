@@ -1,11 +1,21 @@
 package home.safe.com.myguarder;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
 import java.util.ArrayList;
+
+/*
+ * @author 경창현
+ * @version 1.0.0
+ * @text  추가해야할일
+ *        1. 맵이 제대로 안뜸
+ *        2. 뷰 부분 부드럽게 수정
+ * @since 2017-11-06 오후 11:48
+ */
 
 public class MainActivity extends ProGuardian implements IProGuardian {
 
@@ -13,6 +23,15 @@ public class MainActivity extends ProGuardian implements IProGuardian {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*
+         * @author 경창현
+         * @version 1.0.0
+         * @text ActivityGuarder 띄움
+         * @since 2017-11-06 오후 11:47
+         */
+        Intent intent = new Intent(this, ActivityGuarder.class);
+        startActivity(intent);
     }
 
     @Override
@@ -34,6 +53,6 @@ public class MainActivity extends ProGuardian implements IProGuardian {
     public int remove(ContentValues contentValues) {
         return 0;
     }
-    // 나는야 종하찡
+
 }
 

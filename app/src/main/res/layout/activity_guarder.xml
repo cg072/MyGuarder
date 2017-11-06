@@ -38,20 +38,19 @@
         </LinearLayout>
 
 
-        <!--
+       <!--
         * @author 경창현
         * @version 1.0.0
-        * @text ImageView에 지도를 넣어야함 -> Fragment로 해야 할 것 같다.
-        * @since 2017-11-03 오후 5:20
-        -->
+        * @text NaverMap Fragment 들어갈 자리
+        *       id  : fragMapHere
+        * @since 2017-11-06 오후 11:46
+       -->
         <RelativeLayout
+            android:id="@+id/fragMapHere"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="5">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#000000"/>
+
             <Button
                 android:layout_width="100dp"
                 android:layout_height="50dp"
