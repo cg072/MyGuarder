@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="300dp"
+    android:background="#FFFFFF"
+    tools:context="home.safe.com.myguarder.ActivityPopup">
+
+    <!--
+     * @author 경창현
+     * @version 1.0.0
+     * @text 지난위치보기 Popup
+     *          내용 추가 안했음
+     * @since 2017-11-07 오후 5:19
+    -->
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="30dp"
+      android:gravity="center_horizontal"
+      android:background="@drawable/border"
+      android:text="지난 위치"
+      android:textSize="20dp"/>
+    <Button
+        android:id="@+id/btnPopupOk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:text="확인"/>
+
+</RelativeLayout>

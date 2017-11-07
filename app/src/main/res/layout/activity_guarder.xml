@@ -7,62 +7,105 @@
     tools:context="home.safe.com.myguarder.ActivityGuarder">
 
     <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="피지킴이명"/>
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="이동수단명"/>
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="메모"/>
-
-        </LinearLayout>
-
-
-       <!--
-        * @author 경창현
-        * @version 1.0.0
-        * @text NaverMap Fragment 들어갈 자리
-        *       id  : fragMapHere
-        * @since 2017-11-06 오후 11:46
-       -->
+        <!--
+       * @author 경창현
+       * @version 1.0.0
+       * @text NaverMap Fragment 들어갈 자리
+       *       id  : fragMapHere
+       * @since 2017-11-06 오후 11:46
+      -->
         <RelativeLayout
             android:id="@+id/fragMapHere"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5">
+            android:layout_margin="2dp"
+            android:layout_weight="8"
+            android:background="#000000"
+            android:elevation="5dp">
 
             <Button
+                android:id="@+id/btnGuarderLog"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
-                android:textSize="13dp"
-                android:text="지난위치보기"/>
+                android:elevation="4dp"
+                android:text="지난위치보기"
+                android:textSize="13dp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <TextView
+                android:id="@+id/tvJikimNameGuarder"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="피지킴이명"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvTransNameGuarder"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvJikimNameGuarder"
+                android:text="이동수단명"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvMemoGuarder"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTransNameGuarder"
+                android:text="메모"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvJikimNameThisGuarder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tvJikimNameGuarder"
+                android:gravity="center_horizontal"
+                android:text="경 창현"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvTransNameThisGuarder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvJikimNameThisGuarder"
+                android:layout_toRightOf="@+id/tvTransNameGuarder"
+                android:gravity="center_horizontal"
+                android:text="택시"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/tvMemoThisGuarder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTransNameThisGuarder"
+                android:layout_toRightOf="@+id/tvMemoGuarder"
+                android:gravity="center_horizontal"
+                android:text="서울 1003"
+                android:textSize="20dp" />
+
         </RelativeLayout>
 
 
         <Button
+            android:id="@+id/btnLocation"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="위치 정보 요청" />
 
     </LinearLayout>
 
