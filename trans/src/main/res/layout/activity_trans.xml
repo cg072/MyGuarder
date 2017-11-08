@@ -47,7 +47,7 @@
             android:hint="이곳에 부가 정보를 입력하세요(200byte)"/>
 
         <Button
-            android:id="@+id/btnSubmit"
+            android:id="@+id/btnOk"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="15dp"
