@@ -15,8 +15,13 @@ import java.util.ArrayList;
  *        1. 맵이 제대로 안뜸
  *        2. 뷰 부분 부드럽게 수정 30%
  *        3. 지난위치보기 내부 구현
+ *        4. 전송값 확인
+ *        5. 설정 버튼
+ *        6. 설정 엑티비티
  * @since 2017-11-07 오후 5:23
  */
+
+
 
 public class MainActivity extends ProGuardian implements IProGuardian {
 
