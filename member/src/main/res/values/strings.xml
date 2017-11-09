@@ -19,5 +19,6 @@
     </string>
     <string name="title_activity_member_find_pwd">ActivityMemberFindPWD</string>
     <string name="title_activity_member_cert_dialog">ActivityMemberCertDialog</string>
+    <string name="title_activity_member_find_id">ActivityMemberFindID</string>
 
 </resources>

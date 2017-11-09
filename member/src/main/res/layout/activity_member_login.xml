@@ -111,7 +111,23 @@
                     android:paddingLeft="10dp"/>
 
                 <TextView
-                    android:id="@+id/tvFindpwd"
+                    android:id="@+id/tvFindID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textConfig"
+                    android:text="아이디 찾기"
+                    android:clickable="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textConfig"
+                    android:text="|"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"/>
+
+                <TextView
+                    android:id="@+id/tvFindPWD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textConfig"

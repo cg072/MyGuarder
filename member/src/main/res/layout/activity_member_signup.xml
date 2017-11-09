@@ -55,7 +55,7 @@
                         android:layout_weight="2"
                         />
                     <Button
-                        android:id="@+id/btnDuplication"
+                        android:id="@+id/btnDuplicationID"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/textHeight"
                         android:layout_weight="0.5"
@@ -141,7 +141,7 @@
                         android:layout_weight="2"
                         />
                     <Button
-                        android:id="@+id/btnPhoneCertification"
+                        android:id="@+id/btnCertificationPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/textHeight"
                         android:layout_weight="0.5"

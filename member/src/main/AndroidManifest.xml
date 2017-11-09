@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="home.safe.com.member">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,7 +12,7 @@
         <activity android:name=".ActivityMemberLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+    
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -38,9 +33,8 @@
             android:label="@string/title_activity_member_find_pwd"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ActivityMemberCertDialog"
-            android:label="@string/title_activity_member_cert_dialog"
+            android:name=".ActivityMemberFindID"
+            android:label="@string/title_activity_member_find_id"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
-
 </manifest>

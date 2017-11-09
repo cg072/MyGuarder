@@ -18,7 +18,9 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private CheckBox cboxKeep;
     private Button btnLogin;
     private TextView tvSignup;
+    private TextView tvFIndID;
     private TextView tvFindPWD;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
         cboxKeep = (CheckBox)findViewById(R.id.cboxCheck);
         btnLogin = (Button)findViewById(R.id.btnLogin);
         tvSignup = (TextView)findViewById(R.id.tvSignup);
-        tvFindPWD = (TextView)findViewById(R.id.tvFindpwd);
+        tvFIndID = (TextView)findViewById(R.id.tvFindID);
+        tvFindPWD = (TextView)findViewById(R.id.tvFindPWD);
 
         // touch값에 대한 ClickListener를 설정정
        btnLogin.setOnClickListener(new Button.OnClickListener() {
@@ -45,6 +48,14 @@ public class ActivityMemberLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ActivityMemberLogin.this, ActivityMemberSignup.class);
+                startActivity(intent);
+            }
+        });
+
+        tvFIndID.setOnClickListener(new TextView.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ActivityMemberLogin.this, ActivityMemberFindID.class);
                 startActivity(intent);
             }
         });
