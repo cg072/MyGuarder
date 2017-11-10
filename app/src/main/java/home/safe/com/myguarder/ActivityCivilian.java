@@ -24,6 +24,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
 
         initFragment();
+        startMyLocation();
 
         btnCivilianLog.setOnClickListener(this);
     }
