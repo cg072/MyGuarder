@@ -169,6 +169,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:textSize="@dimen/textConfig"
+                    android:hint="예) 19701201"
                     android:background="@drawable/et_round_signup"
                     android:paddingStart="10dp"
                     android:layout_weight="1"
@@ -218,29 +219,44 @@
                     android:orientation="horizontal"
                     android:layout_weight="1"
                     android:background="@color/colorWhite">
+
                     <RadioGroup
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/textHeight"
                         android:orientation="horizontal">
+
                         <RadioButton
                             android:id="@+id/rbUndefine"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/textHeight"
+                            android:checked="true"
                             android:text="미지정   "
-                            android:textSize="15dp"
-                            android:checked="true"/>
+                            android:textSize="15dp" />
+
+                        <LinearLayout
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorBackground"></LinearLayout>
+
                         <RadioButton
                             android:id="@+id/rbFemale"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/textHeight"
-                            android:text="여자   "
-                            android:textSize="15dp"/>
+                            android:layout_marginRight="25dp"
+                            android:text="여자"
+                            android:textSize="15dp" />
+
+                        <LinearLayout
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorBackground"></LinearLayout>
+
                         <RadioButton
                             android:id="@+id/rbMale"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/textHeight"
                             android:text="남자 "
-                            android:textSize="15dp"/>
+                            android:textSize="15dp" />
                     </RadioGroup>
 
 

@@ -57,15 +57,6 @@
                         android:background="@color/colorWhite"
                         android:paddingStart="10dp"
                         android:textSize="@dimen/textConfig" />
-
-                    <Button
-                        android:id="@+id/btnCertificationEmail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/btn_round_signup"
-                        android:text="확 인"
-                        android:textSize="@dimen/textConfig" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -100,28 +91,14 @@
                         android:paddingStart="10dp"
                         android:textSize="@dimen/textConfig" />
 
-                    <Button
-                        android:id="@+id/btnCertificationPhone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/btn_round_signup"
-                        android:text="인 증"
-                        android:textSize="@dimen/textConfig" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="*E-Mail 확인 후에 전화번호 인증을 하여 주십시오"
-                android:textSize="15dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="*하단의 '발송' 버튼을 누르면 해당 E-Mail로 발송되어집니다."
-                android:textSize="15dp" />
+                android:text="  *하단의 '발송' 버튼을 누르면 해당 E-Mail로 발송되어집니다."
+                android:textSize="13dp" />
             />
 
             <Button
@@ -130,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/btn_round_login"
-                android:text="발    송"
+                android:text="확         인"
                 android:textColor="@color/colorWhite"
                 android:textSize="20dp">
 

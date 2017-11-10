@@ -36,7 +36,7 @@
             android:id="@+id/etCertCode"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="인증코드 입력란"
+            android:hint="인증코드 입력란"
             android:textSize="15dp"
             android:gravity="center" />
 
@@ -44,7 +44,7 @@
             android:id="@+id/btnCheckCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="확  인"
+            android:text="확         인"
             android:layout_marginTop="10dp"/>
     </LinearLayout>
 </LinearLayout>

@@ -11,8 +11,6 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
 
     private EditText etID;
     private EditText etEmail;
-    private Button btnCertificationID;
-    private Button btnCertificationEmail;
     private Button btnSend;
 
     @Override
@@ -22,25 +20,8 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
 
         etID = (EditText)findViewById(R.id.etID);
         etEmail = (EditText)findViewById(R.id.etEmail);
-        btnCertificationID = (Button)findViewById(R.id.btnCertificationID);
-        btnCertificationEmail = (Button)findViewById(R.id.btnCertificationEmail);
         btnSend = (Button)findViewById(R.id.btnSend);
 
-        btnCertificationEmail.setEnabled(false);
-        btnSend.setEnabled(false);
-
-        btnSend.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        btnCertificationEmail.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
         btnSend.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,5 +29,4 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
             }
         });
     }
-
 }

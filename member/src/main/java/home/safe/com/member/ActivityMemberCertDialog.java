@@ -55,25 +55,37 @@ public class ActivityMemberCertDialog extends Dialog {
     }
 
     // 아래와 같은 방식으로 해당 다이얼로그를 불러온다.
-/*        btnCertificationEmail.setOnClickListener(new Button.OnClickListener() {
+/*
         // 나중에 서버로부터 얻은 값을 셋팅하는 것으로 해야함
-        ActivityMemberCertDialog certDialog = new ActivityMemberCertDialog(ActivityMemberFindPWD.this);
-        @Override
-        public void onClick(View view) {
-            certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    certDialog.setRecvCode(code);
+        btnCertificationPhone.setOnClickListener(new Button.OnClickListener() {
+            ActivityMemberCertDialog certDialog = new ActivityMemberCertDialog(ActivityMemberFindID.this);
+            @Override
+            public void onClick(View view) {
+                certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
+                        certDialog.setRecvCode(code);
 
-                }
-            }));
-            certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-
-                }
-            });
-            certDialog.show();
-        }
-    });*/
+                    }
+                }));
+                certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        if(code.equals(certDialog.getSendCode()))
+                        {
+                            Toast.makeText(ActivityMemberFindID.this, code + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                            etPhone.setEnabled(false);
+                            btnCertificationPhone.setEnabled(false);
+                            btnSend.setEnabled(true);
+                        }
+                        else
+                        {
+                            Toast.makeText(ActivityMemberFindID.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                certDialog.show();
+            }
+        });*/
 }
