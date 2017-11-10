@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="home.safe.com.trans.ActivityTrans">
 
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
 
         <TextView
             android:id="@+id/transList"
@@ -36,15 +40,34 @@
             android:textSize="18dp" />
 
 
-        <EditText
+        <!--에디트텍스트 영역에 보더주고, 텍스트 입력창 올리기-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="3"
+            android:layout_margin="15dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+        <!--<EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:layout_weight="3"
+            android:hint="이곳에 부가 정보를 입력하세요(200byte)"
             android:lines="5"
-            android:maxLength="200"
-            android:hint="이곳에 부가 정보를 입력하세요(200byte)"/>
+            android:maxLength="200"/>-->
+
+
 
         <Button
             android:id="@+id/btnOk"
@@ -54,10 +77,10 @@
             android:layout_weight="1"
             android:background="@android:color/holo_blue_dark"
             android:text="확인"
-            android:textSize="18dp" />
-
-
+            android:textSize="18dp"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="8dp" />
 
 
     </LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

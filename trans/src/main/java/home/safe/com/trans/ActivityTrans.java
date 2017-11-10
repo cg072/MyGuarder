@@ -21,6 +21,11 @@ import android.widget.Toast;
     확인버튼 클릭 -> 메인액티비티로 이동
     */
 
+    /*해야할 일 : 1. 이동수단 선택 된것과, 선택 한것 텍스트뷰에 표시해주기!!!
+                2. 확인 버튼 클릭시, 부가정보입력 된 텍스트 저장하기!!!
+                3. 메모위치 영역 표시해주기!!!
+                */
+
 public class ActivityTrans extends AppCompatActivity implements View.OnClickListener {
 
     //리스트, 선택 영역의 텍스트뷰 선언
