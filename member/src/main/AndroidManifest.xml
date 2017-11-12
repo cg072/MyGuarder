@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="home.safe.com.member">
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -36,5 +38,6 @@
             android:name=".ActivityMemberFindID"
             android:label="@string/title_activity_member_find_id"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 </manifest>
