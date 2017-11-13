@@ -1,19 +1,31 @@
 package home.safe.com.myguarder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import android.view.LayoutInflater;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+
+
+import com.google.android.gms.maps.MapView;
+
+/*
+ * @author 경창현
+ * @version 1.0.0
+ * @text 구글 api로 바꿈
+ * @since 2017-11-14 오전 12:14
+ */
 
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
 
+    MapView mapView;
     Button btnCivilianLog;
 
     @Override
@@ -23,8 +35,13 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
 
+
+        //fragment inflater
+        LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mapView = (MapView)layoutInflater.inflate(R.layout.fragment_map,null).findViewById(R.id.map);
+
+        //initFragment
         initFragment();
-        startMyLocation();
 
         btnCivilianLog.setOnClickListener(this);
     }
@@ -50,7 +67,6 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         }
 
     }
-
 
 
 }

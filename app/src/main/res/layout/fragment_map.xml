@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!--
      * @author 경창현
      * @version 1.0.0
-     * @text NaverMap View
-     * @since 2017-11-06 오후 11:47
+     * @text 구글 지도 api
+     *        MapView를 이용해 지도 적용
+     * @since 2017-11-14 오전 12:15
     -->
 
-    <com.nhn.android.maps.NMapView
-        android:id="@+id/mapView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.MapFragment"/>
 
-</LinearLayout>
+</RelativeLayout>
