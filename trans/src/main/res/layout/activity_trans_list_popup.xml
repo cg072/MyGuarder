@@ -30,7 +30,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/txtText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +38,11 @@
             android:alpha="0.87"
             android:gravity="center"
             android:textColor="#000"
-            android:textSize="15dp" />
+            android:textSize="15dp" />-->
+        <ListView
+            android:id="@+id/transListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
     </LinearLayout>
     <!-- Notice -->
 

@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
     /*2017. 11. 03
     author 박준규
     이동수단 설정 -> 메인
@@ -32,6 +34,10 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
     TextView transList;
     TextView transSelect;
     Button btnOk;
+
+    ArrayList<TestListViewDTO> test;
+
+
 
 
     @Override
@@ -59,6 +65,12 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
         //리스트버튼 클릭
         if (view == transList) {
             Intent intentPopup = new Intent(this, ActivityTransListPopup.class);
+
+            test.add(new TestListViewDTO("1", "2", "3"));
+
+            intentPopup.putExtra("1", test);
+
+
             startActivity(intentPopup);
         }
 
