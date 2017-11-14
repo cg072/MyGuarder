@@ -22,8 +22,7 @@ import java.util.ArrayList;
  *        2. 지난위치보기 내부 구현
  *        3. 설정 버튼
  *        4. 설정 엑티비티
- *        5. 퍼미션 요청 메시지 안뜨는거 해결해야함
- *        6. 현재 위치 표시 부터 시작
+ *        5. 현재 위치 표시 부터 시작
  * @since 2017-11-15 오전 12:13
  */
 
@@ -32,10 +31,6 @@ import java.util.ArrayList;
 public class MainActivity extends ProGuardian implements IProGuardian {
 
 
-    boolean permissionCheck = false;
-
-    private final static int MY_LOCATION_REQUEST_CODE = 99;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +38,7 @@ public class MainActivity extends ProGuardian implements IProGuardian {
 
 
 
-        this.initPermissions();
 
-        Log.d("퍼미션 권한",String.valueOf(permissionCheck));
 
         /*
          * @author 경창현
@@ -88,45 +81,6 @@ public class MainActivity extends ProGuardian implements IProGuardian {
         return 0;
     }
 
-
-    /*
-     * @author 경창현
-     * @version 1.0.0
-     * @text 퍼미션 작성 -> 미완료  퍼미션 요청 메시지가 안뜸
-     * @since 2017-11-14 오전 12:12
-     */
-    public void initPermissions()
-    {
-        Log.d("initPermissions","오는가");
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            permissionCheck = true;
-            Log.d("initPermissions","T");
-//            mMap.setMyLocationEnabled(true);
-        } else {
-            // Show rationale and request permission.
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_LOCATION_REQUEST_CODE);
-            Log.d("initPermissions","F");
-
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (requestCode == MY_LOCATION_REQUEST_CODE) {
-            if (permissions.length == 1 &&
-                    permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                mMap.setMyLocationEnabled(true);
-            } else {
-                // Permission was denied. Display an error message.
-                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
 }
 
