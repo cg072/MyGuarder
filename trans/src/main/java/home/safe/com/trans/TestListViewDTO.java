@@ -1,12 +1,14 @@
 package home.safe.com.trans;
 
+import java.io.Serializable;
+
 /**
  * Created by plupin724 on 2017-11-13.
  *
  * 데이터 흐름을 확인하기 위한 테스트 dto 클래스
  */
 
-public class TestListViewDTO{
+public class TestListViewDTO implements Serializable{
     String num;
     String type;
     String name;

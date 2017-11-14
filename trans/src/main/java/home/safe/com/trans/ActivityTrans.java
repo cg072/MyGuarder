@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,11 +36,6 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
     TextView transSelect;
     Button btnOk;
 
-    ArrayList<TestListViewDTO> test;
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +60,21 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         //리스트버튼 클릭
         if (view == transList) {
+
+            //인텐트로 보내주기 위한 객체 어레이 리스트 생성
+            ArrayList<TestListViewDTO> arrtest = new ArrayList<>();
+            //어레이 리스트에 dto 값을 넣어둠
+            arrtest.add(new TestListViewDTO("1", "2", "3"));
+            arrtest.add(new TestListViewDTO("4", "5", "6"));
+            arrtest.add(new TestListViewDTO("7", "8", "9"));
+            arrtest.add(new TestListViewDTO("a", "b", "c"));
+
+            //ActivityTransListPopup.class로 인텐트를 전송
             Intent intentPopup = new Intent(this, ActivityTransListPopup.class);
 
-            test.add(new TestListViewDTO("1", "2", "3"));
 
-            intentPopup.putExtra("1", test);
-
+            //인텐트에 dto객체 어레이 리스트를 부가로 전송
+            intentPopup.putExtra("dtotest" , arrtest);
 
             startActivity(intentPopup);
         }
@@ -89,22 +94,27 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
                     switch (item.getItemId()) {
                         case R.id.transWalk:
                             Toast.makeText(getApplicationContext(), "도보", Toast.LENGTH_LONG).show();
+                            transSelect.setText("도보");
                     }
                     switch (item.getItemId()) {
                         case R.id.transBus:
                             Toast.makeText(getApplicationContext(), "버스", Toast.LENGTH_LONG).show();
+                            transSelect.setText("버스");
                     }
                     switch (item.getItemId()) {
                         case R.id.transTaxi:
                             Toast.makeText(getApplicationContext(), "택시", Toast.LENGTH_LONG).show();
+                            transSelect.setText("택시");
                     }
                     switch (item.getItemId()) {
                         case R.id.transSub:
                             Toast.makeText(getApplicationContext(), "지하철", Toast.LENGTH_LONG).show();
+                            transSelect.setText("지하철");
                     }
                     switch (item.getItemId()) {
                         case R.id.transEtc:
                             Toast.makeText(getApplicationContext(), "기타", Toast.LENGTH_LONG).show();
+                            transSelect.setText("기타");
                     }
 
                     return false;

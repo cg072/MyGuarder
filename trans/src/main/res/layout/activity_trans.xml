@@ -50,8 +50,10 @@
             android:layout_margin="15dp">
 
             <EditText
+                android:id="@+id/editText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:hint="이곳에 부가 정보를 입력하세요(200byte)"/>
 
 
         </LinearLayout>

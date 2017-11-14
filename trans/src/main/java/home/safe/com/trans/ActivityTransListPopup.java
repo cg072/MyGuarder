@@ -24,7 +24,7 @@ public class ActivityTransListPopup extends AppCompatActivity implements View.On
     ListView transListView;
     Button transListFinish;
 
-    Intent getin;
+    ArrayList<TestListViewDTO> redto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +34,20 @@ public class ActivityTransListPopup extends AppCompatActivity implements View.On
         transListView = (ListView) findViewById(R.id.transListView);
         transListFinish = (Button) findViewById(R.id.transListFinish);
 
+        redto = (ArrayList<TestListViewDTO>)getIntent().getSerializableExtra("dtotest");
+
         //내부클래스로 만들어준 어댑터 인스턴스를 생성
         TransListAdapter adapter = new TransListAdapter();
 
-        //인텐트로 정보 받아와야 함!!!!!!!!!!!!!
+
+        //어댑터에 메인엑티비티에서 인텐트로 받은 dto정보를 넣어줌
+        for(TestListViewDTO test : redto){
+            adapter.addItem(test);
+        }
 
 
+      /*  adapter.addItem(new TestListViewDTO("a", "b", "c"));*/
 
-        adapter.addItem(new TestListViewDTO("a", "b", "c"));
-        adapter.addItem(new TestListViewDTO("a", "b", "c"));
-        adapter.addItem(new TestListViewDTO("a", "b", "c"));
-        adapter.addItem(new TestListViewDTO("a", "b", "c"));
-        adapter.addItem(new TestListViewDTO("a", "b", "c"));
 
 
         //리스트뷰에 어댑터를 추가
@@ -110,8 +112,6 @@ public class ActivityTransListPopup extends AppCompatActivity implements View.On
             itemView.setSeq(dto.getNum());
             itemView.setType(dto.getType());
             itemView.setName(dto.getName());
-
-
 
             return  itemView;
         }
