@@ -15,7 +15,8 @@ import java.util.ArrayList;
     author : 박준규
     흐름 : 이동수단 설정 -> 메인 -> 이동수단 내역 보기 click
     실행되는 동작 : 1. 이동수단 내역 보여주기
-                    2. 확인(transListFinish) 버튼을 누르면 종료
+                   2. 확인(transListFinish) 버튼을 누르면 종료
+                   3. 이동수단 관리 페이지라는 명확한 표시 해주기!!!!!!!
     */
 
 
@@ -47,8 +48,6 @@ public class ActivityTransListPopup extends AppCompatActivity implements View.On
 
 
       /*  adapter.addItem(new TestListViewDTO("a", "b", "c"));*/
-
-
 
         //리스트뷰에 어댑터를 추가
         transListView.setAdapter(adapter);

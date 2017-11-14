@@ -64,10 +64,10 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
             //인텐트로 보내주기 위한 객체 어레이 리스트 생성
             ArrayList<TestListViewDTO> arrtest = new ArrayList<>();
             //어레이 리스트에 dto 값을 넣어둠
-            arrtest.add(new TestListViewDTO("1", "2", "3"));
-            arrtest.add(new TestListViewDTO("4", "5", "6"));
-            arrtest.add(new TestListViewDTO("7", "8", "9"));
-            arrtest.add(new TestListViewDTO("a", "b", "c"));
+            arrtest.add(new TestListViewDTO("1", "택시", "모범"));
+            arrtest.add(new TestListViewDTO("2", "버스", "좌석"));
+            arrtest.add(new TestListViewDTO("3", "대리", "대리"));
+            arrtest.add(new TestListViewDTO("4", "지하철", "지하철"));
 
             //ActivityTransListPopup.class로 인텐트를 전송
             Intent intentPopup = new Intent(this, ActivityTransListPopup.class);
@@ -84,7 +84,7 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
         if (view == transSelect) {
             //팝업 메뉴 만들어주기
             PopupMenu popupTransSelect = new PopupMenu(this, view);
-            //팝
+            //팝업메뉴 인플레이트
             MenuInflater inflater = popupTransSelect.getMenuInflater();
             Menu menu = popupTransSelect.getMenu();
             inflater.inflate(R.menu.menu_transselect, menu);
