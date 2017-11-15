@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorNoti">#AFB42B</color>
+    <color name="colorAppbar">#CDDC39</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorLoginBtn">#231e52</color>
+    <color name="colorSignupTv">#a2a29e</color>
+    <color name="colorBackground">#dddddd</color>
 </resources>
