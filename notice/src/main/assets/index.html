@@ -4,25 +4,97 @@
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="index.css">
     <script src="jquery-3.2.1.min.js"></script>
-    <script src="indexscript.js"></script>
+   <!-- <script src="indexscript.js"></script>-->
 
     <title>Notice</title>
 </head>
 
+
+<body>
+
 <wrap id = "wrap">
-    <div id = "header">
 
-
-
-    </div>
     <div id = "content">
 
     </div>
-
-
+    <!--<div class="group g1">
+        <div class="box">
+            <strong class="title title1"><a href="#">타이틀1</a></strong>
+            <div class="cont">내용1</div>
+        </div>
+        <div class="box">
+            <strong class="title"><a href="#">타이틀2</a></strong>
+            <div class="cont">내용222222222222222</div>
+        </div>
+        <div class="box">
+            <strong class="title"><a href="#">타이틀3</a></strong>
+            <div class="cont"> 내용33333333333</div>
+        </div>
+        <div class="box">
+            <strong class="title"><a href="#">타이틀4</a></strong>
+            <div class="cont">44444</div>
+        </div>
+    </div>-->
 </wrap>
 
-<body>
+<script>
+
+    $(function() {
+
+  var group = $(".group");
+
+  group.each(function() {
+    var _group = new GroupBox(this);
+  });
+
+  // 사용자 정의 생성자 함수 정의
+  function GroupBox(groupElement) {
+
+    var box = $(groupElement).find(".box");
+    var title = $(groupElement).find(".box .title a");
+
+    box.each(function(idx) {
+      var newBox = new RootBox(this);
+      if (idx > 0) {
+        newBox.siblingsClose();
+      }
+    });
+  }
+
+  // 사용자 정의 생성자 함수 정의
+  function RootBox(boxElement) {
+    var _this = this;
+    var boxEl = $(boxElement);
+    var target = $(boxEl).find(".title a");
+    var cont = $(boxEl).find(".cont");
+
+    // _groupParent = $(boxEl).parent();
+
+    target.on("click", anchorClickEvent);
+
+    function anchorClickEvent() {
+
+      if (cont.is(':hidden')) {
+        _this.open();
+      } else {
+        _this.close();
+      }
+    }
+
+    _this.siblingsClose = function() {
+      cont.css('display', 'none');
+    };
+
+    _this.open = function() {
+      cont.slideDown();
+    };
+    _this.close = function() {
+      cont.slideUp();
+    }
+  }
+});
+    </script>
+
 
 </body>
 
