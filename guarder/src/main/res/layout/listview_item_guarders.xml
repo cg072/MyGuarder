@@ -23,12 +23,13 @@
         android:text="01072058516"
         android:textSize="@dimen/listItemText"/>
 
-    <Button
-        android:id="@+id/btnGuardAdd"
+    <ToggleButton
+        android:id="@+id/btnGuardResist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="등록"
-        android:textSize="@dimen/listItemText" />
+        android:textSize="@dimen/listItemText"
+        android:background="@drawable/toggle_selector"
+        android:layout_margin="10dp" />
 
 </LinearLayout>

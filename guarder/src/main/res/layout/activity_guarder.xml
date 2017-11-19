@@ -24,12 +24,14 @@
             >
 
             <EditText
+                android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:textSize="20dp"
                 android:hint="번호를 검색해주세요"/>
             <Button
+                android:id="@+id/btnSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -49,21 +51,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/colorWhite">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="검색 결과"
-                    android:textSize="20dp"/>
-                    <ListView
-                        android:id="@+id/lvSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"></ListView>
+                    android:textSize="20dp" />
+
+                <ListView
+                    android:id="@+id/lvSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></ListView>
             </LinearLayout>
 
             <LinearLayout

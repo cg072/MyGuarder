@@ -1,6 +1,8 @@
 package home.safe.com.guarder;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -19,28 +22,28 @@ import java.util.ArrayList;
  * 그러므로 Custom Adapter를 만들 때는 ArrayAdapter 대신에 BaseAdapter를 사용하는 것이 좋다
  */
 
-public class ListViewAdapterGuarders extends ArrayAdapter {
+public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClickListener {
 
-    // 버튼 클릭 이벤트를 위한 Listrner 인터페이스 정의
-    public interface ListBtnClickListener {
-        void onListBtnClick(int position) ;
+    // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의
+    public interface GuardersListBtnClickListener {
+        void onGuardersListBtnClick(int position) ;
     }
 
     // 생성자로부터 전달된 resource id 값을 저장
     int resourceID;
 
     // 생성자로부터 전달된 ListBtnClickListener 저장
-    private ListBtnClickListener listBtnClickListener;
+    private GuardersListBtnClickListener listBtnClickListener;
 
     // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
-    ListViewAdapterGuarders(Context context, int resource, ArrayList<ListViewItemGuarders> list, ListBtnClickListener clickListener) {
+    ListViewAdapterGuarders(Context context, int resource, ArrayList<ListViewItemGuarders> list, GuardersListBtnClickListener clickListener) {
         super(context, resource, list);
 
         // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceID = resource;
 
         // 생성자에 리스너 추가
-        this.listBtnClickListener =clickListener;
+        this.listBtnClickListener = clickListener;
     }
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
@@ -69,15 +72,39 @@ public class ListViewAdapterGuarders extends ArrayAdapter {
         tvPhone.setText(listViewItemGuarders.getTvPhone());
 
         // btnGuardersAdd 클릭 시 작업내용
-        Button btnGuardersAdd = (Button) convertView.findViewById(R.id.btnGuardAdd);
-        btnGuardersAdd.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 회원 검색 후 추가를 눌렀을 시 동작하는 내용을 코딩한다.
-                Toast.makeText(context, tvName.getText() + "(을)를 추가하였습니다", Toast.LENGTH_SHORT).show();
-            }
-        });
+        ToggleButton btnGuardResist = (ToggleButton) convertView.findViewById(R.id.btnGuardResist);
+        btnGuardResist.setTag(position);
+        btnGuardResist.setOnClickListener(this);
 
        return convertView;
+    }
+
+    @Override
+    public void onClick(View view) {
+        // ActivityGuarder 의 GuardListBtnClickListener의 onGuardBtnClick() 함수 호출
+        if(this.listBtnClickListener != null) {
+            this.listBtnClickListener.onGuardersListBtnClick((int) view.getTag());
+        }
+    }
+
+    @Override
+    public int getCount() {
+        return super.getCount();
+    }
+
+    @Nullable
+    @Override
+    public Object getItem(int position) {
+        return super.getItem(position);
+    }
+
+    @Override
+    public int getPosition(@Nullable Object item) {
+        return super.getPosition(item);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
     }
 }
