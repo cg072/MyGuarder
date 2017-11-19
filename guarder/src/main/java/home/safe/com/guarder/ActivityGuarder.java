@@ -33,7 +33,8 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     ListViewAdapterSearch lvAdapterSearch;
     ListViewAdapterGuarders lvAdapterGuarders;
     private boolean checkPermission = false;
-    String nowGuarder;
+    String nowGuarderName;
+    String nowGuarderPhone;
 
     ArrayList<ListViewItemSearch> alSearch;
     ArrayList<ListViewItemGuarders> alGuarders;
@@ -156,8 +157,21 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
 
     // 지킴이 리스트에서 슬라이딩 버튼을 눌렀을 시
     @Override
-    public void onGuardersListBtnClick(int position) {
-        Toast.makeText(this, Integer.toString(position+1) + "아이템이 선택되었습니다.", Toast.LENGTH_SHORT).show();
+    public void onGuardersListBtnClick(int position, int count) {
+        for( int i = 0 ; i < count ; i++ ) {
+            if( i != position) {
+                alGuarders.get(i).setUse(false);
+            } else {
+                alGuarders.get(i).setUse(true);
+                nowGuarderName = alGuarders.get(i).getTvName();
+                nowGuarderPhone = alGuarders.get(i).getTvPhone();
+                //위의 noewGuarder부분을 다른 액티비티, 서버로 전송하여 준다.
+            }
+        }
+        lvAdapterGuarders = new ListViewAdapterGuarders(this, R.layout.listview_item_guarders, alGuarders, this);
+        lvAdapterGuarders.notifyDataSetChanged();
+        lvGuarders.setAdapter(lvAdapterGuarders);
+        Toast.makeText(this, Integer.toString(position+1) + "아이템이 선택되었습니다. 총수 : " + count, Toast.LENGTH_SHORT).show();
         //int nowPosition
     }
 

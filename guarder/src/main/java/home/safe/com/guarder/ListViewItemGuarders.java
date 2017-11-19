@@ -10,6 +10,7 @@ public class ListViewItemGuarders {
 
     private String name;
     private String phone;
+    private boolean use = false;
 
     public void setTvName(String name) {
         this.name = name;
@@ -19,6 +20,10 @@ public class ListViewItemGuarders {
         this.phone = phone;
     }
 
+    public void setUse(boolean use) {
+        this.use = use;
+    }
+
     public String getTvName(){
         return this.name;
     }
@@ -26,5 +31,11 @@ public class ListViewItemGuarders {
     public String getTvPhone(){
         return this.phone;
     }
+
+    public boolean getUse() {
+        return this.use;
+    }
+
+
 
 }

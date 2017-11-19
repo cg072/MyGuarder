@@ -24,9 +24,11 @@ import java.util.ArrayList;
 
 public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClickListener {
 
+    ToggleButton btnGuardResist;
+
     // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의
     public interface GuardersListBtnClickListener {
-        void onGuardersListBtnClick(int position) ;
+        void onGuardersListBtnClick(int position, int count) ;
     }
 
     // 생성자로부터 전달된 resource id 값을 저장
@@ -66,14 +68,17 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         final TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
 
         // Data Set(ListViewItemList)에서 position에 위치한 데이터 참조 획득
-        final ListViewItemGuarders listViewItemGuarders = (ListViewItemGuarders) getItem(position);
+        final ListViewItemGuarders lvItemGuarders = (ListViewItemGuarders) getItem(position);
 
-        tvName.setText(listViewItemGuarders.getTvName());
-        tvPhone.setText(listViewItemGuarders.getTvPhone());
+        tvName.setText(lvItemGuarders.getTvName());
+        tvPhone.setText(lvItemGuarders.getTvPhone());
 
         // btnGuardersAdd 클릭 시 작업내용
-        ToggleButton btnGuardResist = (ToggleButton) convertView.findViewById(R.id.btnGuardResist);
+        btnGuardResist = (ToggleButton) convertView.findViewById(R.id.btnGuardResist);
         btnGuardResist.setTag(position);
+        if(lvItemGuarders.getUse() == true) {
+            btnGuardResist.setChecked(true);
+        }
         btnGuardResist.setOnClickListener(this);
 
        return convertView;
@@ -83,28 +88,12 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
     public void onClick(View view) {
         // ActivityGuarder 의 GuardListBtnClickListener의 onGuardBtnClick() 함수 호출
         if(this.listBtnClickListener != null) {
-            this.listBtnClickListener.onGuardersListBtnClick((int) view.getTag());
+            this.listBtnClickListener.onGuardersListBtnClick((int) view.getTag(), getCount());
         }
     }
 
     @Override
     public int getCount() {
         return super.getCount();
-    }
-
-    @Nullable
-    @Override
-    public Object getItem(int position) {
-        return super.getItem(position);
-    }
-
-    @Override
-    public int getPosition(@Nullable Object item) {
-        return super.getPosition(item);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
     }
 }
