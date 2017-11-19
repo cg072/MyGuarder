@@ -36,6 +36,7 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     String nowGuarder;
 
     ArrayList<ListViewItemSearch> alSearch;
+    ArrayList<ListViewItemGuarders> alGuarders;
 
     final private String TAG = "가드";
 
@@ -48,12 +49,12 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         etSearch = (EditText) findViewById(R.id.etSearch);
         btnSearch = (Button) findViewById(R.id.btnSearch);
 
-        ArrayList<ListViewItemGuarders> alGuarders = new ArrayList<ListViewItemGuarders>();
+        alGuarders = new ArrayList<ListViewItemGuarders>();
 
         // alSearch의 아이템들을 Load
         //loadSearchFromDB(getList());  // <- 검색버튼을 눌렀을 시에 적용이 되어야한다.
         //loadItemsFromDB(alGuarders);
-        loadItemsFromDB(alGuarders);
+        //loadItemsFromDB(alGuarders);
 
         // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
         lvAdapterSearch = new ListViewAdapterSearch(this, R.layout.listview_item_search, getList(), this);
@@ -143,69 +144,45 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         return alSearch;
     }
 
-    public boolean loadItemsFromDB(ArrayList<ListViewItemGuarders> list) {
-        ListViewItemGuarders lvItemGuarders;
-        int desc ;
+    // ArrayList에 지킴이를 추가함 [서버와 연결 후 부터는 서버로부터 받아와야한다.]
+    private ArrayList<ListViewItemGuarders> addGuarder(String name, String phone) {
+        ListViewItemGuarders lvItemGuarders = new ListViewItemGuarders();
+        lvItemGuarders.setTvName(name);
+        lvItemGuarders.setTvPhone(phone);
+        alGuarders.add(lvItemGuarders);
 
-        if(list == null) {
-            list = new ArrayList<ListViewItemGuarders>();
-        }
-
-        // 순서를 위한 desc값을 1로 초기화.
-        desc = 1;
-
-        // 아이템 생성.
-        lvItemGuarders = new ListViewItemGuarders();
-        lvItemGuarders.setTvName("김종하");
-        lvItemGuarders.setTvPhone("01072058516");
-        list.add(lvItemGuarders);
-        desc++;
-
-        // 아이템 생성.
-        lvItemGuarders = new ListViewItemGuarders();
-        lvItemGuarders.setTvName("김진복");
-        lvItemGuarders.setTvPhone("010알아몰라");
-        list.add(lvItemGuarders);
-        desc++;
-
-        // 아이템 생성.
-        lvItemGuarders = new ListViewItemGuarders();
-        lvItemGuarders.setTvName("박준규");
-        lvItemGuarders.setTvPhone("010몰라알아아");
-        list.add(lvItemGuarders);
-        desc++;
-
-        // 아이템 생성.
-        lvItemGuarders = new ListViewItemGuarders();
-        lvItemGuarders.setTvName("경창현");
-        lvItemGuarders.setTvPhone("010몰라몰라");
-        list.add(lvItemGuarders);
-        desc++;
-
-        return true;
+        return alGuarders;
     }
 
-    // 이거 안뜸 ㅠ_ㅠ
+    // 지킴이 리스트에서 슬라이딩 버튼을 눌렀을 시
     @Override
     public void onGuardersListBtnClick(int position) {
         Toast.makeText(this, Integer.toString(position+1) + "아이템이 선택되었습니다.", Toast.LENGTH_SHORT).show();
         //int nowPosition
     }
+
+    // 회원 리스트에서 등록 버튼을 눌렀을 시
     @Override
     public void onSearchListBtnClick(int position, ListViewItemSearch lvItemSearch) {
+        lvAdapterGuarders = new ListViewAdapterGuarders(this, R.layout.listview_item_guarders, addGuarder(lvItemSearch.getTvName(), lvItemSearch.getTvPhone()), this);
+        lvAdapterGuarders.notifyDataSetChanged();
+        lvGuarders.setAdapter(lvAdapterGuarders);
         //Toast.makeText(this, Integer.toString(position+1) + "아이템이 선택되었습니다.", Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, lvItemSearch.getTvName() + lvItemSearch.getTvPhone(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, lvItemSearch.getTvName() + lvItemSearch.getTvPhone() + " 지킴이등록", Toast.LENGTH_SHORT).show();
     }
 
 
 
+
+    // 주소록 읽기 권한 체크하는 부분
+
     /*
-*  date     : 2017.11.12
-*  author   : Kim Jong-ha
-*  title    : checkPermission 메소드 생성
-*  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
-*             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
-* */
+    *  date     : 2017.11.12
+    *  author   : Kim Jong-ha
+    *  title    : checkPermission 메소드 생성
+    *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
+    *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
+    * */
     private void checkPermission()
     {
         Log.v(TAG, "checkPermission들어옴");
