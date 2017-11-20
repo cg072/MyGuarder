@@ -175,32 +175,37 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
         {
+            // 퍼미션 없음
             Log.d("getDeviceLocation","in!!!");
-            mLocationPermissionGranted = true;
 
-            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-            Log.d("mCurrentLocation",mCurrentLocation.toString());
+
+//            Log.d("mCurrentLocation",mCurrentLocation.toString());
 
             //ActivityCompat.shouldShowRequestPermissionRationale 재요청인지 확인
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
             {
-
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_FINE_LOCATION);
             }
             else{   //처음일 경우 퍼미션 요청
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_FINE_LOCATION);
             }
+
+
         }
         else
         {
+            //퍼미션 있음
             Log.d("getDeviceLocation","out!!!");
 
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -213,6 +218,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     mLocationPermissionGranted = true;
+
                 } else {
                     // permission denied
                 }
@@ -246,7 +252,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);            //위치 요청 간격 ms
         mLocationRequest.setFastestInterval(5000);      //
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
     @Override

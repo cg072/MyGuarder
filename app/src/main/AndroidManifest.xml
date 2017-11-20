@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- 최대한 정확한 위치를 판별 -->
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
     <application
