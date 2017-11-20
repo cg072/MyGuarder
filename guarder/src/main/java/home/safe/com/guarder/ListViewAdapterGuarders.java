@@ -78,6 +78,8 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         btnGuardResist.setTag(position);
         if(lvItemGuarders.getUse() == true) {
             btnGuardResist.setChecked(true);
+        } else {
+            btnGuardResist.setChecked(false);
         }
         btnGuardResist.setOnClickListener(this);
 
