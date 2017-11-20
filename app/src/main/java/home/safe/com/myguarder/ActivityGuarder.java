@@ -20,26 +20,10 @@ public class ActivityGuarder extends AppCompatActivity implements View.OnClickLi
 
         btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
 
-        initFragment();
 
         btnGuarderLog.setOnClickListener(this);
     }
 
-    /*
-     * @author 경창현
-     * @version 1.0.0
-     * @text NaverMap Fragment 등록
-     * @since 2017-11-06 오후 11:45
-     */
-    public void initFragment()
-    {
-        Fragment fragment = new FragmentMap();
-        fragment.setArguments(new Bundle());
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragMapHere, fragment);
-        fragmentTransaction.commit();
-    }
 
     @Override
     public void onClick(View view) {

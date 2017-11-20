@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffff">
 
-    <!--
-     * @author 경창현
-     * @version 1.0.0
-     * @text 구글 지도 api
-     *        MapView를 이용해 지도 적용
-     * @since 2017-11-14 오전 12:15
-    -->
-
-    <com.google.android.gms.maps.MapView
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.MapFragment"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
