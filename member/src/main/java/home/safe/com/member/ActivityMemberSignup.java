@@ -84,6 +84,8 @@ public class ActivityMemberSignup extends AppCompatActivity {
             }
         } else {
             //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
+            checkPermission = true;
+
             Log.v(TAG, "Permission is granted");
             Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
         }
