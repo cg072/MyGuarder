@@ -9,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -28,35 +30,35 @@ import java.util.ArrayList;
 
 
 
-public class MainActivity extends ProGuardian implements IProGuardian {
+public class MainActivity extends ProGuardian implements IProGuardian, View.OnClickListener {
 
+    Button btnMain;
+    Button btnGuarder;
+    Button btnMember;
+    Button btnNotice;
+    Button btnTrans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnMain = (Button)findViewById(R.id.btnMain);
+        btnGuarder = (Button)findViewById(R.id.btnGuarder);
+        btnMember = (Button)findViewById(R.id.btnMember);
+        btnNotice = (Button)findViewById(R.id.btnNotice);
+        btnTrans = (Button)findViewById(R.id.btnTrans);
 
 
 
 
-        /*
-         * @author 경창현
-         * @version 1.0.0
-         * @text ActivityGuarder 띄움
-         * @since 2017-11-06 오후 11:47
-         */
-//        Intent intent = new Intent(this, ActivityGuarder.class);
-//        startActivity(intent);
 
-        /*
-         * @author 경창현
-         * @version 1.0.0
-         * @text ActivityCivilian 띄움
-         * @since 2017-11-07 오후 3:42
-         */
-        Intent intent2 = new Intent(this, ActivityCivilian.class);
-        startActivity(intent2);
+        btnMain.setOnClickListener(this);
+        btnGuarder.setOnClickListener(this);
+        btnMember.setOnClickListener(this);
+        btnNotice.setOnClickListener(this);
+        btnTrans.setOnClickListener(this);
+
     }
 
 
@@ -82,5 +84,37 @@ public class MainActivity extends ProGuardian implements IProGuardian {
     }
 
 
+    @Override
+    public void onClick(View view) {
+
+        Intent intent;
+
+        if(view.getResources() == btnMain.getResources())
+        {
+            intent = new Intent(this, ActivityCivilian.class);
+        }
+        else if(view.getResources() == btnGuarder.getResources())
+        {
+            intent = new Intent(this, ActivityCivilian.class);
+        }
+        else if(view.getResources() == btnMember.getResources())
+        {
+            intent = new Intent(this, ActivityCivilian.class);
+        }
+        else if(view.getResources() == btnNotice.getResources())
+        {
+            intent = new Intent(this, ActivityCivilian.class);
+        }
+        else if(view.getResources() == btnTrans.getResources())
+        {
+            intent = new Intent(this, ActivityCivilian.class);
+        }
+        else
+        {
+            intent = null;
+        }
+        startActivity(intent);
+
+    }
 }
 

@@ -45,6 +45,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
     //프레그먼트
     MapFragment mMapFragment;
+
     //맵 객체
     GoogleMap googleMap;
 
@@ -56,6 +57,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public static final String CAMERA_POSITION = "camera_position";
     public static final String LOCATION = "location";
 
+    //db
     private SQLiteOpenHelper sqLiteOpenHelper;
     public static boolean loginCheck;
 
@@ -178,8 +180,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             // 퍼미션 없음
             Log.d("getDeviceLocation","in!!!");
 
-
-
 //            Log.d("mCurrentLocation",mCurrentLocation.toString());
 
             //ActivityCompat.shouldShowRequestPermissionRationale 재요청인지 확인
@@ -199,11 +199,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         {
             //퍼미션 있음
             Log.d("getDeviceLocation","out!!!");
+            mLocationPermissionGranted = true;
 
+            //현재위치 갱신
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
-
     }
 
 
