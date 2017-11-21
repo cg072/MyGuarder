@@ -87,7 +87,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
     @Override
     public void onClick(View view) {
 
-        Intent intent;
+        Intent intent = null;
 
         if(view.getResources() == btnMain.getResources())
         {
@@ -109,10 +109,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         {
             intent = new Intent(this, ActivityCivilian.class);
         }
-        else
-        {
-            intent = null;
-        }
+
         startActivity(intent);
 
     }
