@@ -5,27 +5,38 @@ import android.content.ContentValues;
 /**
  * Created by 김진복 on 2017-11-21.
  * 예제용
+ * ProGuardianVO를 상속한 PreTestVO 객체
+ * 실제 보여주기 위한 데이터가 있는 객체
  */
 
 public class PreTestVO extends ProGuardianVO {
-    String test1;
-    String test2;
-    String test3;
+    String test1 = "";
+    String test2 = "";
+    String test3 = "";
+
+    public PreTestVO(){
+    };
+
+    public PreTestVO(String test1, String test2, String test3) {
+        this.test1 = test1;
+        this.test2 = test2;
+        this.test3 = test3;
+    }
 
     @Override
     public ContentValues convertDataToContentValues() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("test1",test1);
-        contentValues.put("test2",test2);
-        contentValues.put("test3",test3);
+        contentValues.put(PreTestDBHelper.COL1,test1);
+        contentValues.put(PreTestDBHelper.COL2,test2);
+        contentValues.put(PreTestDBHelper.COL3,test3);
         return contentValues;
     }
 
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {
-        test1 = contentValues.getAsString("test1");
-        test2 = contentValues.getAsString("test2");
-        test3 = contentValues.getAsString("test3");
+        test1 = contentValues.getAsString(PreTestDBHelper.COL1);
+        test2 = contentValues.getAsString(PreTestDBHelper.COL2);
+        test3 = contentValues.getAsString(PreTestDBHelper.COL3);
     }
 
     public String getTest1() {
@@ -52,5 +63,16 @@ public class PreTestVO extends ProGuardianVO {
         this.test3 = test3;
     }
 
+    public String getDetail() {
+        String detail = test1 + "\n" + String.valueOf(test2) + "\n" + test3;
+
+        return detail;
+    }
+
+    public String getDetails() {
+        String detail = test1 + " / " + String.valueOf(test2) + " / " + test3 + "\n";
+
+        return detail;
+    }
 
 }

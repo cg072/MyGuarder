@@ -10,12 +10,11 @@ import java.util.List;
 
 /**
  * Created by 김진복 on 2017-11-21.
- * DBHelper 부모 객체
- * 상속받기
- * git remote set-url origin https://github.com/cg072/MyGuarder.git
+ * DBHelper 객체 부모
+ * DBHelper 객체 만들때 상속
  */
 
-public class ProGuardianDBHelper extends SQLiteOpenHelper {
+abstract public class ProGuardianDBHelper extends SQLiteOpenHelper {
     final static public String DB_NAME = "safehome";
     final static public int DB_VERSION = 1;
     final static public int TABLE_MEMBER = 101;
@@ -23,15 +22,17 @@ public class ProGuardianDBHelper extends SQLiteOpenHelper {
     final static public int TABLE_LOCATION = 301;
     final static public int TABLE_NOTICE = 401;
     final static public int TABLE_TRANS = 501;
+    final static public int TABLE_TEST = 1001;
+
 
     final private String T_MEMBER = "member";
     final private String T_GUARDER = "guarder";
     final private String T_LOCATION = "location";
     final private String T_NOTICE = "notice";
     final private String T_TRANS = "transportation";
+    final private String T_TEST = "test";
 
     private String table_name;
-    private SQLiteDatabase db;
 
 /*
     public ProGuardianDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -51,12 +52,11 @@ public class ProGuardianDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int a, int b) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        //oldVersion 이면 newVersion으로 업그레이드
     }
 
     public String getTableName() {
@@ -86,39 +86,18 @@ public class ProGuardianDBHelper extends SQLiteOpenHelper {
                 table_name = T_TRANS;
                 break;
             default:
-                table_name = null;
+                table_name = T_TEST;
                 break;
         }
 
     }
 
-    public int insert(ContentValues contentValues) {
-        db = getWritableDatabase();
-        //테이블명, 컬럼명, 컬럼값
-        db.insert(table_name, null, contentValues);
-        return 0;
-    }
+    abstract public int insert(ContentValues contentValues);
 
-    public List<ContentValues> search(ContentValues contentValues) {
-        db = getReadableDatabase();
-        String[] conditions = {"컬럼1=값1", "컬럼2=값2"};
-        db.rawQuery("select * from " + table_name, conditions);
+    abstract public List<ContentValues> search(ContentValues contentValues);
 
-        return null;
-    }
+    abstract public int update(ContentValues contentValues);
 
-    public int update(ContentValues contentValues) {
-        db = getWritableDatabase();
-        String[] conditions = {"값1", "값2", "값3"};   //물음표 위치에 0번째 값부터 조건으로 들어감
-        db.update(table_name, contentValues, "조건1=? and 조건2=? and 조건3=?", conditions);
-        return 0;
-    }
-
-    public int remove(ContentValues contentValues) {
-        db = getWritableDatabase();
-        String[] conditions = {"contentValues값1", "contentValues값2", "contentValues값3"};   //물음표 위치에 0번째 값부터 조건으로 들어감
-        db.delete(table_name, "조건1=? and 조건2=? and 조건3=?", conditions);
-        return 0;
-    }
+    abstract public int remove(ContentValues contentValues);
 
 }

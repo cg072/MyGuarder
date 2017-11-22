@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Created by 김진복 on 2017-11-21.
  * 예제용
+ * changer에서 PreTest 객체 관련 Db접근
  */
 
 public class PreTestController implements IProGuardianController {
@@ -20,14 +21,13 @@ public class PreTestController implements IProGuardianController {
 
     @Override
     public int insert(ContentValues contentValues) {
-        proGuardianDBHelper.insert(contentValues);
-        return 0;
+        int res = proGuardianDBHelper.insert(contentValues);
+        return res;
     }
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
-        proGuardianDBHelper.search(contentValues);
-        return null;
+        return proGuardianDBHelper.search(contentValues);
     }
 
     @Override

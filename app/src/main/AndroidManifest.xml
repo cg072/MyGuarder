@@ -2,18 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="home.safe.com.myguarder">
 
-    <!-- ACCESS_FINE_LOCATION , ACCESS_COARSE_LOCATION 둘중 하나 사용-->
+    <!-- ACCESS_FINE_LOCATION , ACCESS_COARSE_LOCATION 둘중 하나 사용 -->
     <!--
        The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
        Google Maps Android API v2, but you must specify either coarse or fine
        location permissions for the 'MyLocation' functionality.
        도시 블록 1개 정도의 오차로 위치
-  -->
+    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- 최대한 정확한 위치를 판별 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +21,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -34,12 +32,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityGuarder" />
+        <activity android:name=".ActivityMyGuarder" />
         <activity android:name=".ActivityCivilian" />
-        <activity android:name=".ActivityPopup"
-            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"
-
-            ></activity>
+        <activity
+            android:name=".ActivityPopup"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity
+            android:name=".ActivityTest"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
