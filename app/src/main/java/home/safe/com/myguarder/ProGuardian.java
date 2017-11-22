@@ -123,6 +123,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+    * 
+    * @author 경창현
+    * @version 1.0.0
+    * @text fragment 객체 생성 및 container에 올리기, getMapAsync 콜백 지정
+    * @since 2017-11-22 오후 4:24
+    **/
     public void initFragment()
     {
         mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -137,6 +144,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+
+
 
         if(mCameraPosition !=  null)
         {
@@ -157,6 +166,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         updateLocationUI();
     }
 
+    /**
+    * 
+    * @author 경창현
+    * @version 1.0.0
+    * @text GoogleApiClient 생성
+    * @since 2017-11-22 오후 4:25
+    **/
     public synchronized void buildGoogleApiClient()
     {
         if(mGoogleApiClient == null)
@@ -171,6 +187,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         createLocationRequest();
     }
 
+    /**
+    * 
+    * @author 경창현
+    * @version 1.0.0
+    * @text 퍼미션 체크
+    * @since 2017-11-22 오후 4:25
+    **/
     public void getDeviceLocation()
     {
         // 퍼미션 체크
@@ -207,7 +230,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-
+/**
+* 
+* @author 경창현
+* @version 1.0.0
+* @text 퍼미션 체크 결과 처리
+* @since 2017-11-22 오후 4:25
+**/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -231,6 +260,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         updateLocationUI();
     }
 
+    /**
+    * 
+    * @author 경창현
+    * @version 1.0.0
+    * @text 맵 표시 설정
+    * @since 2017-11-22 오후 4:25
+    **/
     @SuppressWarnings("MissingPermission")
     public void updateLocationUI()
     {
@@ -248,6 +284,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+    * 
+    * @author 경창현
+    * @version 1.0.0
+    * @text mLocationRequest 위치 정보 생성 및 요청 시간,범위 설정
+    * @since 2017-11-22 오후 4:26
+    **/
     public void createLocationRequest()
     {
         mLocationRequest = new LocationRequest();
@@ -255,7 +298,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         mLocationRequest.setFastestInterval(5000);      //
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
-
+/**
+* 
+* @author 경창현
+* @version 1.0.0
+* @text mGoogleApiClient를 connect했을때 연결 됬을때 실행
+* @since 2017-11-22 오후 4:26
+**/
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         //권한
@@ -273,9 +322,28 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
+/**
+*
+* @author 경창현
+* @version 1.0.0
+* @text createLocationRequest에서 설정한 시간마다 위치정보를 불러옴
+* @since 2017-11-22 오후 4:29
+**/
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
+        printThisLocation();
+    }
+
+    /**
+    * 
+    * @author 경창현
+    * @version 1.0.0
+    * @text 현재위치 위도,경도 출력
+    * @since 2017-11-22 오후 4:23
+    **/
+    public void printThisLocation()
+    {
+        Log.d("onMapReady",""+mCurrentLocation.getLatitude()+" , "+mCurrentLocation.getLongitude());
     }
 }

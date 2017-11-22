@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
 
@@ -13,6 +14,7 @@ import com.google.android.gms.location.LocationServices;
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
 
     Button btnCivilianLog;
+    Button btnEmergency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         setContentView(R.layout.activity_civilian);
 
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
+        btnEmergency = (Button)findViewById(R.id.btnEmergency);
 
         buildGoogleApiClient();
         mGoogleApiClient.connect();
@@ -36,6 +39,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
 
         btnCivilianLog.setOnClickListener(this);
+        btnEmergency.setOnClickListener(this);
     }
 
     @Override
@@ -79,10 +83,14 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     @Override
     public void onClick(View view) {
         //지난위치보기 팝업
-        if(view.getResources() == btnCivilianLog.getResources())
+        if(view.getId() == btnCivilianLog.getId())
         {
             Intent intent = new Intent(this,ActivityPopup.class);
             startActivity(intent);
+        }
+        else if(view.getId() == btnEmergency.getId())
+        {
+            Toast.makeText(this,"긴급버튼",Toast.LENGTH_SHORT).show();
         }
 
     }
