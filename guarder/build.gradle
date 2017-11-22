@@ -1,11 +1,12 @@
-apply plugin: 'com.android.application'
+//apply plugin: 'com.android.application'
+apply plugin: 'android-library'
 
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        applicationId "home.safe.com.guarder"
+        //applicationId "home.safe.com.guarder"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1

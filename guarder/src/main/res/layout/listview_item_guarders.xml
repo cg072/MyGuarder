@@ -25,11 +25,12 @@
 
     <ToggleButton
         android:id="@+id/btnGuardResist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="35dp"
         android:gravity="center"
         android:textSize="@dimen/listItemText"
         android:background="@drawable/toggle_selector"
+        android:padding="5dp"
         android:layout_margin="10dp" />
 
 </LinearLayout>

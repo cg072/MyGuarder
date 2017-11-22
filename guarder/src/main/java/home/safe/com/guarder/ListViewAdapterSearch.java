@@ -29,7 +29,7 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
 
     // 버튼 클릭 이벤트를 위한 Listrner 인터페이스 정의
     public interface SearchListBtnClickListener {
-        void onSearchListBtnClick(int position, ListViewItemSearch listViewItemSearch) ;
+        void onSearchListBtnClick(int position) ;
     }
 
     // 생성자로부터 전달된 resource id 값을 저장
@@ -69,10 +69,10 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
         final TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
 
         // Data Set(ListViewItemList)에서 position에 위치한 데이터 참조 획득
-        ListViewItemSearch lvItemSearch = (ListViewItemSearch) getItem(position);
+        final ListViewItemSearch lvItemSearch = (ListViewItemSearch) getItem(position);
 
         tvName.setText(lvItemSearch.getTvName());
-        tvPhone.setText(lvItemSearch.getTvPhone());
+        tvPhone.setText(hyphenAdd(lvItemSearch.getTvPhone()));
 
         alitemSearch.add(lvItemSearch);
 
@@ -81,14 +81,6 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
 
         // btnSearchAdd 클릭 시 작업내용
         btnSearchAdd = (Button) convertView.findViewById(R.id.btnSearchAdd);
-/*        btnSearchAdd.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 회원 검색 후 추가를 눌렀을 시 동작하는 내용을 코딩한다.
-                Toast.makeText(context, tvName.getText() + "(을)를 추가하였습니다", Toast.LENGTH_SHORT).show();
-                setSaveItem(tvName.getText().toString(), tvPhone.getText().toString());
-            }
-        });*/
         btnSearchAdd.setTag(position);
         btnSearchAdd.setOnClickListener(this);
 
@@ -99,21 +91,29 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
     public void onClick(View view) {
         // ActivityGuarder 의 GuardListBtnClickListener의 onGuardBtnClick() 함수 호출
         if(this.listBtnClickListener != null) {
-            this.listBtnClickListener.onSearchListBtnClick((int) view.getTag(), alitemSearch.get((int) view.getTag()));
+            this.listBtnClickListener.onSearchListBtnClick((int) view.getTag());
         }
     }
 
-    private void setSaveItem(String name, String phone) {
-        saveItem.setTvName(name);
-        saveItem.setTvPhone(phone);
+    private String hyphenAdd(String phone) {
+
+        String resultString = phone;
+
+        switch(resultString.length()) {
+            case 10 :
+                resultString =  resultString.substring(0,3) + "-" +
+                                resultString.substring(3,6) + "-" +
+                                resultString.substring(6,10);
+                break;
+
+            case 11 :
+                resultString =  resultString.substring(0,3) + "-" +
+                                resultString.substring(3,7) + "-" +
+                                resultString.substring(7,11);
+                break;
+            default :
+                resultString = "Error";
+        }
+        return resultString;
     }
-
-    public ListViewItemSearch getSaveItem() {
-        return saveItem;
-    }
-
-    public String getTvName(){
-
-        return null;
-    };
 }

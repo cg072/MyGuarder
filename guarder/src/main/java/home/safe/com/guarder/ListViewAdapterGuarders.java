@@ -71,7 +71,7 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         final ListViewItemGuarders lvItemGuarders = (ListViewItemGuarders) getItem(position);
 
         tvName.setText(lvItemGuarders.getTvName());
-        tvPhone.setText(lvItemGuarders.getTvPhone());
+        tvPhone.setText(hyphenAdd(lvItemGuarders.getTvPhone()));
 
         // btnGuardersAdd 클릭 시 작업내용
         btnGuardResist = (ToggleButton) convertView.findViewById(R.id.btnGuardResist);
@@ -97,5 +97,27 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
     @Override
     public int getCount() {
         return super.getCount();
+    }
+
+    private String hyphenAdd(String phone) {
+
+        String resultString = phone;
+
+        switch(resultString.length()) {
+            case 10 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,6) + "-" +
+                        resultString.substring(6,10);
+                break;
+
+            case 11 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,7) + "-" +
+                        resultString.substring(7,11);
+                break;
+            default :
+                resultString = "Error";
+        }
+        return resultString;
     }
 }
