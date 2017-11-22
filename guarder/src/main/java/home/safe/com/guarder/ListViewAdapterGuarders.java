@@ -99,6 +99,14 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         return super.getCount();
     }
 
+
+    /*
+     *  date     : 2017.11.22
+     *  author   : Kim Jong-ha
+     *  title    : hyphenAdd() 메소드 생성
+     *  comment  : 전화 번호 사이의 '-' 를 추가한다
+     *  return   : String 형태
+     * */
     private String hyphenAdd(String phone) {
 
         String resultString = phone;

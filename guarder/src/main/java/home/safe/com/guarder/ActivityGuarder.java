@@ -12,20 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import home.safe.com.guarder.R;
+//import home.safe.com.guarder.R;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 public class ActivityGuarder extends AppCompatActivity implements ListViewAdapterSearch.SearchListBtnClickListener, ListViewAdapterGuarders.GuardersListBtnClickListener{
 
@@ -78,6 +74,7 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
      *  author   : Kim Jong-ha
      *  title    : hyphenRemove() 메소드 생성
      *  comment  : 전화 번호 사이의 '-' 를 제거한다
+     *  return   : String 형태
      * */
     private String hyphenRemove(String phone) {
 
