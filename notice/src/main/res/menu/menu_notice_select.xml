@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itemNoticeAll"
+        android:title="전체"/>
+    <item
+        android:id="@+id/itemNoticeTitle"
+        android:title="제목"/>
+    <item
+        android:id="@+id/itemNoticeCont"
+        android:title="내용"/>
+
+</menu>

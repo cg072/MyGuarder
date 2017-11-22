@@ -11,20 +11,41 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:padding="10dp"
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tvSearSelect"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:text="공지사항"
-                android:textSize="30dp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="left"
+                android:background="@android:color/holo_blue_bright"
+                android:text="전체"
+                android:textSize="30dp" />
+
+            <EditText
+                android:id="@+id/edSearText"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:hint="검색어를 입력하세요"/>
+
+            <ImageButton
+                android:id="@+id/btnSearButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_search" />
+
+
         </LinearLayout>
 
         <ExpandableListView
