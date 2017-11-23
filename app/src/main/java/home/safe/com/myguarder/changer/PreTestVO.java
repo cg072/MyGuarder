@@ -15,7 +15,7 @@ public class PreTestVO extends ProGuardianVO {
     String test3 = "";
 
     public PreTestVO(){
-    };
+    }
 
     public PreTestVO(String test1, String test2, String test3) {
         this.test1 = test1;

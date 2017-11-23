@@ -9,14 +9,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class ActivityGuarder extends AppCompatActivity implements View.OnClickListener{
+public class ActivityMyGuarder extends AppCompatActivity implements View.OnClickListener{
 
     Button btnGuarderLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guarder);
+        setContentView(R.layout.activity_myguarder);
 
         btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
 

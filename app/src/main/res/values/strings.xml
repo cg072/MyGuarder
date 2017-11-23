@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MyGuarder</string>
     <string name="action_setting">Setting</string>
+    <string name="title_activity_test">Test Activity 테스트</string>
 </resources>

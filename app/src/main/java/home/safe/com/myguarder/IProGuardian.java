@@ -9,10 +9,10 @@ import java.util.ArrayList;
  */
 
 interface IProGuardian {
-    public ArrayList searchList(ContentValues contentValues);
-    public int modify(ContentValues contentValues);
-    public int insert(ContentValues contentValues);
-    public int remove(ContentValues contentValues);
+    ArrayList searchList(ContentValues contentValues);
+    int modify(ContentValues contentValues);
+    int insert(ContentValues contentValues);
+    int remove(ContentValues contentValues);
     //public int getDataCount();
     //public ContentValues getData(int row);
 }

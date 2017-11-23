@@ -24,7 +24,7 @@ public class ActivityPopup extends Activity implements View.OnClickListener{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
 
-        btnPopupOk = (Button)findViewById(R.id.btnPopupOk);
+        btnPopupOk = findViewById(R.id.btnPopupOk);
 
         btnPopupOk.setOnClickListener(this);
     }

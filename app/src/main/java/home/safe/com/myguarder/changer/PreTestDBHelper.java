@@ -69,7 +69,7 @@ public class PreTestDBHelper extends ProGuardianDBHelper {
                 } finally {
                     db.endTransaction();
 
-                };
+                }
                 break;
         }
     }
@@ -93,7 +93,7 @@ public class PreTestDBHelper extends ProGuardianDBHelper {
         } finally {
             db.endTransaction();
 
-        };
+        }
     }
 
     @Override
