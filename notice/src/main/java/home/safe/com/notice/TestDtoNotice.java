@@ -9,13 +9,13 @@ package home.safe.com.notice;
 public class TestDtoNotice {
 
     String testtitle;
-    String testcontents;
     String testauthor;
+    String testcontents;
 
-    public TestDtoNotice(String testtitle, String testcontents, String testauthor) {
+    public TestDtoNotice(String testtitle, String testauthor, String testcontents) {
         this.testtitle = testtitle;
-        this.testcontents = testcontents;
         this.testauthor = testauthor;
+        this.testcontents = testcontents;
     }
 
     public String getTesttitle() {
@@ -26,19 +26,19 @@ public class TestDtoNotice {
         this.testtitle = testtitle;
     }
 
-    public String getTestcontents() {
-        return testcontents;
-    }
-
-    public void setTestcontents(String testcontents) {
-        this.testcontents = testcontents;
-    }
-
     public String getTestauthor() {
         return testauthor;
     }
 
     public void setTestauthor(String testauthor) {
         this.testauthor = testauthor;
+    }
+
+    public String getTestcontents() {
+        return testcontents;
+    }
+
+    public void setTestcontents(String testcontents) {
+        this.testcontents = testcontents;
     }
 }
