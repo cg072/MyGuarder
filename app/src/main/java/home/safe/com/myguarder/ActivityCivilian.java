@@ -29,6 +29,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
         setContentView(R.layout.activity_civilian);
 
+        first = System.currentTimeMillis();
+
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
         btnEmergency = (Button)findViewById(R.id.btnEmergency);
 

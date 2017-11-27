@@ -5,6 +5,8 @@ import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,8 +30,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
  * Created by hotki on 2017-11-01.
@@ -56,6 +63,18 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
     public static final String CAMERA_POSITION = "camera_position";
     public static final String LOCATION = "location";
+
+    //polyline
+    Polyline line;
+
+    private LatLng startPL = new LatLng(0, 0);        //polyline 시작점
+    private LatLng endPL = new LatLng(0, 0);        //polyline 끝점
+    //marker
+    Marker point;
+
+    // 시스템으로부터 현재시간(ms) 가져오기
+    long first;
+    long now;
 
     //db
     private SQLiteOpenHelper sqLiteOpenHelper;
@@ -311,6 +330,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         getDeviceLocation();
         //콘넥트후 프레그먼트 생성
         initFragment();
+        //처음 시작 라인
+        startPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
     }
 
     @Override
@@ -322,6 +343,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
 /**
 *
 * @author 경창현
@@ -345,5 +368,32 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void printThisLocation()
     {
         Log.d("onMapReady",""+mCurrentLocation.getLatitude()+" , "+mCurrentLocation.getLongitude());
+
+        now = System.currentTimeMillis();
+
+        Log.d("TimeMillisNow",String.valueOf(now));
+
+        if(now - first>10000 )
+        {
+            Log.d("TimeMillis", "now - first");
+            first = now;
+
+            drawPolyline();
+        }
+    }
+
+    public void drawPolyline()
+    {
+        endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+
+        PolylineOptions polylineOptions = new PolylineOptions().add(startPL).add(endPL).width(15).color(Color.RED).geodesic(true);
+        line = googleMap.addPolyline(polylineOptions);
+
+        MarkerOptions markerOptions = new MarkerOptions().position(startPL).draggable(true);
+        //icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_point)
+        point = googleMap.addMarker(markerOptions);
+
+
+        startPL = endPL;
     }
 }
