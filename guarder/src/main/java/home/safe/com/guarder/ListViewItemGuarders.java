@@ -10,7 +10,6 @@ public class ListViewItemGuarders {
 
     private String name;
     private String phone;
-    private int sort;
     private boolean use = false;
 
     public void setTvName(String name) {
@@ -25,9 +24,6 @@ public class ListViewItemGuarders {
         this.use = use;
     }
 
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
 
     public String getTvName(){
         return this.name;
@@ -41,7 +37,4 @@ public class ListViewItemGuarders {
         return this.use;
     }
 
-    public int getSort() {
-        return this.sort;
-    }
 }

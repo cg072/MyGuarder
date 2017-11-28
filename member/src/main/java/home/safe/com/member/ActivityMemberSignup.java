@@ -55,7 +55,7 @@ public class ActivityMemberSignup extends AppCompatActivity {
         rbMale = (RadioButton)findViewById(R.id.rbMale);
         btnSignup = (Button)findViewById(R.id.btnSignup);
 
-        //getMemberPhone();
+        getMemberPhone();
     }
 
     /*
@@ -85,7 +85,7 @@ public class ActivityMemberSignup extends AppCompatActivity {
         } else {
             //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
             checkPermission = true;
-            getMemberPhone();
+
             Log.v(TAG, "Permission is granted");
             Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
         }
@@ -107,7 +107,7 @@ public class ActivityMemberSignup extends AppCompatActivity {
                     //사용자가 동의했을때
                     Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
                     checkPermission = true;
-                    checkPermission();
+                    getMemberPhone();
                 } else {
                     //사용자가 거부 했을때
                     Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
@@ -135,6 +135,7 @@ public class ActivityMemberSignup extends AppCompatActivity {
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
 
         if(checkPermission == true) {
+            Log.v(TAG, "들어옴?");
             String phoneNum = telephonyManager.getLine1Number();
 
             TelephonyManager mgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);

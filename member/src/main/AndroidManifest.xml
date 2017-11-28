@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityMemberLogin">
+        <activity android:name=".ActivityMemberSignup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
     
@@ -27,8 +27,8 @@
             android:label="@string/title_activity_member_modify"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ActivityMemberSignup"
-            android:label="@string/title_activity_member_signup"
+            android:name=".ActivityMemberLogin"
+            android:label="@string/title_activity_member_login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ActivityMemberFindPWD"
@@ -38,6 +38,5 @@
             android:name=".ActivityMemberFindID"
             android:label="@string/title_activity_member_find_id"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
     </application>
 </manifest>

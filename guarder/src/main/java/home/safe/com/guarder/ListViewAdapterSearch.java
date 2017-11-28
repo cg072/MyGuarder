@@ -1,11 +1,14 @@
 package home.safe.com.guarder;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +23,16 @@ import java.util.Map;
  * 그러므로 Custom Adapter를 만들 때는 ArrayAdapter 대신에 BaseAdapter를 사용하는 것이 좋다
  */
 
-public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickListener{
+public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickListener, Filterable{
 
     ListViewItemSearch saveItem = new ListViewItemSearch();
     Button btnSearchAdd ;
     String name;
     String phone;
+
+    Filter listFilter;
+    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
+    private ArrayList<ListViewItemSearch> alitemSearch = new ArrayList<ListViewItemSearch>();
 
     // 버튼 클릭 이벤트를 위한 Listrner 인터페이스 정의
     public interface SearchListBtnClickListener {
@@ -42,6 +49,8 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
     ListViewAdapterSearch(Context context, int resource, ArrayList<ListViewItemSearch> list, SearchListBtnClickListener clickListener) {
         super(context, resource, list);
 
+        //this.alitemSearch = list;
+
         // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceID = resource;
 
@@ -49,15 +58,11 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
         this.listBtnClickListener = clickListener;
     }
 
-    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<ListViewItemSearch> alitemSearch = new ArrayList<ListViewItemSearch>();
-
     // position에 위치한 데이터를 화면에 출력하는데 사용될 view를 리턴 : 필수구현
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
-
         // 생성자로부터 저장된 resourceID(listview_item_search)에 해당하는 Layout을 inflate하여 convertView 참조 획득
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

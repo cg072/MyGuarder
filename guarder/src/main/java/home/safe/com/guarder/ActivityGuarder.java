@@ -8,8 +8,11 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,14 +36,12 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     ListViewItemGuarders lvItemGuarders;
     ListViewAdapterSearch lvAdapterSearch;
     ListViewAdapterGuarders lvAdapterGuarders;
-    private boolean checkPermission = false;
     String nowGuarderName;
     String nowGuarderPhone;
 
-    ArrayList<ListViewItemSearch> alSearch;
-    ArrayList<ListViewItemGuarders> alGuarders;
-
-    private static ListViewItemGuarders sortGuarders;
+    ArrayList<ListViewItemSearch> alSearch = null;
+    ArrayList<ListViewItemSearch> alSearchResult = null;
+    ArrayList<ListViewItemGuarders> alGuarders = null;
 
     final private String TAG = "가드";
 
@@ -59,14 +60,55 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
 
         // 기기에 있는 전화번호를 불러온다. 추후에는 기기에 있는 번호를 보내는 메소드가 필요함
         // private ArrayList<ListViewItemSearch> listSetting로 값을 반환하여 서버에 보내야한다.
-        checkPermission();
+
+        // 서버와 연결 후 부터는 서버로부터 받아서 세팅하는 메소드
+        listSetting();
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 검색 버튼을 눌렀을 시 해야할 행동
+
+                sendToServerText(etSearch.getText().toString());
+
+                searchAdapterUpdate(resultSearch());
+
            }
         });
+    }
+
+    private void sendToServerText(String phone) {
+
+    }
+    private void sendToServerVO() {
+
+    }
+
+    /*
+     *  date     : 2017.11.27
+     *  author   : Kim Jong-ha
+     *  title    : alSearchResult() 메소드 생성
+     *  comment  : 단어를 필터링해주고, 필터링된 ArrayList를 반환한다.
+     *             본래는 서버로 String를 보내고, 필터링된 값들을 리스트에 담아야한다.
+     *  return   : ArrayList<ListViewItemSearch>
+     * */
+    private ArrayList<ListViewItemSearch> resultSearch() {
+
+        // 결과 담는 ArrayList 초기화
+        alSearchResult = new ArrayList<ListViewItemSearch>();
+
+        // EditText로부터 필터링할 값 가져옴
+        String strSearch = etSearch.getText().toString();
+
+        // 필터링된 값들을 초기화된 alSearchResult에 담는다.
+        for(ListViewItemSearch a : alSearch) {
+            if(a.getTvPhone().contains(strSearch) == true || a.getTvName().contains(strSearch) == true) {
+                alSearchResult.add(a);
+            }
+        }
+
+        // 필터링된 결과값 반환
+        return alSearchResult;
     }
 
     /*
@@ -95,49 +137,78 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     *  date     : 2017.11.19
     *  author   : Kim Jong-ha
     *  title    : getList 메소드 생성
-    *  comment  : 주소록에 있는 사람들 중 이름과 전화번호가 둘 다 있는 사람들은 가져온다.
-    *             checkPermission으로 권한 체크한다.
-    *             추후에는 이 리스트들을 서버로 보낼 것 이다.
+    *  comment  : 시험용 리스트
     * */
-    private void listSetting(){
+    private void listSetting() {
+        /* 코딩될 내용들
+            1. 버튼 눌렀을 때, edittext에서 getText 후 스트링으로 바꾼 다음, 서버로 보내기
+            2. 리턴 값을 받아서 화면에 뿌려주기 <- 뿌려주는건 대충 구현됨
+            3. 지킴이 목록에 있는 회원은 보여주지 않는다.
+         */
+        // 예시용 목록 회원
+        ArrayList<ListViewItemSearch> alReturnList = new ArrayList<ListViewItemSearch>();
 
-        alSearch = new ArrayList<ListViewItemSearch>();
-        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
-                null, null, null,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
+        ListViewItemSearch listViewItemSearch = new ListViewItemSearch();
 
-        while (c.moveToNext()) {
-            lvItemSearch = new ListViewItemSearch();
-            // 연락처 id 값
-            String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
-            // 연락처 대표 이름
-            String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-            lvItemSearch.setTvName(name);
+        listViewItemSearch.setTvName("히히히");
+        listViewItemSearch.setTvPhone("01011112222");
+        alReturnList.add(listViewItemSearch);
 
-            // ID로 전화 정보 조회
-            Cursor phoneCursor = getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
-                    null, null);
+        listViewItemSearch = new ListViewItemSearch();
 
-            // 데이터가 있는 경우
-            if (phoneCursor.moveToFirst()) {
-                String phone = phoneCursor.getString(phoneCursor.getColumnIndex(
-                        ContactsContract.CommonDataKinds.Phone.NUMBER));
+        listViewItemSearch.setTvName("니나노");
+        listViewItemSearch.setTvPhone("01033334444");
+        alReturnList.add(listViewItemSearch);
 
-                // hyphen을 제거하는 메소드를 추가하였다.
-                lvItemSearch.setTvPhone(hyphenRemove(phone));
+        listViewItemSearch = new ListViewItemSearch();
 
-                // 여기 if문 아래서 추가를 해야 전화번호가 있는 사람만 담아간다.
-                alSearch.add(lvItemSearch);
-            }
+        listViewItemSearch.setTvName("릴리리");
+        listViewItemSearch.setTvPhone("0168887777");
+        alReturnList.add(listViewItemSearch);
 
-            phoneCursor.close();
+        listViewItemSearch = new ListViewItemSearch();
 
-        }// end while
+        listViewItemSearch.setTvName("지리구요");
+        listViewItemSearch.setTvPhone("01083832562");
+        alReturnList.add(listViewItemSearch);
 
-        c.close();
+        listViewItemSearch = new ListViewItemSearch();
+
+        listViewItemSearch.setTvName("오졌구요");
+        listViewItemSearch.setTvPhone("01099991111");
+        alReturnList.add(listViewItemSearch);
+
+        Collections.sort(alReturnList ,new NameDescCompareSearch());
+
+        alSearch = alReturnList;
+        alSearchResult = alSearch;
+
+        Log.v("어디냐1","ㅇ");
+        for(ListViewItemSearch a : alSearch) {
+            Log.v(a.getTvName(), a.getTvPhone());
+        }
+
+
+        // 예시용 목록 2 지킴이
+        ListViewItemGuarders listViewItemGuarders = new ListViewItemGuarders();
+
+        listViewItemGuarders.setTvName("지리구요");
+        listViewItemGuarders.setTvPhone("01083832562");
+        listViewItemGuarders.setUse(true);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+
+        listViewItemGuarders.setTvName("오졌구요");
+        listViewItemGuarders.setTvPhone("01099991111");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        // 지킴이 어댑터 갱신
+
+        guarderAdapterUpdate();
+        searchAdapterUpdate(searchUpdate(alSearch, alGuarders));
+        //searchUpdate(alSearch, alGuarders);
 
     }
 
@@ -147,30 +218,10 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         lvItemGuarders.setTvName(name);
         lvItemGuarders.setTvPhone(phone);
         lvItemGuarders.setUse(false);
-        lvItemGuarders.setSort(1);
-
-/*
-        boolean sortCheck = false;
-
-
-        for(ListViewItemGuarders item : alGuarders) {
-            if(item.getTvName().compareTo(name) < 0) {
-                lvItemGuarders.setTvName(name);
-                lvItemGuarders(item. + 1);
-                sortCheck = true;
-            }
-        }
-
-        if(sortCheck == false) {
-
-        }*/
-
 
         alGuarders.add(lvItemGuarders);
 
-        sortGuarders = lvItemGuarders;
-
-        Collections.sort(alGuarders ,new NameDescCompare());
+        Collections.sort(alGuarders ,new NameDescCompareGuarders());
         // 역방향 시 Collections.reverse 로 해주면 된다
     }
 
@@ -179,13 +230,41 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
      * @author falbb
      *
      */
-    private class NameDescCompare implements Comparator<ListViewItemGuarders> {
+    private class NameDescCompareGuarders implements Comparator<ListViewItemGuarders> {
         @Override
         public int compare(ListViewItemGuarders arg0, ListViewItemGuarders arg1) {
             return  arg0.getTvName().compareTo(arg1.getTvName());
         }
     }
 
+    private class NameDescCompareSearch implements Comparator<ListViewItemSearch> {
+        @Override
+        public int compare(ListViewItemSearch arg0, ListViewItemSearch arg1) {
+            return  arg0.getTvName().compareTo(arg1.getTvName());
+        }
+    }
+
+    /*
+*  date     : 2017.11.20
+*  author   : Kim Jong-ha
+*  title    : guarderSearchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders 메소드 생성
+*  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
+*  return   : ArrayList<ListViewItemSearch> 형태
+* */
+    private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> searchs, ArrayList<ListViewItemGuarders> guarders) {
+
+        Log.v("사이즈", String.valueOf(searchs.size()));
+
+        for( int i = searchs.size() - 1 ;  i >= 0 ; i -- ) {
+            for( int j = 0 ; j < guarders.size() ; j++ ) {
+                if(  searchs.get(i).getTvPhone().equals(guarders.get(j).getTvPhone())){
+                    searchs.remove(i);
+                    break;
+                }
+            }
+        }
+        return searchs;
+    }
 
 
     // 회원 리스트에서 등록 버튼을 눌렀을 시
@@ -198,17 +277,28 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     @Override
     public void onSearchListBtnClick(int position) {
 
-        // 클릭한 값의 name과 phone를 ArrayList<ListViewItemGuarders> 에 추가한다.
-        guarderAdd(alSearch.get(position).getTvName(), alSearch.get(position).getTvPhone());
+        // 등록을 클릭한 해당 postion의 리스트의 아이템(name, phone)을 가져온다.
+        String name = alSearchResult.get(position).getTvName();
+        String phone = alSearchResult.get(position).getTvPhone();
 
+        // 지킴이 목록에 추가
+        guarderAdd(name, phone);
+
+        // 지킴이 어댑터 갱신
         guarderAdapterUpdate();
 
-        // 클릭한 position의 값을 ArrayList<ListViewItemSearch> 에서 지운다
-        Toast.makeText(this, alSearch.get(position).getTvName() + alSearch.get(position).getTvPhone() + "지킴이 설정", Toast.LENGTH_SHORT).show();
+        // 추가된 것을 회원 전체 목록에서 삭제한다.
+        for(ListViewItemSearch a : alSearch) {
+            if(a.getTvPhone().equals(phone)){
+                alSearch.remove(a);
+                /*alSearchResult.remove(position); <- 이게 왜 alSearch까지 지우는지 모르겠음
+                searchAdapterUpdate(alSearchResult);*/
+                break;
+            }
+        }
 
-        alSearch.remove(position);
-
-        searchAdapterUpdate();
+        // 회원 어댑터 갱신
+        searchAdapterUpdate(alSearch);
     }
 
 
@@ -255,33 +345,11 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         guarderAdapterUpdate();
     }
 
-     /*
-    *  date     : 2017.11.20
-    *  author   : Kim Jong-ha
-    *  title    : guarderSearchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders 메소드 생성
-    *  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
-    *  return   : ArrayList<ListViewItemSearch> 형태
-    * */
-    private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders) {
-
-        for( int i = 0 ; i < alSearch.size() ; i ++ ) {
-            for( int j = 0 ; j < alGuarders.size() ; i++ ) {
-                if( alSearch.get(i).getTvName().equals(alGuarders.get(j).getTvName())
-                    && alSearch.get(i).getTvPhone().equals(alGuarders.get(j).getTvPhone())){
-                    alSearch.remove(i);
-                    break;
-                }
-            }
-        }
-
-        return alSearch;
-    }
-
     // 회원 목록의 어댑터 갱신
-    private void searchAdapterUpdate() {
+    private void searchAdapterUpdate(ArrayList<ListViewItemSearch> list) {
         // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
         //lvAdapterSearch = new ListViewAdapterSearch(this, R.layout.listview_item_search, alSearch, this);
-        lvAdapterSearch = new ListViewAdapterSearch(this, R.layout.listview_item_search, alSearch, this);
+        lvAdapterSearch = new ListViewAdapterSearch(this, R.layout.listview_item_search, list, this);
         // 변경된 Adapter 적용
         lvAdapterSearch.notifyDataSetChanged();
         // 리스트뷰 참조 및 Adapter 달기
@@ -298,79 +366,11 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         lvGuarders.setAdapter(lvAdapterGuarders);
     }
 
-    // 주소록 읽기 권한 체크하는 부분
+    private void getGuarderVO() {
 
-    /*
-    *  date     : 2017.11.12
-    *  author   : Kim Jong-ha
-    *  title    : checkPermission 메소드 생성
-    *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
-    *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
-    * */
-    private void checkPermission()
-    {
-        Log.v(TAG, "checkPermission들어옴");
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            //퍼미션이 없는 경우
-            //최초로 퍼미션을 요청하는 것인지 사용자가 취소되었던것을 다시 요청하려는건지 체크
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-                //퍼미션을 재요청 하는 경우 - 왜 이 퍼미션이 필요한지등을 대화창에 넣어서 사용자를 설득할 수 있다.
-                //대화상자에 '다시 묻지 않기' 체크박스가 자동으로 추가된다.
-                Log.v(TAG, "퍼미션을 재요청 합니다.");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-
-            } else {
-                //처음 퍼미션을 요청하는 경우
-                Log.v(TAG, "첫 퍼미션 요청입니다.");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-            }
-        } else {
-            //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
-            checkPermission = true;
-            listSetting();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // 당겨서 새로고침
-                }
-            }, 2000);
-            searchAdapterUpdate();
-            guarderAdapterUpdate();
-            Log.v(TAG, "Permission is granted");
-            Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
-        }
-        Log.v(TAG, "checkPermission나감");
     }
 
-    /*
-    *  date     : 2017.11.12
-    *  author   : Kim Jong-ha
-    *  title    : onRequestPermissionResult 메소드 불러옴
-    *  comment  : 권한 사용or거부 요청창을 띄워 사용자가 권한을 동의, 비동의 때의 Perform을 둠
-    * */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1: //
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //사용자가 동의했을때
-                    Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
-                    checkPermission = true;
-                    checkPermission();
-                    //listSetting();
-                } else {
-                    //사용자가 거부 했을때
-                    Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
+    private void setGuarderVO() {
 
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 2000);*/
-                }
-                return;
-        }
     }
 }

@@ -52,47 +52,49 @@
             android:orientation="vertical"
             android:background="@color/colorWhite">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="검색 결과"
-                    android:textSize="20dp" />
-
-                <ListView
-                    android:id="@+id/lvSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"></ListView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:layout_weight="1">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="@color/colorBackground">
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="검색 결과"
+                        android:textSize="20dp" />
+
+                    <ListView
+                        android:id="@+id/lvSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"></ListView>
                 </LinearLayout>
-                <TextView
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="지킴이 목록"
-                    android:textSize="20dp"/>
-                <ListView
-                    android:id="@+id/lvGuarders"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"></ListView>
-            </LinearLayout>
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="@color/colorBackground">
+
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="지킴이 목록"
+                        android:textSize="20dp"/>
+                    <ListView
+                        android:id="@+id/lvGuarders"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </ListView>
+                </LinearLayout>
         </LinearLayout>
      </LinearLayout>
 </LinearLayout>
