@@ -1,5 +1,6 @@
 package home.safe.com.trans;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -104,7 +105,6 @@ public class ActivityTransListPopup extends AppCompatActivity implements View.On
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             TransItemView itemView = new TransItemView(getApplicationContext());
-
 
             TestListViewDTO dto = items.get(i);
 

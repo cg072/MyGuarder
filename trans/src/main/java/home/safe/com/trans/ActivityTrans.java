@@ -24,9 +24,14 @@ import java.util.ArrayList;
     확인버튼 클릭 -> 메인액티비티로 이동
     */
 
-    /*해야할 일 : 1. 이동수단 선택 된것과, 선택 한것 텍스트뷰에 표시해주기!!!
-                2. 확인 버튼 클릭시, 부가정보입력 된 텍스트 저장하기!!!
-                3. 메모위치 영역 표시해주기!!!
+    /*해야할 일 :
+                1. 스위치문 고치기!!!!!
+                2. 이동수단 내역 보기와 등록하는 영역을 구분해주기!!!
+                3. 에디트텍스트 영역 늘려주고 구분선 지어주기
+                4. 이동수단 클릭시 팝업메뉴 키우기 혹은 컨텍스트메뉴로 변경하기!!!!
+                5. 확인 버튼 클릭시, 부가정보입력 된 텍스트 저장하기!!!
+                6. 내역보기 클릭시 디비에서 정보 받아오기!!!!
+                7. 확인버튼 클릭시 디비에 저장 하기!!!!!
                 */
 
 public class ActivityTrans extends AppCompatActivity implements View.OnClickListener {
@@ -120,8 +125,8 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
                     return false;
                 }
             });
-            popupTransSelect.show();
 
+            popupTransSelect.show();
 
         }
 
