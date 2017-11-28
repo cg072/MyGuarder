@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 /*
@@ -27,14 +29,22 @@ import java.util.HashMap;
 * 게시판을 위한 확장형 리스트뷰 메인 액티비티
 * */
 
+/*
+* 해야할일 :
+* 1. 디자인 변경!!!
+* 2. 디비에서 정보 받아오기!!!
+* */
+
 
 public class ActivityNotice extends AppCompatActivity implements View.OnClickListener{
 
     TextView tvSearSelect;
-    EditText edSearText;
+    EditText etSearText;
     ImageButton btnSearButton;
     ExpandableListView elvNotice;
     int stat;
+    ArrayList<TestDtoNotice> plusItem = new ArrayList<>();
+    ArrayList<TestDtoNotice> resultitem = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +55,21 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
         //검색 분류를 위한 버튼을 로딩
         tvSearSelect = (TextView)findViewById(R.id.tvSearSelect);
 
+        //검색어를 입력하는 EditText를 로딩
+        etSearText = (EditText)findViewById(R.id.etSearText);
+
+        //검색을 위한 이미지버튼을 로딩
+        btnSearButton = (ImageButton)findViewById(R.id.btnSearButton);
+
         //클릭이벤트리스너
         tvSearSelect.setOnClickListener(this);
+        btnSearButton.setOnClickListener(this);
 
         //리스트뷰를 보여줄 영역의 아이디를 호출
         elvNotice = (ExpandableListView)findViewById(R.id.elvNotice);
 
         //어댑터 생성
-        AdapterNotice1 adapter = new AdapterNotice1();
+        AdapterNotice adapter = new AdapterNotice();
 
         //어댑터에 데이터를 넣어줌
         Log.v("됩니까", "돼요?");
@@ -63,12 +80,12 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
         adapter.addItem(new TestDtoNotice("555", "iii", "jjj"));
 
 
-        //어댑터 세팅
+        //어댑터 전송
         elvNotice.setAdapter(adapter);
 
-
-
     }
+
+
 
     @Override
     public void onClick(View view) {
@@ -106,9 +123,10 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
 
         //검색아이콘 클릭시
         if(view == btnSearButton){
-            if(stat == 0){
 
-            }
+
+            Toast.makeText(getApplicationContext(), "클릭됨요", Toast.LENGTH_LONG).show();
+
         }
     }
 
@@ -120,10 +138,9 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
     * */
 
 
-    public class AdapterNotice1 extends BaseExpandableListAdapter {
+    public class AdapterNotice extends BaseExpandableListAdapter {
 
         ArrayList<TestDtoNotice> items = new ArrayList<TestDtoNotice>();
-        ArrayList<String> titlekey = new ArrayList<String>();
         HashMap<TestDtoNotice, String> hash = new HashMap<>();
 
         //메인액티비티에서 보낸 정보를 어레이리스트에 추가
@@ -132,9 +149,6 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
             Log.v("ㅇㅇ?", "ㅇㅇ?");
 
             items.add(test);
-
-            Log.v(test.toString(), "ㅇㅇ?");
-
 
             hash.put(test, test.getTestcontents());
 
@@ -180,13 +194,7 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
         @Override
         public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
 
-
-            Log.v("어딥니꽈?", "어디죠?");
-
-
             ListViewItemTitle itemTitle = new ListViewItemTitle(getApplicationContext());
-
-            Log.v("됩니까?", "돼요?");
 
             TestDtoNotice dto = items.get(i);
 
