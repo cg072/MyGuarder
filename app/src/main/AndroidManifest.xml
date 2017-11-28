@@ -39,8 +39,8 @@
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
         <activity
             android:name=".ActivityTest"
-            android:label="@string/title_activity_test"
-           ></activity>
+            android:label="@string/title_activity_test" />
+        <activity android:name=".ActivitySetting"></activity>
     </application>
 
 </manifest>

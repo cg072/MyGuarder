@@ -3,6 +3,7 @@ package home.safe.com.myguarder;
 import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by hotki on 2017-11-01.
@@ -75,6 +79,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     // 시스템으로부터 현재시간(ms) 가져오기
     long first;
     long now;
+
+    ArrayList locationList = new ArrayList<Location>();
 
     //db
     private SQLiteOpenHelper sqLiteOpenHelper;
@@ -134,6 +140,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         {
             case R.id.action_setting:
                 txt = "action_setting";
+                Intent intent = new Intent(this,ActivitySetting.class);
+                startActivity(intent);
                 break;
         }
 
@@ -176,7 +184,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         }
         else
         {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(25.3, 34.3), 16));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.566535, 126.97796919999996), 16));
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             Log.d("onMapReady","null");
         }
@@ -368,6 +376,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         //처음 시작 라인
         startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
+        //위치 저장
+        locationList.add(mCurrentLocation);
+
         printThisLocation();
     }
 
@@ -386,13 +397,19 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         Log.d("TimeMillisNow",String.valueOf(now));
 
+        printLocationList();
+
         if(now - first>10000 )
         {
             Log.d("TimeMillis", "now - first");
             first = now;
 
-            //이동경로 그리기
-            drawPolyline();
+            if(true) {
+                //이동경로 그리기
+                drawPolyline();
+            }
+            //여기서 이동경로 없어진 부분 출력할 if문 작성
+
 //            showCamera();
         }
     }
@@ -411,4 +428,29 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         startPL = endPL;
     }
+
+    public void printLocationList()
+    {
+        for(int i = 0;i<locationList.size();i++)
+        {
+            Log.d("count",""+i);
+            Log.d("printLocation ",""+((Location)locationList.get(i)).getLatitude());
+            Log.d("printLocation ",""+((Location)locationList.get(i)).getLongitude());
+        }
+    }
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text
+     * 1. 마커
+     * 2. 이동경로 저장 -
+     * 3. 카메라 이동 모션 -
+     * 4. 이동경로 뿌리기 -
+     * 5. 지킴이 화면에 피지킴이 위치 뿌리기 5분
+     * 6. 설정 화면 -
+     * 7. gps 중간에 키면 오류 -
+    * @since 2017-11-28 오후 4:10
+    **/
 }
