@@ -164,25 +164,31 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
-
-
         if(mCameraPosition !=  null)
         {
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+            Log.d("onMapReady","mCameraPosition not null");
         }
         else if(mCurrentLocation != null)
         {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(mCurrentLocation.getLatitude(),
-                    mCurrentLocation.getLongitude()), 16));
+            showCamera();
+            Log.d("onMapReady","mCurrentLocation not null");
         }
         else
         {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(25.3, 34.3), 16));
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            Log.d("onMapReady","null");
         }
 
         updateLocationUI();
+    }
+
+    public void showCamera()
+    {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(mCurrentLocation.getLatitude(),
+                        mCurrentLocation.getLongitude()), 16));
     }
 
     /**
@@ -243,9 +249,11 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             Log.d("getDeviceLocation","out!!!");
             mLocationPermissionGranted = true;
 
-            //현재위치 갱신
+            //현재위치 정보 세팅
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+            updateLocationUI();
         }
     }
 
@@ -326,12 +334,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 **/
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Log.d("onConnected", " Connected");
+
         //권한
         getDeviceLocation();
+
         //콘넥트후 프레그먼트 생성
         initFragment();
-        //처음 시작 라인
-        startPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
     }
 
     @Override
@@ -355,6 +364,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
+
+        //처음 시작 라인
+        startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+
         printThisLocation();
     }
 
@@ -378,7 +391,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             Log.d("TimeMillis", "now - first");
             first = now;
 
+            //이동경로 그리기
             drawPolyline();
+//            showCamera();
         }
     }
 

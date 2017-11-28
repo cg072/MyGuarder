@@ -37,8 +37,6 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         buildGoogleApiClient();
         mGoogleApiClient.connect();
 
-//        initFragment();
-
 
         btnCivilianLog.setOnClickListener(this);
         btnEmergency.setOnClickListener(this);
