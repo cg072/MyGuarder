@@ -89,23 +89,23 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
 
         Intent intent = null;
 
-        if(view.getResources() == btnMain.getResources())
+        if(view.getId() == btnMain.getId())
         {
             intent = new Intent(this, ActivityCivilian.class);
         }
-        else if(view.getResources() == btnGuarder.getResources())
+        else if(view.getId() == btnGuarder.getId())
+        {
+            intent = new Intent(this, ActivitySetting.class);
+        }
+        else if(view.getId() == btnMember.getId())
         {
             intent = new Intent(this, ActivityCivilian.class);
         }
-        else if(view.getResources() == btnMember.getResources())
+        else if(view.getId() == btnNotice.getId())
         {
             intent = new Intent(this, ActivityCivilian.class);
         }
-        else if(view.getResources() == btnNotice.getResources())
-        {
-            intent = new Intent(this, ActivityCivilian.class);
-        }
-        else if(view.getResources() == btnTrans.getResources())
+        else if(view.getId() == btnTrans.getId())
         {
             intent = new Intent(this, ActivityCivilian.class);
         }

@@ -2,6 +2,7 @@ package home.safe.com.myguarder;
 
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
@@ -49,9 +51,16 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("onRestart","in");
+    }
+
+    @Override
     protected void onResume() {
         if(mGoogleApiClient.isConnected())
         {
+            Log.d("onResume","isConnected");
             getDeviceLocation();
         }
         super.onResume();
@@ -66,6 +75,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+        outFlag = true;
+        line.remove();
     }
 
     @Override

@@ -81,6 +81,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     long now;
 
     ArrayList locationList = new ArrayList<Location>();
+    public boolean outFlag = false;
 
     //db
     private SQLiteOpenHelper sqLiteOpenHelper;
@@ -148,6 +149,15 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         Toast.makeText(this,txt,Toast.LENGTH_SHORT).show();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(googleMap != null) {
+            outState.putParcelable(CAMERA_POSITION, googleMap.getCameraPosition());
+            outState.putParcelable(LOCATION, mCurrentLocation);
+            super.onSaveInstanceState(outState);
+        }
     }
 
     /**
@@ -261,6 +271,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
+            //처음 시작 라인
+            startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            Log.d("startPL","!!!!");
+            Log.d("getLatitude ",""+mCurrentLocation.getLatitude());
+            Log.d("getLongitude ",""+mCurrentLocation.getLongitude());
+
             updateLocationUI();
         }
     }
@@ -373,9 +389,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
 
-        //처음 시작 라인
-        startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-
         //위치 저장
         locationList.add(mCurrentLocation);
 
@@ -391,13 +404,31 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     **/
     public void printThisLocation()
     {
-        Log.d("onMapReady",""+mCurrentLocation.getLatitude()+" , "+mCurrentLocation.getLongitude());
+        Log.d("printThisLocation",""+mCurrentLocation.getLatitude()+" , "+mCurrentLocation.getLongitude());
 
         now = System.currentTimeMillis();
 
         Log.d("TimeMillisNow",String.valueOf(now));
 
-        printLocationList();
+        //printLocationList();
+
+
+        /**
+        *
+        * @author 경창현
+        * @version 1.0.0
+        * @text 폴리라인이 그려지지 않음
+         * 리스트 저장은 됨
+         * 이유를 모르겠다
+        * @since 2017-11-29 오후 9:14
+        **/
+        if(outFlag)
+        {
+            Log.d("reDrawPolyline","outFlag - "+outFlag);
+            reDrawPolyline();
+            outFlag = false;
+        }
+
 
         if(now - first>10000 )
         {
@@ -406,27 +437,49 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
             if(true) {
                 //이동경로 그리기
-                drawPolyline();
-            }
-            //여기서 이동경로 없어진 부분 출력할 if문 작성
+                endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
+                drawPolyline(startPL,endPL);
+
+                startPL = endPL;
+            }
 //            showCamera();
         }
     }
 
-    public void drawPolyline()
+    public void drawPolyline(LatLng start, LatLng end)
     {
-        endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
-
-        PolylineOptions polylineOptions = new PolylineOptions().add(startPL).add(endPL).width(15).color(Color.RED).geodesic(true);
+        PolylineOptions polylineOptions = new PolylineOptions().add(start).add(end).width(15).color(Color.RED).geodesic(true);
         line = googleMap.addPolyline(polylineOptions);
 
-        MarkerOptions markerOptions = new MarkerOptions().position(startPL).draggable(true);
+        MarkerOptions markerOptions = new MarkerOptions().position(start).draggable(true);
         //icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_point)
         point = googleMap.addMarker(markerOptions);
+    }
+
+    public void reDrawPolyline()
+    {
+
+        Location locationS;
+        Location locationE;
+
+        Log.d("reDrawPolyline"," "+locationList.size());
 
 
-        startPL = endPL;
+        //폴로라인 다시 그리기
+        for(int i = 0;i<locationList.size()-1;i++)
+        {
+            Log.d("reDrawPolyline", "for "+i);
+            locationS = ((Location)locationList.get(i));
+            locationE = ((Location)locationList.get(i+1));
+            Log.d("reDrawPolyline", "locationS"+i+" "+locationS.getLatitude());
+            Log.d("reDrawPolyline", "locationS"+i+" "+locationS.getLongitude());
+            Log.d("reDrawPolyline", "locationE"+i+" "+locationE.getLatitude());
+            Log.d("reDrawPolyline", "locationE"+i+" "+locationE.getLongitude());
+            LatLng a = new LatLng(locationS.getLatitude(),locationS.getLongitude());
+            LatLng b = new LatLng(locationE.getLatitude(),locationE.getLongitude());
+            drawPolyline(a ,b);
+        }
     }
 
     public void printLocationList()
