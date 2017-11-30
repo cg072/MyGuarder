@@ -75,8 +75,11 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-        outFlag = true;
-        line.remove();
+
+        if(null != line) {
+            outFlag = true;
+            line.remove();
+        }
     }
 
     @Override

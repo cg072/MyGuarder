@@ -204,9 +204,16 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
     public void showCamera()
     {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+        //이동
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                new LatLng(mCurrentLocation.getLatitude(),
+//                        mCurrentLocation.getLongitude()), 16));
+
+        //이동 + 모션
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(mCurrentLocation.getLatitude(),
                         mCurrentLocation.getLongitude()), 16));
+
     }
 
     /**
@@ -413,21 +420,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         //printLocationList();
 
 
-        /**
-        *
-        * @author 경창현
-        * @version 1.0.0
-        * @text 폴리라인이 그려지지 않음
-         * 리스트 저장은 됨
-         * 이유를 모르겠다
-        * @since 2017-11-29 오후 9:14
-        **/
-        if(outFlag)
-        {
-            Log.d("reDrawPolyline","outFlag - "+outFlag);
-            reDrawPolyline();
-            outFlag = false;
-        }
+
 
 
         if(now - first>10000 )
@@ -436,6 +429,24 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             first = now;
 
             if(true) {
+                /**
+                *
+                * @author 경창현
+                * @version 1.0.0
+                * @text 저장된 폴로라인 그리기
+                 * 시간차를 두니 그리기 완료
+                 * - 문제사항 : 1. 이상한 곳에 마커가 보였다 없어졌다 한다.
+                 *              2. 불러온 좌표가 다 표시 되지 않는것 같다.
+                * @since 2017-11-30 오후 1:42
+                **/
+                if(outFlag)
+                {
+                    Log.d("reDrawPolyline","outFlag - "+outFlag);
+                    reDrawPolyline();
+                    outFlag = false;
+                }
+
+
                 //이동경로 그리기
                 endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
@@ -443,10 +454,19 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
                 startPL = endPL;
             }
-//            showCamera();
+            showCamera();
         }
     }
 
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text Polyline 그리기
+     * param : ( LatLng, LatLng)
+     * return : void
+    * @since 2017-11-30 오후 2:25
+    **/
     public void drawPolyline(LatLng start, LatLng end)
     {
         PolylineOptions polylineOptions = new PolylineOptions().add(start).add(end).width(15).color(Color.RED).geodesic(true);
@@ -498,11 +518,11 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     * @version 1.0.0
     * @text
      * 1. 마커
-     * 2. 이동경로 저장 -
-     * 3. 카메라 이동 모션 -
-     * 4. 이동경로 뿌리기 -
+     * 2. 이동경로 저장 ok
+     * 3. 카메라 이동 모션 ok
+     * 4. 이동경로 뿌리기 part ok
      * 5. 지킴이 화면에 피지킴이 위치 뿌리기 5분
-     * 6. 설정 화면 -
+     * 6. 설정 화면 - ok - 전송주기 받아오기 ok - 적용 아직
      * 7. gps 중간에 키면 오류 -
     * @since 2017-11-28 오후 4:10
     **/

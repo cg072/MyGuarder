@@ -1,15 +1,32 @@
 package home.safe.com.myguarder;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+/**
+*
+* @author 경창현
+* @version 1.0.0
+* @text Setting
+ * - 전송주기 : 주기 받아서 오는것까지
+ * - 지킴이관리 : 버튼 눌림
+* @since 2017-11-30 오후 4:58
+**/
 public class ActivitySetting extends AppCompatActivity implements View.OnClickListener{
 
     Button btnCycleSetting;
     Button btnGuarderSetting;
+
+    int cycleNum = 5;
+
+    //intent PopupCycle key code
+    private final static int MY_REQUEST_CODE = 1111;
+    private final static String DATA_NAME = "cycle";
+    private final static int DEFAULT_NUMBER = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +45,8 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
         switch (view.getId())
         {
             case R.id.btnCycleSetting:
+                Intent intent = new Intent(this, ActivityPopupCycle.class);
+                startActivityForResult(intent,MY_REQUEST_CODE);
                 Toast.makeText(this,"Cycle",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnGuarderSetting:
@@ -43,6 +62,20 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btnSignOutSetting:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK)
+        {
+            if(requestCode == MY_REQUEST_CODE)
+            {
+                cycleNum = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER);
+                btnCycleSetting.setText("전송주기 - "+cycleNum+"분");
+            }
         }
     }
 }
