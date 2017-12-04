@@ -1,22 +1,27 @@
 package home.safe.com.myguarder;
 
 
+import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 
 
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
 
     Button btnCivilianLog;
     Button btnEmergency;
+
+    TextView tvTransNameThisCivilian;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
         btnEmergency = (Button)findViewById(R.id.btnEmergency);
+        tvTransNameThisCivilian = (TextView)findViewById(R.id.tvTransNameThisCivilian);
 
         buildGoogleApiClient();
         mGoogleApiClient.connect();
@@ -43,6 +49,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         btnCivilianLog.setOnClickListener(this);
         btnEmergency.setOnClickListener(this);
     }
+
+
 
     @Override
     protected void onStart() {
@@ -58,13 +66,17 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
     @Override
     protected void onResume() {
+
+        loadData();
+        tvTransNameThisCivilian.setText(""+cycleCivilian);
         if(mGoogleApiClient.isConnected())
         {
             Log.d("onResume","isConnected");
-            getDeviceLocation();
+            getPermissions();
         }
         super.onResume();
         Log.d("onResume","in");
+//        super.reDrawPolyline();
     }
 
     @Override
@@ -77,7 +89,6 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         }
 
         if(null != line) {
-            outFlag = true;
             line.remove();
         }
     }
@@ -107,6 +118,42 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
             Toast.makeText(this,"긴급버튼",Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK)
+        {
+            if(requestCode == MY_REQUEST_CODE)
+            {
+                cycleCivilian = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER)*60000;
+                Log.d("주기 : ", "" +cycleCivilian);
+                saveData();
+            }
+        }
+    }
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text 외부에 데이터 저장
+    * @since 2017-12-03 오후 4:29
+    **/
+    private void saveData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("cycleCivilian",cycleCivilian);
+        editor.commit();
+    }
+
+    private void loadData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        cycleCivilian = preferences.getInt("cycleCivilian", 10000);
     }
 
 }

@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -40,7 +38,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by hotki on 2017-11-01.
@@ -76,12 +73,20 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     //marker
     Marker point;
 
+    //intent PopupCycle key code
+    public final static int MY_REQUEST_CODE = 1111;
+    public final static String DATA_NAME = "cycle";
+    public final static int DEFAULT_NUMBER = 5;
+
+    public int cycleCivilian = 10000;
+    public int cycleGuarder = 10000;
+
     // 시스템으로부터 현재시간(ms) 가져오기
     long first;
     long now;
 
     ArrayList locationList = new ArrayList<Location>();
-    public boolean outFlag = false;
+    public boolean mapDrawFlag = false;
 
     //db
     private SQLiteOpenHelper sqLiteOpenHelper;
@@ -124,6 +129,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         return true;
     }
 
+
     /**
      *
      * @author 경창현
@@ -142,7 +148,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             case R.id.action_setting:
                 txt = "action_setting";
                 Intent intent = new Intent(this,ActivitySetting.class);
-                startActivity(intent);
+                startActivityForResult(intent,MY_REQUEST_CODE);
                 break;
         }
 
@@ -150,6 +156,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -200,6 +207,21 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         }
 
         updateLocationUI();
+
+        /**
+         *
+         * @author 경창현
+         * @version 1.0.0
+         * @text 저장된 폴로라인 그리기
+         * 시간차를 두니 그리기 완료
+         * - 문제사항 : 1. 이상한 곳에 마커가 보였다 없어졌다 한다.
+         *              2. 불러온 좌표가 다 표시 되지 않는것 같다.
+         * - 원인 : 맵이 그려지기 전에 changeLocation이 실행이 여러번 됨 이후 onMapReady이 실행 후 맵이 그려진다.
+         * - 해결방법 : onMapReady에 위치를 불러오는 코드를 사용하여 해결
+         * @since 2017-11-30 오후 1:42
+         **/
+
+            reDrawPolyline();
     }
 
     public void showCamera()
@@ -244,16 +266,15 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     * @text 퍼미션 체크
     * @since 2017-11-22 오후 4:25
     **/
-    public void getDeviceLocation()
+    public void getPermissions()
     {
         // 퍼미션 체크
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED)
         {
             // 퍼미션 없음
-            Log.d("getDeviceLocation","in!!!");
+            Log.d("getPermissions","in!!!");
 
-//            Log.d("mCurrentLocation",mCurrentLocation.toString());
 
             //ActivityCompat.shouldShowRequestPermissionRationale 재요청인지 확인
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
@@ -271,18 +292,20 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         else
         {
             //퍼미션 있음
-            Log.d("getDeviceLocation","out!!!");
+            Log.d("getPermissions","out!!!");
             mLocationPermissionGranted = true;
 
             //현재위치 정보 세팅
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-            //처음 시작 라인
-            startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            Log.d("startPL","!!!!");
-            Log.d("getLatitude ",""+mCurrentLocation.getLatitude());
-            Log.d("getLongitude ",""+mCurrentLocation.getLongitude());
+            if(mCurrentLocation != null) {
+                //처음 시작 라인
+                startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                Log.d("startPL", "!!!!");
+                Log.d("getLatitude ", "" + mCurrentLocation.getLatitude());
+                Log.d("getLongitude ", "" + mCurrentLocation.getLongitude());
+            }
 
             updateLocationUI();
         }
@@ -368,7 +391,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         Log.d("onConnected", " Connected");
 
         //권한
-        getDeviceLocation();
+        getPermissions();
 
         //콘넥트후 프레그먼트 생성
         initFragment();
@@ -381,7 +404,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d("onConnectionFailed","Connect fail");
     }
 
 
@@ -396,10 +419,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
 
-        //위치 저장
-        locationList.add(mCurrentLocation);
+        if(null != googleMap) {
+            //위치 저장
+            locationList.add(mCurrentLocation);
 
-        printThisLocation();
+            printThisLocation();
+        }
     }
 
     /**
@@ -417,36 +442,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         Log.d("TimeMillisNow",String.valueOf(now));
 
-        //printLocationList();
-
-
-
-
-
-        if(now - first>10000 )
+        if(now - first > cycleCivilian )
         {
             Log.d("TimeMillis", "now - first");
             first = now;
 
             if(true) {
-                /**
-                *
-                * @author 경창현
-                * @version 1.0.0
-                * @text 저장된 폴로라인 그리기
-                 * 시간차를 두니 그리기 완료
-                 * - 문제사항 : 1. 이상한 곳에 마커가 보였다 없어졌다 한다.
-                 *              2. 불러온 좌표가 다 표시 되지 않는것 같다.
-                * @since 2017-11-30 오후 1:42
-                **/
-                if(outFlag)
-                {
-                    Log.d("reDrawPolyline","outFlag - "+outFlag);
-                    reDrawPolyline();
-                    outFlag = false;
-                }
-
-
                 //이동경로 그리기
                 endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
@@ -454,6 +455,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
                 startPL = endPL;
             }
+
             showCamera();
         }
     }
@@ -502,15 +504,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    public void printLocationList()
-    {
-        for(int i = 0;i<locationList.size();i++)
-        {
-            Log.d("count",""+i);
-            Log.d("printLocation ",""+((Location)locationList.get(i)).getLatitude());
-            Log.d("printLocation ",""+((Location)locationList.get(i)).getLongitude());
-        }
-    }
 
     /**
     *
@@ -522,8 +515,19 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 3. 카메라 이동 모션 ok
      * 4. 이동경로 뿌리기 part ok
      * 5. 지킴이 화면에 피지킴이 위치 뿌리기 5분
-     * 6. 설정 화면 - ok - 전송주기 받아오기 ok - 적용 아직
-     * 7. gps 중간에 키면 오류 -
+     * 6. 설정 화면 - ok - 전송주기 받아오기 ok - 적용 아직 activi
+     * 7. gps 중간에 키면 오류 - ok t  null 체크
     * @since 2017-11-28 오후 4:10
+    **/
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text
+     * 1. 마커 개수찾기
+     * 2. 저장된 위치정보 출력 고치지 -  리줌이 가장 이상적 ok
+     * 3. 설정화면 주기부분 -  activity를 통해 ok -> 데이터 저장까지 완료
+    * @since 2017-12-01 오후 3:34
     **/
 }

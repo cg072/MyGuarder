@@ -16,12 +16,19 @@
     -->
 
   <TextView
+      android:id="@+id/tvPopupText"
       android:layout_width="match_parent"
       android:layout_height="30dp"
       android:gravity="center_horizontal"
       android:background="@drawable/border"
       android:text="지난 위치"
       android:textSize="20dp"/>
+    <ListView
+        android:id="@+id/lvPopupList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvPopupText"
+        android:layout_above="@+id/btnPopupOk"/>
     <Button
         android:id="@+id/btnPopupOk"
         android:layout_width="match_parent"

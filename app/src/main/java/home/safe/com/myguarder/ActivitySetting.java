@@ -3,6 +3,7 @@ package home.safe.com.myguarder;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        Log.d("Setting","onCreate()");
 
         btnCycleSetting = (Button)findViewById(R.id.btnCycleSetting);
         btnGuarderSetting = (Button)findViewById(R.id.btnGuarderSetting);
@@ -77,5 +79,39 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 btnCycleSetting.setText("전송주기 - "+cycleNum+"분");
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("Setting","onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Setting","onResume()");
+
+        Intent intentData = new Intent();
+        intentData.putExtra(DATA_NAME, cycleNum);
+        setResult(RESULT_OK, intentData);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Setting","onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Setting","onStop()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Setting","onDestroy()");
     }
 }
