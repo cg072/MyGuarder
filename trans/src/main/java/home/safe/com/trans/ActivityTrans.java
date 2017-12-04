@@ -1,6 +1,10 @@
 package home.safe.com.trans;
 
+import android.app.Fragment;
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -10,9 +14,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
     /*2017. 11. 03
@@ -25,7 +33,7 @@ import java.util.ArrayList;
     */
 
     /*해야할 일 :
-                1. 스위치문 고치기!!!!!
+                1. 스위치문 고치기!!!!! xxxxxx
                 2. 이동수단 내역 보기와 등록하는 영역을 구분해주기!!!
                 3. 에디트텍스트 영역 늘려주고 구분선 지어주기
                 4. 이동수단 클릭시 팝업메뉴 키우기 혹은 컨텍스트메뉴로 변경하기!!!!
@@ -34,7 +42,7 @@ import java.util.ArrayList;
                 7. 확인버튼 클릭시 디비에 저장 하기!!!!!
                 */
 
-public class ActivityTrans extends AppCompatActivity implements View.OnClickListener {
+/*public class ActivityTrans extends AppCompatActivity implements View.OnClickListener {
 
     //리스트, 선택 영역의 텍스트뷰 선언
     TextView transList;
@@ -96,30 +104,33 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
             popupTransSelect.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
+
+                    switch (item.getItemId()){
                         case R.id.transWalk:
                             Toast.makeText(getApplicationContext(), "도보", Toast.LENGTH_LONG).show();
                             transSelect.setText("도보");
-                    }
-                    switch (item.getItemId()) {
+                        break;
+
                         case R.id.transBus:
                             Toast.makeText(getApplicationContext(), "버스", Toast.LENGTH_LONG).show();
                             transSelect.setText("버스");
-                    }
-                    switch (item.getItemId()) {
+                        break;
+
                         case R.id.transTaxi:
                             Toast.makeText(getApplicationContext(), "택시", Toast.LENGTH_LONG).show();
                             transSelect.setText("택시");
-                    }
-                    switch (item.getItemId()) {
+                        break;
+
                         case R.id.transSub:
                             Toast.makeText(getApplicationContext(), "지하철", Toast.LENGTH_LONG).show();
                             transSelect.setText("지하철");
-                    }
-                    switch (item.getItemId()) {
+                        break;
+
                         case R.id.transEtc:
                             Toast.makeText(getApplicationContext(), "기타", Toast.LENGTH_LONG).show();
                             transSelect.setText("기타");
+                        break;
+
                     }
 
                     return false;
@@ -133,5 +144,131 @@ public class ActivityTrans extends AppCompatActivity implements View.OnClickList
 
     }
 
+
+}*/
+
+public class ActivityTrans extends AppCompatActivity {
+
+    FragmentTransReg fragmentTransReg;
+    FragmentTransList fragmentTransList;
+    android.support.v7.widget.Toolbar toolbarTrans;
+    TabLayout tabbarTrans;
+    ViewPager vpagerTrans;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_trans);
+
+        tabbarTrans = (TabLayout)findViewById(R.id.tabbarTrans);
+        vpagerTrans = (ViewPager)findViewById(R.id.vpagerTrans);
+
+        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
+        vpagerTrans.setOffscreenPageLimit(1);
+
+        tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단등록"), 0 , true);
+        tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단내역"), 1);
+
+        tabbarTrans.addOnTabSelectedListener(tabSelectedListener);
+
+        vpagerTrans.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabbarTrans));
+
+
+
+
+
+
+        ////////////////////두번째코드시작////////////////////////
+
+       /* //툴바의 아이디를 찾아옴
+        toolbarTrans = (android.support.v7.widget.Toolbar)findViewById(R.id.toolbarTrans);
+        //액션바에 툴바를 세팅
+        setSupportActionBar(toolbarTrans);
+
+        //탭바의 아이디를 찾아옴
+        tabbarTrans = (TabLayout) findViewById(R.id.tabbarTrans);
+
+        //뷰페이저 아이디를 찾아옴
+        vpagerTrans = (ViewPager) findViewById(R.id.vpagerTrans);
+
+        vpagerTrans.setAdapter(new AdapterFragMoveTrans(getSupportFragmentManager()));
+        vpagerTrans.setOffscreenPageLimit(1);
+
+        //탭바 안에 제목을 붙여주고 페이지를 등록
+        tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단등록"), 0, true);
+        tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단내역"), 1);
+
+        Log.v("됩니까", "돼요?");
+
+        tabbarTrans.addOnTabSelectedListener(tabSelectedListener);
+
+        vpagerTrans.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabbarTrans));
+
+        //프래그먼트 인스턴스를 생성
+        fragmentTransReg = new FragmentTransReg();
+        fragmentTransList = new FragmentTransList();*/
+
+       ////////////////////두번째코드 끝///////////////////
+
+
+
+        ////////////////첫번째코드시작///////////////////
+
+
+
+        /*//첫번째 화면에 이동수단등록 프래그먼트를 띄움
+        getSupportFragmentManager().beginTransaction().add(R.id.transContainer, fragmentTransReg).commit();
+
+
+        tabbarTrans.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+
+                android.support.v4.app.Fragment selected = null;
+
+                if(position == 0){
+                    selected = fragmentTransReg;
+                }else if(position == 1){
+                    selected = fragmentTransList;
+                }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.transContainer, selected).commit();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });*/
+
+        //////////////////첫번째코드끝//////////////////////
+
+    }
+
+    TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+
+            vpagerTrans.setCurrentItem(tab.getPosition());
+
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
 
 }

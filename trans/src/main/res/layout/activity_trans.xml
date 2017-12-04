@@ -6,7 +6,101 @@
     android:layout_height="match_parent"
     tools:context="home.safe.com.trans.ActivityTrans">
 
-    <LinearLayout
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabbarTrans"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:elevation="1dp"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextColor="@color/colorPrimary">
+
+
+
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpagerTrans"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        >
+
+    </android.support.v4.view.ViewPager>
+
+
+
+
+
+
+
+
+
+    <!--!!!!!!!!!!두번째코드-->
+
+    <!--<android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarTrans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                android:elevation="1dp">
+
+            </android.support.v7.widget.Toolbar>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabbarTrans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:background="@android:color/background_light"
+                app:tabMode="fixed"
+                app:tabGravity="fill"
+                app:tabTextColor="@color/colorPrimary"
+                app:tabSelectedTextColor="@color/colorAccent">
+
+
+
+            </android.support.design.widget.TabLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vpagerTrans"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+            </android.support.v4.view.ViewPager>
+
+        </android.support.design.widget.AppBarLayout>
+
+        &lt;!&ndash;<FrameLayout
+            android:id="@+id/transContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        </FrameLayout>&ndash;&gt;
+
+    </android.support.design.widget.CoordinatorLayout>-->
+
+
+    <!--!!!!!!!!!처음코드!!!!!!!!!!!!-->
+
+    <!-- <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -40,7 +134,7 @@
             android:textSize="18dp" />
 
 
-        <!--에디트텍스트 영역에 보더주고, 텍스트 입력창 올리기-->
+        &lt;!&ndash;에디트텍스트 영역에 보더주고, 텍스트 입력창 올리기&ndash;&gt;
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +155,7 @@
         </LinearLayout>
 
 
-        <!--<EditText
+        &lt;!&ndash;<EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -69,7 +163,7 @@
             android:layout_weight="3"
             android:hint="이곳에 부가 정보를 입력하세요(200byte)"
             android:lines="5"
-            android:maxLength="200"/>-->
+            android:maxLength="200"/>&ndash;&gt;
 
 
 
@@ -86,5 +180,5 @@
             tools:layout_editor_absoluteX="8dp" />
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 </android.support.constraint.ConstraintLayout>
