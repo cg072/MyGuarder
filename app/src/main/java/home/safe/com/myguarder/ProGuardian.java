@@ -530,4 +530,16 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 3. 설정화면 주기부분 -  activity를 통해 ok -> 데이터 저장까지 완료
     * @since 2017-12-01 오후 3:34
     **/
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text
+     * 1. 마커 갯수
+     * 2. activityPopup 세부 코딩
+     * 3. 모드전환 -> 스위치 형식 비활성화 활성화 두개의 버튼  □■
+     * 4. 지킴이가 위치정보 불러와서 그리는 부분 만들기
+    * @since 2017-12-05 오후 3:23
+    **/
 }

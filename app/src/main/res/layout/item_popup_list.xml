@@ -8,7 +8,8 @@
         android:id="@+id/tvListNumber"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:gravity="center_horizontal"/>
     <TextView
         android:id="@+id/tvListDate"
         android:layout_width="0dp"

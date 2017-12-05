@@ -20,6 +20,21 @@ public class LocationVO {
     private String ltime;
     private String lid;
 
+    public LocationVO(int lseq, String lday) {
+        this.lseq = lseq;
+        this.lday = lday;
+    }
+
+    public LocationVO(int lseq, String llat, String llong, String lday, String ltime, String lid) {
+        this.lseq = lseq;
+        this.llat = llat;
+        this.llong = llong;
+        this.lday = lday;
+        this.ltime = ltime;
+        this.lid = lid;
+    }
+
+
     public int getLseq() {
         return lseq;
     }
