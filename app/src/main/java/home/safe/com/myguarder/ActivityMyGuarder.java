@@ -18,11 +18,11 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null)
-        {
-            mCurrentLocation = savedInstanceState.getParcelable(LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(CAMERA_POSITION);
-        }
+//        if(savedInstanceState != null)
+//        {
+//            mCurrentLocation = savedInstanceState.getParcelable(LOCATION);
+//            mCameraPosition = savedInstanceState.getParcelable(CAMERA_POSITION);
+//        }
 
         setContentView(R.layout.activity_myguarder);
 

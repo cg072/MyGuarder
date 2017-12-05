@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import home.safe.com.guarder.ActivityGuarder;
+import home.safe.com.member.ActivityMemberModify;
+import home.safe.com.notice.ActivityNotice;
+import home.safe.com.trans.ActivityTrans;
+
 /**
 *
 * @author 경창현
@@ -52,19 +57,28 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this,"Cycle",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnGuarderSetting:
+                Intent intent2 = new Intent(this, ActivityGuarder.class);
                 Toast.makeText(this,"Guarder",Toast.LENGTH_SHORT).show();
+                startActivity(intent2);
                 break;
             case R.id.btnTransSetting:
+                Intent intent3 = new Intent(this, ActivityTrans.class);
+                startActivity(intent3);
                 break;
             case R.id.btnMyInfoSetting:
+                Intent intent4 = new Intent(this, ActivityMemberModify.class);
+                startActivity(intent4);
                 break;
             case R.id.btnNoticeSetting:
+                Intent intent5 = new Intent(this, ActivityNotice.class);
+                startActivity(intent5);
                 break;
             case R.id.btnModeSetting:
                 break;
             case R.id.btnSignOutSetting:
                 break;
         }
+
     }
 
     @Override

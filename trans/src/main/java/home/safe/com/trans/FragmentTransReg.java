@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+import home.safe.com.trans.R;
 
 /**
  * Created by plupin724 on 2017-11-30.
@@ -76,26 +77,21 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
 
-                    switch (menuItem.getItemId()){
-                        case R.id.transWalk:
-                            tvtranskind.setText("도보");
-                            break;
+                    int i = menuItem.getItemId();
+                    if (i == R.id.transWalk) {
+                        tvtranskind.setText("도보");
 
-                        case R.id.transBus:
-                            tvtranskind.setText("버스");
-                            break;
+                    } else if (i == R.id.transBus) {
+                        tvtranskind.setText("버스");
 
-                        case R.id.transTaxi:
-                            tvtranskind.setText("택시");
-                            break;
+                    } else if (i == R.id.transTaxi) {
+                        tvtranskind.setText("택시");
 
-                        case R.id.transSub:
-                            tvtranskind.setText("지하철");
-                            break;
+                    } else if (i == R.id.transSub) {
+                        tvtranskind.setText("지하철");
 
-                        case R.id.transEtc:
-                            tvtranskind.setText("기타");
-                            break;
+                    } else if (i == R.id.transEtc) {
+                        tvtranskind.setText("기타");
 
                     }
                     return false;
