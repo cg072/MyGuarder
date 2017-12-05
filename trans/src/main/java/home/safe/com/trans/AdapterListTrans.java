@@ -1,9 +1,6 @@
 package home.safe.com.trans;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,7 @@ import java.util.ArrayList;
  * 이동수단내역보기 프래그먼트에 리스트 뷰를 전달할 어댑터 클래스 작성
  */
 
-public class ListAdapterTrans extends BaseAdapter{
+public class AdapterListTrans extends BaseAdapter{
 
     //메인액티비티에서 받을 정보를 저장할 배열리스트
     ArrayList<TestListViewDTO> items = new ArrayList<TestListViewDTO>();

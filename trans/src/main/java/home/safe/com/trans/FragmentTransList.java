@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class FragmentTransList extends Fragment {
 
-    ListAdapterTrans adapter;
+    AdapterListTrans adapter;
 
     ListView lvtrans;
 
@@ -37,7 +37,7 @@ public class FragmentTransList extends Fragment {
 
         lvtrans = (ListView)rootview.findViewById(R.id.lvtrans);
 
-        adapter = new ListAdapterTrans();
+        adapter = new AdapterListTrans();
 
         adapter.addItem(new TestListViewDTO("1", "택시", "개인"));
         adapter.addItem(new TestListViewDTO("2", "버스", "시외버스"));

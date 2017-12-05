@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvtranskind"
@@ -18,17 +18,21 @@ android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="3"
         android:layout_margin="15dp"
+        android:layout_weight="3"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:background="@drawable/edit_text_area">
 
         <EditText
             android:id="@+id/etTextTrans"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="이곳에 부가 정보를 입력하세요(200byte)"/>
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:maxLength="200"
+            android:hint="이곳에 부가 정보를 입력하세요(200byte)"
+            android:background="@null"/>
 
 
     </LinearLayout>
@@ -41,7 +45,7 @@ android:orientation="vertical">
         android:layout_weight="1"
         android:background="@android:color/holo_blue_dark"
         android:text="확인"
-        android:textSize="18dp"/>
+        android:textSize="18dp" />
 
 
 </LinearLayout>

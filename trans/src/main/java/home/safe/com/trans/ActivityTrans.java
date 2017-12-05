@@ -147,7 +147,16 @@ import java.util.ArrayList;
 
 }*/
 
+/*
+* 해야할일!!
+* 1. 이동수단내역 리스트뷰에 시간을 추가해주기
+* 2. 이동수단내역 확인 버튼 클릭시 전 화면으로 돌아가게 만들어 주기
+* 3. 이동수단등록 fragmaent_transreg.xml의 콘텐츠를 weight가 아닌 수동 크기로 주기!! 최소사이즈 지정!!
+* */
+
+
 public class ActivityTrans extends AppCompatActivity {
+
 
     FragmentTransReg fragmentTransReg;
     FragmentTransList fragmentTransList;
@@ -169,6 +178,8 @@ public class ActivityTrans extends AppCompatActivity {
 
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단등록"), 0 , true);
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단내역"), 1);
+
+        /*Bundle bundle = new Bundle(1);*/
 
         tabbarTrans.addOnTabSelectedListener(tabSelectedListener);
 
