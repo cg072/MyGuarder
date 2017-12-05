@@ -2,6 +2,7 @@ package home.safe.com.member;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -18,6 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ActivityMemberModify extends AppCompatActivity {
+
+
+    final static String settingCode = "200";
 
     private TextView tvID;
 
@@ -32,7 +37,7 @@ public class ActivityMemberModify extends AppCompatActivity {
     private RadioButton rbMale;
 
     private Button btnPWDModify;
-    private Button btnPhoneCertification;
+    private Button btnCertificationPhone;
     private Button btnModify;
 
     private boolean checkPermission = false;
@@ -58,8 +63,43 @@ public class ActivityMemberModify extends AppCompatActivity {
         rbMale = (RadioButton)findViewById(R.id.rbMale);
 
         btnPWDModify = (Button)findViewById(R.id.btnPWDModify);
-        btnPhoneCertification = (Button)findViewById(R.id.btnPhoneCertification);
+        btnCertificationPhone = (Button)findViewById(R.id.btnCertificationPhone);
         btnModify = (Button)findViewById(R.id.btnModify);
+
+        getMemberPhone();
+
+        // 나중에 서버로부터 얻은 값을 셋팅하는 것으로 해야함
+        btnCertificationPhone.setOnClickListener(new Button.OnClickListener() {
+            ActivityMemberCertDialog certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
+            @Override
+            public void onClick(View view) {
+                certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
+                        certDialog.setRecvCode(settingCode);
+
+                    }
+                }));
+                certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        if(settingCode.equals(certDialog.getSendCode()))
+                        {
+                            Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                            etPhone.setEnabled(false);
+                            btnCertificationPhone.setEnabled(false);
+                            btnModify.setEnabled(true);
+                        }
+                        else
+                        {
+                            Toast.makeText(ActivityMemberModify.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                certDialog.show();
+            }
+        });
     }
 
     /*
@@ -147,10 +187,39 @@ public class ActivityMemberModify extends AppCompatActivity {
                 myNumber = mgr.getLine1Number();
                 myNumber = myNumber.replace("+82", "0");
                 Toast.makeText(this, myNumber, Toast.LENGTH_SHORT).show();
-                etPhone.setText(myNumber);
+                etPhone.setText(hyphenAdd(myNumber));
             } catch (Exception e) {
                 Toast.makeText(this, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /*
+     *  date     : 2017.11.22
+     *  author   : Kim Jong-ha
+     *  title    : hyphenAdd() 메소드 생성
+     *  comment  : 전화 번호 사이의 '-' 를 추가한다
+     *  return   : String 형태
+     * */
+    private String hyphenAdd(String phone) {
+
+        String resultString = phone;
+
+        switch(resultString.length()) {
+            case 10 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,6) + "-" +
+                        resultString.substring(6,10);
+                break;
+
+            case 11 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,7) + "-" +
+                        resultString.substring(7,11);
+                break;
+            default :
+                resultString = "Error";
+        }
+        return resultString;
     }
 }

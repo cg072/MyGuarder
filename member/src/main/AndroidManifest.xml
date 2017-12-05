@@ -2,7 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="home.safe.com.member">
 
+    <!-- naver app을 통한 인증을 위해 필요한 permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- network 상태를 미리 체크하여 연결 안된 경우 다이얼로그를 보여주려면 아래 permission 추가 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 기기에서 자신의 전화번호를 가져오는 권한 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- 구글 계정 -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,10 +25,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityMemberSignup">
+        <activity android:name=".ActivityMemberLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-    
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,8 +41,8 @@
             android:label="@string/title_activity_member_modify"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ActivityMemberLogin"
-            android:label="@string/title_activity_member_login"
+            android:name=".ActivityMemberSignup"
+            android:label="@string/title_activity_member_signup"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ActivityMemberFindPWD"
@@ -37,6 +51,21 @@
         <activity
             android:name=".ActivityMemberFindID"
             android:label="@string/title_activity_member_find_id"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ActivityMemberCertPhone"
+            android:label="@string/title_activity_member_cert_phone"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+
+        <!-- [naveroauthlogin][start] 네이버아이디로로그인을 사용하기 위해서 넣어줘야하는 부분 -->
+        <activity
+            android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.nhn.android.naverlogin.ui.OAuthLoginInAppBrowserActivity"
+            android:label="OAuth2.0 In-app" />
+
     </application>
+
 </manifest>

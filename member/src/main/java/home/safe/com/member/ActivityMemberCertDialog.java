@@ -29,9 +29,9 @@ public class ActivityMemberCertDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_member_cert_dialog);
 
-        tvCertCode = (TextView)findViewById(R.id.tvCertCode);
-        etCertCode = (EditText)findViewById(R.id.etCertCode);
-        btnCheckCode = (Button)findViewById(R.id.btnCheckCode);
+        tvCertCode = (TextView) findViewById(R.id.tvCertCode);
+        etCertCode = (EditText) findViewById(R.id.etCertCode);
+        btnCheckCode = (Button) findViewById(R.id.btnCheckCode);
 
         btnCheckCode.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -40,19 +40,21 @@ public class ActivityMemberCertDialog extends Dialog {
             }
         });
     }
-    public void setRecvCode(String recvCode){
+
+    public void setRecvCode(String recvCode) {
         this.recvCode = recvCode;
         this.tvCertCode.setText(this.recvCode);
     }
 
-    public String getRecvCode(){
+    public String getRecvCode() {
         return recvCode;
     }
 
-    public String getSendCode(){
+    public String getSendCode() {
         sendCode = etCertCode.getText().toString();
         return sendCode;
     }
+
 
     // 아래와 같은 방식으로 해당 다이얼로그를 불러온다.
 /*
@@ -87,5 +89,5 @@ public class ActivityMemberCertDialog extends Dialog {
                 });
                 certDialog.show();
             }
-        });*/
+        }); */
 }

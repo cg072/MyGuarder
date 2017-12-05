@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/textHeight"
+        android:text="전화 번호 인증"
+        android:textSize="35dp"
+        android:gravity="center"
+        android:layout_marginTop="150dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textSize="@dimen/textConfig"
+            android:text="010-7205-8516"
+            android:gravity="center"
+            android:background="@drawable/et_round_signup"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="'인증하기'버튼을 누르시면, 위의 전화 번호로 인증합니다."
+            android:gravity="center"
+            android:layout_marginTop="5dp"/>
+        <Button
+            android:id="@+id/btnCert"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/textHeight"
+            android:text="인 증 하 기"
+            android:textSize="@dimen/textConfig"
+            android:background="@drawable/btn_round_login"
+            android:textColor="@color/colorWhite"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

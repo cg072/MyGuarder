@@ -17,6 +17,7 @@ public class MemberVO {
     private String msns;
     private String msnsid;
     private String mregday;
+    private String mnickname;
 
     public int getMseq() {
         return mseq;
@@ -112,5 +113,13 @@ public class MemberVO {
 
     public void setMregday(String mregday) {
         this.mregday = mregday;
+    }
+
+    public String getMnickname() {
+        return mnickname;
+    }
+
+    public void setMnickname(String mnickname) {
+        this.mnickname = mnickname;
     }
 }

@@ -98,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:text="  *하단의 '발송' 버튼을 누르면 해당 E-Mail로 발송되어집니다."
-                android:textSize="13dp" />
+                android:textSize="12dp" />
             />
 
             <Button
