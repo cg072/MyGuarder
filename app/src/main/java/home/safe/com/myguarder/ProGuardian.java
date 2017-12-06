@@ -158,14 +158,14 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        if(googleMap != null) {
-//            outState.putParcelable(CAMERA_POSITION, googleMap.getCameraPosition());
-//            outState.putParcelable(LOCATION, mCurrentLocation);
-//            super.onSaveInstanceState(outState);
-//        }
-//    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(googleMap != null) {
+            outState.putParcelable(CAMERA_POSITION, googleMap.getCameraPosition());
+            outState.putParcelable(LOCATION, mCurrentLocation);
+            super.onSaveInstanceState(outState);
+        }
+    }
 
     /**
     * 
