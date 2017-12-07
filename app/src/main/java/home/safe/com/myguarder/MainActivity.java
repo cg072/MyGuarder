@@ -33,10 +33,7 @@ import java.util.ArrayList;
 public class MainActivity extends ProGuardian implements IProGuardian, View.OnClickListener {
 
     Button btnMain;
-    Button btnGuarder;
-    Button btnMember;
-    Button btnNotice;
-    Button btnTrans;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +41,14 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         setContentView(R.layout.activity_main);
 
         btnMain = (Button)findViewById(R.id.btnMain);
-        btnGuarder = (Button)findViewById(R.id.btnGuarder);
-        btnMember = (Button)findViewById(R.id.btnMember);
-        btnNotice = (Button)findViewById(R.id.btnNotice);
-        btnTrans = (Button)findViewById(R.id.btnTrans);
+
 
 
 
 
 
         btnMain.setOnClickListener(this);
-        btnGuarder.setOnClickListener(this);
-        btnMember.setOnClickListener(this);
-        btnNotice.setOnClickListener(this);
-        btnTrans.setOnClickListener(this);
+
 
     }
 
@@ -93,22 +84,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         {
             intent = new Intent(this, ActivityCivilian.class);
         }
-        else if(view.getId() == btnGuarder.getId())
-        {
-            intent = new Intent(this, ActivitySetting.class);
-        }
-        else if(view.getId() == btnMember.getId())
-        {
-            intent = new Intent(this, ActivityCivilian.class);
-        }
-        else if(view.getId() == btnNotice.getId())
-        {
-            intent = new Intent(this, ActivityCivilian.class);
-        }
-        else if(view.getId() == btnTrans.getId())
-        {
-            intent = new Intent(this, ActivityCivilian.class);
-        }
+
 
         startActivity(intent);
 
