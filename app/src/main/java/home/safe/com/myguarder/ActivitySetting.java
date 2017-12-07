@@ -26,6 +26,11 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
 
     Button btnCycleSetting;
     Button btnGuarderSetting;
+    Button btnTransSetting;
+    Button btnMyInfoSetting;
+    Button btnNoticeSetting;
+    Button btnModeSetting;
+    Button btnSignOutSetting;
 
     int cycleNum = 5;
 
@@ -42,9 +47,22 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
 
         btnCycleSetting = (Button)findViewById(R.id.btnCycleSetting);
         btnGuarderSetting = (Button)findViewById(R.id.btnGuarderSetting);
+        btnTransSetting = (Button)findViewById(R.id.btnTransSetting);
+        btnMyInfoSetting = (Button)findViewById(R.id.btnMyInfoSetting);
+        btnNoticeSetting = (Button)findViewById(R.id.btnNoticeSetting);
+        btnModeSetting = (Button)findViewById(R.id.btnModeSetting);
+        btnSignOutSetting = (Button)findViewById(R.id.btnSignOutSetting);
+
+
 
         btnCycleSetting.setOnClickListener(this);
         btnGuarderSetting.setOnClickListener(this);
+        btnTransSetting.setOnClickListener(this);
+        btnMyInfoSetting.setOnClickListener(this);
+        btnNoticeSetting.setOnClickListener(this);
+        btnModeSetting.setOnClickListener(this);
+        btnSignOutSetting.setOnClickListener(this);
+
     }
 
     @Override
