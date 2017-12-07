@@ -42,11 +42,6 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
 
         btnMain = (Button)findViewById(R.id.btnMain);
 
-
-
-
-
-
         btnMain.setOnClickListener(this);
 
 
@@ -84,7 +79,6 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         {
             intent = new Intent(this, ActivityCivilian.class);
         }
-
 
         startActivity(intent);
 
