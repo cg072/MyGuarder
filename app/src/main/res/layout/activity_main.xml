@@ -15,29 +15,29 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="Main"/>
-        <Button
-            android:id="@+id/btnGuarder"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Guarder"/>
-        <Button
-            android:id="@+id/btnMember"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Member"/>
-        <Button
-            android:id="@+id/btnNotice"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Notice"/>
-        <Button
-            android:id="@+id/btnTrans"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Trans"/>
+        <!--<Button-->
+            <!--android:id="@+id/btnGuarder"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Guarder"/>-->
+        <!--<Button-->
+            <!--android:id="@+id/btnMember"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Member"/>-->
+        <!--<Button-->
+            <!--android:id="@+id/btnNotice"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Notice"/>-->
+        <!--<Button-->
+            <!--android:id="@+id/btnTrans"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Trans"/>-->
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
