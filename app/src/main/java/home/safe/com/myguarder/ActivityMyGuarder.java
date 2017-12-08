@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,11 +19,11 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if(savedInstanceState != null)
-//        {
-//            mCurrentLocation = savedInstanceState.getParcelable(LOCATION);
-//            mCameraPosition = savedInstanceState.getParcelable(CAMERA_POSITION);
-//        }
+        if(savedInstanceState != null)
+        {
+            mCurrentLocation = savedInstanceState.getParcelable(LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(CAMERA_POSITION);
+        }
 
         setContentView(R.layout.activity_myguarder);
 
@@ -93,12 +94,18 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         if(view.getId() == btnGuarderLog.getId())
         {
             Intent intent = new Intent(this,ActivityPopup.class);
-            startActivity(intent);
+            startActivityForResult(intent,MY_REQUEST_CODE_POPUP);
         }
         else if(view.getId() == btnLocation.getId())
         {
-            drawPolyline(new LatLng(37.2353127, 127.0626751),new LatLng(37.2353114, 127.0626726));
+            drawPolyline(new LatLng(37.2350000, 127.0620000),new LatLng(37.2353114, 127.0626726));
+            civilianLocationRequest();
         }
+    }
+
+
+    private void civilianLocationRequest() {
+        //피지킴이 위치 요청 메서스 + 위치 그리기
     }
 
     @Override
@@ -109,9 +116,37 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         {
             if(requestCode == MY_REQUEST_CODE)
             {
+                Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE);
                 cycleGuarder = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER);
                 Log.d("주기 : ", "" +cycleGuarder);
             }
+            if(requestCode == MY_REQUEST_CODE_POPUP)
+            {
+                Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE_POPUP);
+                selectPopupList(data.getStringExtra(DATA_NAME_POPUP));
+            }
         }
+    }
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text 날짜를 가지고 sql로 리스트를 불러와서 맵에 뿌려주는 메서드
+     * reference String date
+     * @since 2017-12-08 오후 1:52
+     **/
+    private void selectPopupList(String date)
+    {
+        //sql로 해당 날짜의 리스트 가져오기
+
+        //리스트에 있는 위도 경도로 폴리라인 그리기
+        // onMapReady()안거친다.
+        //리스트를 drawPolyline()으로 그려주기만 하면 된다.
+        drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000));
+        drawPolyline(new LatLng(37.2350000 ,127.0620000), new LatLng(37.2320000,127.0610000));
+        drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.2320000,127.0550000));
+
+        Toast.makeText(this,"selectPopupList",Toast.LENGTH_SHORT).show();
     }
 }

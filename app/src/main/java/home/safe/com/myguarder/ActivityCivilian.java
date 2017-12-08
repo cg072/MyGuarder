@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
@@ -106,12 +108,17 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
+
+    @Override
     public void onClick(View view) {
         //지난위치보기 팝업
         if(view.getId() == btnCivilianLog.getId())
         {
             Intent intent = new Intent(this,ActivityPopup.class);
-            startActivity(intent);
+            startActivityForResult(intent,MY_REQUEST_CODE_POPUP);
         }
         else if(view.getId() == btnEmergency.getId())
         {
@@ -128,12 +135,54 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         {
             if(requestCode == MY_REQUEST_CODE)
             {
+                Log.d("onActivityResult", "Civilian - " +MY_REQUEST_CODE);
                 cycleCivilian = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER)*60000;
                 Log.d("주기 : ", "" +cycleCivilian);
                 saveData();
             }
+            if(requestCode == MY_REQUEST_CODE_POPUP)
+            {
+                Log.d("onActivityResult", "Civilian - " +MY_REQUEST_CODE_POPUP);
+                selectPopupList(data.getStringExtra(DATA_NAME_POPUP));
+            }
         }
     }
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text 날짜를 가지고 sql로 리스트를 불러와서 맵에 뿌려주는 메서드
+     * reference String date
+    * @since 2017-12-08 오후 1:52
+    **/
+    private void selectPopupList(String date)
+    {
+        //sql로 해당 날짜의 리스트 가져오기
+
+        //리스트에 있는 위도 경도로 폴리라인 그리기
+        // onMapReady()안거친다.
+        //리스트를 drawPolyline()으로 그려주기만 하면 된다.
+        if("2017.12.05".equals(date))
+        {
+            Toast.makeText(this,"2017.12.05",Toast.LENGTH_SHORT).show();
+        }
+        else if("2017.12.04".equals(date))
+        {
+            Toast.makeText(this,"2017.12.04",Toast.LENGTH_SHORT).show();
+        }
+        else if("2017.12.03".equals(date))
+        {
+            Toast.makeText(this,"2017.12.03",Toast.LENGTH_SHORT).show();
+        }
+        drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000));
+        drawPolyline(new LatLng(37.2350000 ,127.0620000), new LatLng(37.2320000,127.0610000));
+        drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.2320000,127.0550000));
+
+
+
+    }
+
 
     /**
     *

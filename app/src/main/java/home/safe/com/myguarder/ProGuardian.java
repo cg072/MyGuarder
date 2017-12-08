@@ -75,7 +75,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
     //intent PopupCycle key code
     public final static int MY_REQUEST_CODE = 1111;
+    public final static int MY_REQUEST_CODE_POPUP = 2222;
     public final static String DATA_NAME = "cycle";
+    public final static String DATA_NAME_POPUP = "dateList";
     public final static int DEFAULT_NUMBER = 5;
 
     public int cycleCivilian = 10000;
@@ -222,6 +224,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
          **/
 
             reDrawPolyline();
+
+
     }
 
     public void showCamera()
@@ -537,9 +541,25 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     * @version 1.0.0
     * @text
      * 1. 마커 갯수
-     * 2. activityPopup 세부 코딩
-     * 3. 모드전환 -> 스위치 형식 비활성화 활성화 두개의 버튼  □■
-     * 4. 지킴이가 위치정보 불러와서 그리는 부분 만들기
+     * 2. activityPopup 세부 코딩 ok
+     * 3. 모드전환 -> 스위치 형식 비활성화 활성화 두개의 버튼  □■ ok -> 엑티비티를 현재창에서 띄울건지, 뒤로가서 띄울건지
+     * 4. 지킴이가 위치정보 불러와서 그리는 부분 만들기 ok -> 그리기는 sql에서 데이터 가져와서
     * @since 2017-12-05 오후 3:23
+    **/
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text
+     * 1. 마커 갯수 정하기
+     * 2. 객체로 만들어서 생성해보기
+     * 3. 지난 위치보기 3개 경로 만들고 지우고 새로 뿌리는지 확인
+     * 4. 테스크 설정하고 새로띄움
+     * 5. 지킴이 주기 필요없다.
+     * 6. 설정 주기 확인
+     * 7. 쉐어프리펄런스 -> 이동수단 내용 사용  (public class 생성해서 모든 모듈에서 접근가능하게도 고려)
+     * 8. 지킴이 화면에서 피지킴이 목록을 띄워 한명 선택 후 위치 확인 가능하게
+    * @since 2017-12-08 오후 3:25
     **/
 }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import home.safe.com.guarder.ActivityGuarder;
 import home.safe.com.member.ActivityMemberModify;
@@ -29,8 +29,10 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
     Button btnTransSetting;
     Button btnMyInfoSetting;
     Button btnNoticeSetting;
-    Button btnModeSetting;
     Button btnSignOutSetting;
+
+    ToggleButton tbCivilianMode;
+    ToggleButton tbGuarderMode;
 
     int cycleNum = 5;
 
@@ -50,8 +52,10 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
         btnTransSetting = (Button)findViewById(R.id.btnTransSetting);
         btnMyInfoSetting = (Button)findViewById(R.id.btnMyInfoSetting);
         btnNoticeSetting = (Button)findViewById(R.id.btnNoticeSetting);
-        btnModeSetting = (Button)findViewById(R.id.btnModeSetting);
         btnSignOutSetting = (Button)findViewById(R.id.btnSignOutSetting);
+
+        tbCivilianMode = (ToggleButton)findViewById(R.id.tbCivilianMode);
+        tbGuarderMode = (ToggleButton)findViewById(R.id.tbGuarderMode);
 
 
 
@@ -60,9 +64,10 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
         btnTransSetting.setOnClickListener(this);
         btnMyInfoSetting.setOnClickListener(this);
         btnNoticeSetting.setOnClickListener(this);
-        btnModeSetting.setOnClickListener(this);
         btnSignOutSetting.setOnClickListener(this);
 
+        tbCivilianMode.setOnClickListener(this);
+        tbGuarderMode.setOnClickListener(this);
     }
 
     @Override
@@ -72,11 +77,9 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
             case R.id.btnCycleSetting:
                 Intent intent = new Intent(this, ActivityPopupCycle.class);
                 startActivityForResult(intent,MY_REQUEST_CODE);
-                Toast.makeText(this,"Cycle",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btnGuarderSetting:
                 Intent intent2 = new Intent(this, ActivityGuarder.class);
-                Toast.makeText(this,"Guarder",Toast.LENGTH_SHORT).show();
                 startActivity(intent2);
                 break;
             case R.id.btnTransSetting:
@@ -91,7 +94,15 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 Intent intent5 = new Intent(this, ActivityNotice.class);
                 startActivity(intent5);
                 break;
-            case R.id.btnModeSetting:
+            case R.id.tbCivilianMode:
+                tbCivilianMode.setChecked(true);
+                tbGuarderMode.setChecked(false);
+                break;
+            case R.id.tbGuarderMode:
+                tbCivilianMode.setChecked(false);
+                tbGuarderMode.setChecked(true);
+                Intent intent7 = new Intent(this, ActivityMyGuarder.class);
+                startActivity(intent7);
                 break;
             case R.id.btnSignOutSetting:
                 break;

@@ -1,7 +1,7 @@
 package home.safe.com.myguarder;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -28,16 +28,15 @@ public class ActivityPopup extends Activity implements View.OnClickListener, Ada
 
     Button btnPopupOk;
 
+    private final static String DATA_NAME_POPUP = "dateList";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
 
-        alData = new ArrayList<LocationVO>();
-        alData.add(new LocationVO(1,"2017.12.05"));
-        alData.add(new LocationVO(2,"2017.12.04"));
-        alData.add(new LocationVO(3,"2017.12.03"));
+        selectPopupDate("2017.12");
 
         adapterPopupList = new AdapterPopupList(alData);
 
@@ -65,5 +64,40 @@ public class ActivityPopup extends Activity implements View.OnClickListener, Ada
 
         //sql -> 1. db에서 날짜만 다가져와서 지난위치 리스트 뿌림
         //       2. 클릭한 날짜를 db에서 해당 날짜 자료를 다 가져옴
+        //아래 메서드
+        returnPopupData(alData.get(position).getLday());
+    }
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text sql에서 날자를 추려서 가져옴
+     * reference : String date
+    * @since 2017-12-08 오후 1:24
+    **/
+    public void selectPopupDate(String date)
+    {
+        alData = new ArrayList<LocationVO>();
+        alData.add(new LocationVO(1,"2017.12.05"));
+        alData.add(new LocationVO(2,"2017.12.04"));
+        alData.add(new LocationVO(3,"2017.12.03"));
+    }
+
+    /**
+    *
+    * @author 경창현
+    * @version 1.0.0
+    * @text ActivityCivilian,ActivityMyGuarder로 날짜를 리턴시킴
+     * reference String date
+    * @since 2017-12-08 오후 2:17
+    **/
+    public void returnPopupData(String date)
+    {
+        //date로 sql에서 해당 날짜 리스트를 가져옴
+        Intent intentData = new Intent();
+        intentData.putExtra(DATA_NAME_POPUP, date);
+        setResult(RESULT_OK, intentData);
+        finish();
     }
 }
