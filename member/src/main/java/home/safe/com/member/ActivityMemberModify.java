@@ -19,7 +19,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityMemberModify extends AppCompatActivity {
+public class ActivityMemberModify extends AppCompatActivity implements View.OnClickListener{
 
 
     final static String settingCode = "200";
@@ -27,6 +27,7 @@ public class ActivityMemberModify extends AppCompatActivity {
     private TextView tvID;
 
     private EditText etPWD;
+    private EditText etCheckPWD;
     private EditText etName;
     private EditText etPhone;
     private EditText etBirth;
@@ -36,23 +37,27 @@ public class ActivityMemberModify extends AppCompatActivity {
     private RadioButton rbFemale;
     private RadioButton rbMale;
 
-    private Button btnPWDModify;
     private Button btnCertificationPhone;
     private Button btnModify;
 
     private boolean checkPermission = false;
     private String myNumber = "";
 
+    private MemberVO memberVO = new MemberVO();
+
+    ActivityMemberCertDialog certDialog = null;
+
     final String TAG = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member_modify_check);
+        setContentView(R.layout.activity_member_modify);
 
         tvID = (TextView) findViewById(R.id.tvID);
 
         etPWD = (EditText)findViewById(R.id.etPWD);
+        etCheckPWD = (EditText)findViewById(R.id.etCheckPWD);
         etName = (EditText)findViewById(R.id.etName);
         etPhone = (EditText)findViewById(R.id.etPhone);
         etBirth = (EditText)findViewById(R.id.etBirth);
@@ -62,45 +67,109 @@ public class ActivityMemberModify extends AppCompatActivity {
         rbFemale = (RadioButton)findViewById(R.id.rbFemale);
         rbMale = (RadioButton)findViewById(R.id.rbMale);
 
-        btnPWDModify = (Button)findViewById(R.id.btnPWDModify);
         btnCertificationPhone = (Button)findViewById(R.id.btnCertificationPhone);
+        btnCertificationPhone.setOnClickListener(this);
         btnModify = (Button)findViewById(R.id.btnModify);
 
         getMemberPhone();
 
-        // 나중에 서버로부터 얻은 값을 셋팅하는 것으로 해야함
-        btnCertificationPhone.setOnClickListener(new Button.OnClickListener() {
-            ActivityMemberCertDialog certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
+        btnModify.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
-                        certDialog.setRecvCode(settingCode);
 
+                if(checkPWD(etPWD.getText().toString().trim())      == true &&
+                   checkName(etName.getText().toString().trim())    == true &&
+                   checkPWDEqual() == true ) {
+
+                    memberVO.setMid(tvID.getText().toString().trim());
+                    memberVO.setMpwd(etPWD.getText().toString().trim());
+                    memberVO.setMname(etName.getText().toString().trim());
+                    memberVO.setMemail(etEMail.getText().toString().trim());
+                    memberVO.setMbirth(etBirth.getText().toString().trim());
+
+                    // 성별 판단 f,m,u
+                    if (rbFemale.isChecked()) {
+                        memberVO.setMgender("f");
+                    } else if (rbMale.isChecked()) {
+                        memberVO.setMgender("m");
+                    } else if (rbUndefine.isChecked()) {
+                        memberVO.setMgender("u");
                     }
-                }));
-                certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        if(settingCode.equals(certDialog.getSendCode()))
-                        {
-                            Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                            etPhone.setEnabled(false);
-                            btnCertificationPhone.setEnabled(false);
-                            btnModify.setEnabled(true);
-                        }
-                        else
-                        {
-                            Toast.makeText(ActivityMemberModify.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                certDialog.show();
+
+                    Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                    // 서버로 memberVO를 보냄(update)
+                    finish();
+                }
             }
         });
     }
+
+    @Override
+    public void onClick(View view) {
+        Log.v("버튼","클릭");
+        if(view.getId() == R.id.btnCertificationPhone) {
+            certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
+
+            certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
+                    certDialog.setRecvCode(settingCode);
+                }
+            }));
+            certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    if (settingCode.equals(certDialog.getSendCode())) {
+                        Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                        etPhone.setEnabled(false);
+                        btnCertificationPhone.setEnabled(false);
+                        btnModify.setEnabled(true);
+                    } else {
+                        Toast.makeText(ActivityMemberModify.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            certDialog.show();
+        }
+    }
+
+    private boolean checkName(String name) {
+        boolean check = false;
+
+        if( name.length() > 0 ) {
+            check = true;
+        } else {
+            Toast.makeText(ActivityMemberModify.this, "이름 기입 필수", Toast.LENGTH_SHORT).show();
+        }
+
+        return  check;
+    }
+
+    private boolean checkPWD(String pwd) {
+        boolean check = false;
+
+        if( pwd.length() >= 7 ) {
+            check = true ;
+        } else {
+            Toast.makeText(ActivityMemberModify.this, "Password 7자리 이상 요구", Toast.LENGTH_SHORT).show();
+        }
+
+        return check;
+    }
+
+    private boolean checkPWDEqual() {
+        boolean check = false;
+
+        if(etPWD.getText().toString().trim().equals(etCheckPWD.getText().toString().trim())) {
+            check = true;
+        } else {
+            Toast.makeText(this, "Password가 서로 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+        }
+        return check;
+    }
+
+
 
     /*
 *  date     : 2017.11.12

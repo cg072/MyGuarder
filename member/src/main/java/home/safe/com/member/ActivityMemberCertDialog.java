@@ -23,6 +23,8 @@ public class ActivityMemberCertDialog extends Dialog {
     private String recvCode;
     private String sendCode;
 
+    ActivityMemberCertDialog certDialog = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

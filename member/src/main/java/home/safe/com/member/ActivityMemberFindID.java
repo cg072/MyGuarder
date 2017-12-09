@@ -17,6 +17,8 @@ public class ActivityMemberFindID extends AppCompatActivity {
     private EditText etPhone;
     private Button btnSend;
 
+    private MemberVO memberVO = new MemberVO();
+
     private String savedEmail;
 
     // 테스트용
@@ -33,7 +35,10 @@ public class ActivityMemberFindID extends AppCompatActivity {
         btnSend.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                memberVO.setMemail(etEmail.getText().toString().trim());
+                memberVO.setMphone(etPhone.getText().toString().trim());
 
+                // 서버로 보내고 이메일이 발송되으면 발송되었다고, 오류가 났으면 났다고 함
             }
         });
 

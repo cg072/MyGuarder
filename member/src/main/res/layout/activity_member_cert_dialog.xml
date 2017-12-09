@@ -1,20 +1,24 @@
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="30dp">
+    android:layout_marginTop="80dp"
+    android:layout_marginBottom="80dp"
+    android:layout_marginRight="50dp"
+    android:layout_marginLeft="50dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="인증 코드"
-            android:textSize="30dp" />
+            android:textSize="40dp"
+            android:layout_marginBottom="30dp"/>
 
         <TextView
             android:id="@+id/tvCertCode"
@@ -28,24 +32,32 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="상단의 인증코드를 입력하여 주세요"
             android:textSize="15dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="30dp"></TextView>
 
         <EditText
             android:id="@+id/etCertCode"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:hint="인증코드 입력란"
-            android:textSize="15dp"
-            android:gravity="center" />
 
+            android:textSize="15dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            />
+        <!--android:hint="인증코드 입력란"-->
         <Button
             android:id="@+id/btnCheckCode"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:text="확         인"
-            android:layout_marginTop="10dp"/>
+            android:textSize="@dimen/textSize"
+            android:layout_marginTop="20dp"/>
     </LinearLayout>
 </LinearLayout>
 

@@ -5,117 +5,131 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/colorBackground"
     >
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="비밀번호 초기화"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:layout_marginTop="100dp"></TextView>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/signup_EmptyDistance"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/textHeight"
-                    android:layout_weight="3"
-                    android:background="@drawable/tv_round_signup"
-                    android:gravity="center"
-                    android:text="ID"
-                    android:textSize="@dimen/textConfig" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/textHeight"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/etID"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="2"
-                        android:background="@color/colorWhite"
-                        android:paddingStart="10dp"
-                        android:textSize="@dimen/textConfig" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/signup_EmptyDistance"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_weight="3"
-                    android:background="@drawable/tv_round_signup"
-                    android:gravity="center"
-                    android:text="E-Mail"
-                    android:textSize="@dimen/textConfig" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/textHeight"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="2"
-                        android:background="@color/colorWhite"
-                        android:paddingStart="10dp"
-                        android:textSize="@dimen/textConfig" />
-                </LinearLayout>
-            </LinearLayout>
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            >
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                 android:text="  *하단의 '확인' 버튼을 누르면 해당 E-Mail로 발송되어집니다."
-                android:textSize="12dp" />
-            />
-
-            <Button
-                android:id="@+id/btnSend"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/btn_round_login"
-                android:text="확         인"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp">
+                android:text="비밀번호 초기화"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:layout_marginTop="100dp"></TextView>
 
-            </Button>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/signup_EmptyDistance"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/textHeight"
+                        android:layout_weight="3"
+                        android:background="@drawable/tv_round_signup"
+                        android:gravity="center"
+                        android:text="ID"
+                        android:textSize="@dimen/textSize" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/textHeight"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/etID"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/textHeight"
+                            android:layout_weight="2"
+                            android:background="@color/colorWhite"
+                            android:paddingStart="10dp"
+                            android:textSize="@dimen/textSize"
+                            android:maxLines="1"
+                            android:lines="1"
+                            android:singleLine="true"
+                            android:imeOptions="actionDone"
+                            android:inputType="textEmailAddress"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/signup_EmptyDistance"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/tv_round_signup"
+                        android:gravity="center"
+                        android:text="E-Mail"
+                        android:textSize="@dimen/textSize" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/textHeight"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/etEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/textHeight"
+                            android:layout_weight="2"
+                            android:background="@color/colorWhite"
+                            android:paddingStart="10dp"
+                            android:textSize="@dimen/textSize"
+                            android:maxLines="1"
+                            android:lines="1"
+                            android:singleLine="true"
+                            android:imeOptions="actionDone"
+                            android:inputType="textEmailAddress"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:text="  *하단의 '확인' 버튼을 누르면 해당 E-Mail로 발송되어집니다."
+                    android:textSize="12dp" />
+                />
+
+                <Button
+                    android:id="@+id/btnSend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/btn_round_login"
+                    android:text="확         인"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20dp">
+
+                </Button>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
 

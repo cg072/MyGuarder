@@ -26,11 +26,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ActivityMemberLogin">
-            <intent-filter>
+<!--            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".ActivityMember"
@@ -39,6 +39,10 @@
         <activity
             android:name=".ActivityMemberModify"
             android:label="@string/title_activity_member_modify"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ActivityMemberModifyCheck"
+            android:label="ActivityMemberModifyCheck"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ActivityMemberSignup"
@@ -56,7 +60,6 @@
             android:name=".ActivityMemberCertPhone"
             android:label="@string/title_activity_member_cert_phone"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
 
         <!-- [naveroauthlogin][start] 네이버아이디로로그인을 사용하기 위해서 넣어줘야하는 부분 -->
         <activity

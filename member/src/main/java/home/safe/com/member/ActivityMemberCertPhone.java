@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityMemberCertPhone extends AppCompatActivity {
+public class ActivityMemberCertPhone extends AppCompatActivity implements View.OnClickListener{
 
     private TextView tvPhone;
     private String myNumber = "";
@@ -27,6 +27,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity {
     private int SH_JOB_FALSE = 400;
     private boolean certCheck = false;
     private boolean checkPermission = false;
+    private ActivityMemberCertDialog certDialog;
 
     // 예제용
     private String settingCode = "200";
@@ -41,49 +42,50 @@ public class ActivityMemberCertPhone extends AppCompatActivity {
 
         getMemberPhone();
 
-        btnCert.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 나중에 서버로부터 얻은 값을 셋팅하는 것으로 해야함
-                btnCert.setOnClickListener(new Button.OnClickListener() {
-                    ActivityMemberCertDialog certDialog = new ActivityMemberCertDialog(ActivityMemberCertPhone.this);
-                    @Override
-                    public void onClick(View view) {
-                        certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
-                            @Override
-                            public void onShow(DialogInterface dialogInterface) {
-                                // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
-                                certDialog.setRecvCode(settingCode);
+        btnCert.setOnClickListener(this);
+    }
 
-                            }
-                        }));
-                        certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                                if(settingCode.equals(certDialog.getSendCode()))
-                                {
-                                    //Toast.makeText(ActivityMemberCertPhone.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                                    certCheck = true;
-                                }
-                                else
-                                {
-                                    Toast.makeText(ActivityMemberCertPhone.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                                }
-                                Intent intent = new Intent();
+    @Override
+    public void onClick(View view) {
+        Log.v("버튼", "클릭");
+        if(view.getId() == R.id.btnCert) {
+            Log.v("버튼", "진입");
+            certDialog = new ActivityMemberCertDialog(ActivityMemberCertPhone.this);
 
-                                if(certCheck == true) {
-                                    setResult(SH_JOB_OK);
-                                } else {
-                                    setResult(SH_JOB_FALSE);
-                                }
-                                finish();
-                            }
-                        });
-                        certDialog.show();
+            certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
+                    certDialog.setRecvCode(settingCode);
+
+                }
+            }));
+            certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    if(settingCode.equals(certDialog.getSendCode()))
+                    {
+                        //Toast.makeText(ActivityMemberCertPhone.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                        certCheck = true;
                     }
-                });
-            }
-        });
+                    else
+                    {
+                        Toast.makeText(ActivityMemberCertPhone.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    Intent intent = new Intent();
+                    intent.putExtra("phone", myNumber);
+                    if(certCheck == true) {
+                        setResult(SH_JOB_OK, intent);
+                        //setResult(SH_JOB_OK);
+                    } else {
+                        setResult(SH_JOB_FALSE, intent);
+                        //setResult(SH_JOB_FALSE);
+                    }
+                    finish();
+                }
+            });
+            certDialog.show();
+        }
     }
 
     /*

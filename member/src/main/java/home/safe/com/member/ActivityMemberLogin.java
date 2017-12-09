@@ -11,11 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -541,12 +544,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
             case REQUEST_CODE_GOOGLE:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent( data );
                 if ( result.isSuccess( ) ) { GoogleSignInAccount acct = result.getSignInAccount( );
-                    // 계정 정보 얻어오기
-                    Log.v( "구글 테스트",acct.getDisplayName());
-                    Log.i( "구글 테스트",acct.getEmail());
-                    Log.i( "구글 테스트",acct.getFamilyName());
-                    Log.i( "구글 테스트",acct.getGivenName());
-                    Log.i( "구글 테스트",acct.getId());
                     memberVO.setMemail(acct.getEmail());
                     memberVO.setMname(acct.getDisplayName());
                     Toast.makeText(mContext, acct.getDisplayName() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
@@ -556,7 +553,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
             case REQUEST_CODE_PHONE:
                 if(resultCode == SH_JOB_OK) {
                     Toast.makeText(mContext, "인증에 성공하였습니다", Toast.LENGTH_SHORT).show();
-                    // 메인고고
+                    String phone = data.getStringExtra("phone");
+                    memberVO.setMphone(phone);      // 인증된 전화번호를 memberVO 에 셋팅
                     Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
                     startActivity(intent);
                     finish();

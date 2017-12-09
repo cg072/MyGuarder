@@ -21,7 +21,7 @@
             android:id="@+id/tvPhone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="@dimen/textConfig"
+            android:textSize="@dimen/textSize"
             android:text="010-7205-8516"
             android:gravity="center"
             android:background="@drawable/et_round_signup"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/textHeight"
             android:text="인 증 하 기"
-            android:textSize="@dimen/textConfig"
+            android:textSize="@dimen/textSize"
             android:background="@drawable/btn_round_login"
             android:textColor="@color/colorWhite"
             android:layout_marginLeft="30dp"
@@ -47,5 +47,4 @@
             android:layout_marginTop="10dp"/>
 
     </LinearLayout>
-
 </LinearLayout>

@@ -6,57 +6,65 @@
     android:gravity="center"
     android:background="@color/colorBackground"
     >
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingTop="30dp"
-        android:paddingBottom="50dp"
-        >
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="30dp"
+            android:paddingBottom="50dp"
             >
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:layout_marginTop="100dp"
-                android:gravity="center"
-                android:text="내 정보 수정"
-                android:textSize="50dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="100dp"
+                    android:layout_marginTop="100dp"
+                    android:gravity="center"
+                    android:text="내 정보 수정"
+                    android:textSize="50dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/textHeight"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
 
-                android:gravity="center"
-                android:text="비밀번호를 입력하여 주세요"
-                android:textSize="@dimen/textConfig" />
+                    android:gravity="center"
+                    android:text="비밀번호를 입력하여 주세요"
+                    android:textSize="@dimen/textSize" />
 
-            <EditText
-                android:id="@+id/etPWD"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/textHeight"
-                android:background="@color/colorWhite"
-                android:paddingStart="10dp"
-                android:textSize="@dimen/textConfig"
-                android:layout_marginBottom="5dp"/>
+                <EditText
+                    android:id="@+id/etPWD"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/textHeight"
+                    android:background="@color/colorWhite"
+                    android:paddingStart="10dp"
+                    android:textSize="@dimen/textSize"
+                    android:layout_marginBottom="5dp"
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"/>
 
-            <Button
-                android:id="@+id/btnCheckPWD"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_round_login"
-                android:text="입 력 확 인"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp" />
+                <Button
+                    android:id="@+id/btnCheckPWD"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_round_login"
+                    android:text="입 력 확 인"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>
 
 

@@ -17,6 +17,8 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
     private String email = "hotkiss86kjh@gmail.com";
     private String password = "5029kjhkjh";
 
+    private MemberVO memberVO = new MemberVO();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,5 +27,15 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
         etID = (EditText)findViewById(R.id.etID);
         etEmail = (EditText)findViewById(R.id.etEmail);
         btnSend = (Button)findViewById(R.id.btnSend);
+
+        btnSend.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                memberVO.setMid(etID.toString().toString().trim());
+                memberVO.setMemail(etEmail.getText().toString().trim());
+
+                // 비번 찾기랑 마찬가지로 서버로 보내고 결과값을 받는다.
+            }
+        });
     }
 }
