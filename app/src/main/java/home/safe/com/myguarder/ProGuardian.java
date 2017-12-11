@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hotki on 2017-11-01.
@@ -66,12 +67,24 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public static final String LOCATION = "location";
 
     //polyline
-    Polyline line;
+
+    //polyline 지난위치보기
+    List<Polyline> polylinesLastLocation = new ArrayList<>();
+    //polyline 현재이동경로
+    List<Polyline> polylinesLocation = new ArrayList<>();
+    //polyline 요청위치
+    List<Polyline> polylinesRequestLocation = new ArrayList<>();
 
     private LatLng startPL = new LatLng(0, 0);        //polyline 시작점
     private LatLng endPL = new LatLng(0, 0);        //polyline 끝점
+
     //marker
-    Marker point;
+    //marker 지난위치마커
+    List<Marker> markersLastLocation = new ArrayList<>();
+    //marker 현재위치마커
+    List<Marker> markersLocation = new ArrayList<>();
+    //marker 요청위치마커
+    List<Marker> markersRequestLocation = new ArrayList<>();
 
     //intent PopupCycle key code
     public final static int MY_REQUEST_CODE = 1111;
@@ -88,7 +101,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     long now;
 
     ArrayList locationList = new ArrayList<Location>();
-    public boolean mapDrawFlag = false;
 
     //db
     private SQLiteOpenHelper sqLiteOpenHelper;
@@ -361,6 +373,17 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         {
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    for(Polyline line : polylinesLastLocation)
+                    {
+                        line.remove();
+                    }
+                    polylinesLastLocation.clear();
+                    return false;
+                }
+            });
         }
         else
         {
@@ -368,6 +391,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
     }
+
+
 
     /**
     * 
@@ -417,6 +442,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 * @author 경창현
 * @version 1.0.0
 * @text createLocationRequest에서 설정한 시간마다 위치정보를 불러옴
+ * 고려해야할 부분 - 지킴이 화면에 위치정보를 보내는 방법 2개 중 택 1 해야함
+ * 1. locationList를 사용하여 위치정보를 보내서 폴리라인을 추가한다.
+ * 2. polylinesLocation를 사용하여 폴리라인을 그려준다.
 * @since 2017-11-22 오후 4:29
 **/
     @Override
@@ -425,7 +453,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         if(null != googleMap) {
             //위치 저장
-            locationList.add(mCurrentLocation);
+            locationList.add(mCurrentLocation); // 1. 위치를 저장해서 폴리라인을 추가하는 방법
+            //polylinesLocation 치환 가능   ->  2. polylinesLocation을 보내서 폴리라인을 그려주는 방법(위치정보까지 들어있음 getPoint())
 
             printThisLocation();
         }
@@ -455,7 +484,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                 //이동경로 그리기
                 endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
-                drawPolyline(startPL,endPL);
+                drawPolyline(startPL, endPL, polylinesLocation);
+                drawMarker(startPL, markersLocation);
 
                 startPL = endPL;
             }
@@ -473,38 +503,56 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * return : void
     * @since 2017-11-30 오후 2:25
     **/
-    public void drawPolyline(LatLng start, LatLng end)
+    public void drawPolyline(LatLng start, LatLng end,List<Polyline> polylines)
     {
         PolylineOptions polylineOptions = new PolylineOptions().add(start).add(end).width(15).color(Color.RED).geodesic(true);
-        line = googleMap.addPolyline(polylineOptions);
-
-        MarkerOptions markerOptions = new MarkerOptions().position(start).draggable(true);
-        //icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_point)
-        point = googleMap.addMarker(markerOptions);
+        polylines.add(googleMap.addPolyline(polylineOptions));
     }
 
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text Polyline 그리기
+     * param : ( LatLng )
+     * return : void
+     * @since 2017-12-10 오후 8:25
+     **/
+    public void drawMarker(LatLng start, List<Marker> markers)
+    {
+        MarkerOptions markerOptions = new MarkerOptions().position(start).draggable(true);
+        //icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_point)
+        markers.add(googleMap.addMarker(markerOptions));
+    }
+
+/**
+ * 
+ * @author 경창현
+ * @version 1.0.0
+ * @text 다시 polyline 그리기
+ * @since 2017-12-11 오후 4:32
+**/
     public void reDrawPolyline()
     {
+        List<LatLng> points;
 
-        Location locationS;
-        Location locationE;
+        //맵 클리어 해주고
+        googleMap.clear();
 
-        Log.d("reDrawPolyline"," "+locationList.size());
-
-
-        //폴로라인 다시 그리기
-        for(int i = 0;i<locationList.size()-1;i++)
+        //폴리라인 그리기
+        for(Polyline line : polylinesLocation)
         {
-            Log.d("reDrawPolyline", "for "+i);
-            locationS = ((Location)locationList.get(i));
-            locationE = ((Location)locationList.get(i+1));
-            Log.d("reDrawPolyline", "locationS"+i+" "+locationS.getLatitude());
-            Log.d("reDrawPolyline", "locationS"+i+" "+locationS.getLongitude());
-            Log.d("reDrawPolyline", "locationE"+i+" "+locationE.getLatitude());
-            Log.d("reDrawPolyline", "locationE"+i+" "+locationE.getLongitude());
-            LatLng a = new LatLng(locationS.getLatitude(),locationS.getLongitude());
-            LatLng b = new LatLng(locationE.getLatitude(),locationE.getLongitude());
-            drawPolyline(a ,b);
+            googleMap.addPolyline(new PolylineOptions().add(line.getPoints().get(0),line.getPoints().get(1)).width(15).color(Color.RED).geodesic(true));
+
+            Log.d("polylineVB",""+line.getPoints().get(0));
+            Log.d("polylineVB",""+line.getPoints().get(1));
+            Log.d("polylineVB",""+line.isVisible());
+
+        }
+
+        for(Marker mark : markersLocation)
+        {
+            googleMap.addMarker(new MarkerOptions().position(mark.getPosition()).draggable(true));
         }
     }
 
@@ -552,14 +600,25 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     * @author 경창현
     * @version 1.0.0
     * @text
-     * 1. 마커 갯수 정하기
-     * 2. 객체로 만들어서 생성해보기
-     * 3. 지난 위치보기 3개 경로 만들고 지우고 새로 뿌리는지 확인
+     * 1. 마커 갯수 정하기 - 마커 객체화로 처리 ok
+     * 2. 객체로 만들어서 생성해보기 - ok
+     * 3. 지난 위치보기 3개 경로 만들고 지우고 새로 뿌리는지 확인 ok
      * 4. 테스크 설정하고 새로띄움
      * 5. 지킴이 주기 필요없다.
      * 6. 설정 주기 확인
      * 7. 쉐어프리펄런스 -> 이동수단 내용 사용  (public class 생성해서 모든 모듈에서 접근가능하게도 고려)
      * 8. 지킴이 화면에서 피지킴이 목록을 띄워 한명 선택 후 위치 확인 가능하게
     * @since 2017-12-08 오후 3:25
+    **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text 추가해야할 사항
+     * 1. 지난 위치보기 난후 현재 위치보기로 이전해야하는데 버튼을 만들지 안만들지(지난 위치보기와 현재 위치가 겹침) + 현재위치보기 호출하는것 중지해야함
+     * 2. 테스크 설정 지킴이 관리 같은거 누를시 설정 정해야함
+     * 3.
+     * @since 2017-12-11 오후 5:41
     **/
 }

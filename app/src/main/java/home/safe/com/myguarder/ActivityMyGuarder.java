@@ -71,9 +71,9 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
 
-        if(null != line) {
-            line.remove();
-        }
+//        if(null != line) {
+//            line.remove();
+//        }
     }
 
     @Override
@@ -98,7 +98,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         }
         else if(view.getId() == btnLocation.getId())
         {
-            drawPolyline(new LatLng(37.2350000, 127.0620000),new LatLng(37.2353114, 127.0626726));
+//            drawPolyline(new LatLng(37.2350000, 127.0620000),new LatLng(37.2353114, 127.0626726));
             civilianLocationRequest();
         }
     }
@@ -143,9 +143,9 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         //리스트에 있는 위도 경도로 폴리라인 그리기
         // onMapReady()안거친다.
         //리스트를 drawPolyline()으로 그려주기만 하면 된다.
-        drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000));
-        drawPolyline(new LatLng(37.2350000 ,127.0620000), new LatLng(37.2320000,127.0610000));
-        drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.2320000,127.0550000));
+        drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000), polylinesLastLocation);
+        drawPolyline(new LatLng(37.2350000 ,127.0620000), new LatLng(37.2320000,127.0610000), polylinesLastLocation);
+        drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.2320000,127.0550000), polylinesLastLocation);
 
         Toast.makeText(this,"selectPopupList",Toast.LENGTH_SHORT).show();
     }

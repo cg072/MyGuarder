@@ -34,7 +34,10 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
     ToggleButton tbCivilianMode;
     ToggleButton tbGuarderMode;
 
-    int cycleNum = 5;
+    //주기 시간
+    private int cycleNum = 5;
+    //메인 상태 확인
+    private int MainstateFrag = 0;
 
     //intent PopupCycle key code
     private final static int MY_REQUEST_CODE = 1111;
@@ -57,7 +60,16 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
         tbCivilianMode = (ToggleButton)findViewById(R.id.tbCivilianMode);
         tbGuarderMode = (ToggleButton)findViewById(R.id.tbGuarderMode);
 
-
+        if(".ActivityCivilian".equals(getCallingActivity().getShortClassName()))
+        {
+            tbCivilianMode.setChecked(true);
+            tbGuarderMode.setChecked(false);
+        }
+        else if(".ActivityMyGuarder".equals(getCallingActivity().getShortClassName()))
+        {
+            tbCivilianMode.setChecked(false);
+            tbGuarderMode.setChecked(true);
+        }
 
         btnCycleSetting.setOnClickListener(this);
         btnGuarderSetting.setOnClickListener(this);
@@ -95,14 +107,30 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 startActivity(intent5);
                 break;
             case R.id.tbCivilianMode:
-                tbCivilianMode.setChecked(true);
-                tbGuarderMode.setChecked(false);
+                if(!tbCivilianMode.isChecked())
+                {
+                    finish();
+                }
+                else {
+                    tbCivilianMode.setChecked(true);
+                    tbGuarderMode.setChecked(false);
+                }
+
                 break;
             case R.id.tbGuarderMode:
-                tbCivilianMode.setChecked(false);
-                tbGuarderMode.setChecked(true);
-                Intent intent7 = new Intent(this, ActivityMyGuarder.class);
-                startActivity(intent7);
+                if(!tbGuarderMode.isChecked())
+                {
+                    finish();
+                }
+                else
+                {
+                    tbCivilianMode.setChecked(false);
+                    tbGuarderMode.setChecked(true);
+
+                    Intent intent7 = new Intent(this, ActivityMyGuarder.class);
+                    startActivity(intent7);
+                }
+
                 break;
             case R.id.btnSignOutSetting:
                 break;

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 
 
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
@@ -90,9 +91,9 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
 
-        if(null != line) {
-            line.remove();
-        }
+//        if(null != line) {
+//            line.remove();
+//        }
     }
 
     @Override
@@ -163,22 +164,33 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         //리스트에 있는 위도 경도로 폴리라인 그리기
         // onMapReady()안거친다.
         //리스트를 drawPolyline()으로 그려주기만 하면 된다.
+
+        //기존의 지난 위치보기 polyline 삭제
+        for(Polyline line : polylinesLastLocation)
+        {
+            line.remove();
+        }
+        polylinesLastLocation.clear();
+
+        //선택한 목록의 polyline 그리기
         if("2017.12.05".equals(date))
         {
             Toast.makeText(this,"2017.12.05",Toast.LENGTH_SHORT).show();
+            drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000), polylinesLastLocation);
+            drawPolyline(new LatLng(37.2350000 ,127.0620000), new LatLng(37.2320000,127.0610000), polylinesLastLocation);
+            drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.2320000,127.0550000), polylinesLastLocation);
         }
         else if("2017.12.04".equals(date))
         {
             Toast.makeText(this,"2017.12.04",Toast.LENGTH_SHORT).show();
+            drawPolyline(new LatLng(37.2350000 ,127.0626087), new LatLng(37.2350000,127.0620000), polylinesLastLocation);
         }
         else if("2017.12.03".equals(date))
         {
-            Toast.makeText(this,"2017.12.03",Toast.LENGTH_SHORT).show();
-        }
-        drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000));
-        drawPolyline(new LatLng(37.2350000 ,127.0620000), new LatLng(37.2320000,127.0610000));
-        drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.2320000,127.0550000));
 
+            Toast.makeText(this,"2017.12.03",Toast.LENGTH_SHORT).show();
+            drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.0000000,127.0000000), polylinesLastLocation);
+        }
 
 
     }

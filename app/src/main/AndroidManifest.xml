@@ -43,6 +43,8 @@
         <activity android:name=".ActivitySetting" />
         <activity
             android:name=".ActivityPopupCycle"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity android:name=".ActivityPopupCivilianList"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
     </application>
 
