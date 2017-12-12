@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 //import home.safe.com.guarder.R;
@@ -39,6 +40,9 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     String nowGuarderName;
     String nowGuarderPhone;
 
+    LinearLayout lay1;
+    LinearLayout lay2;
+
     ArrayList<ListViewItemSearch> alSearch = null;
     ArrayList<ListViewItemSearch> alSearchResult = null;
     ArrayList<ListViewItemGuarders> alGuarders = null;
@@ -49,6 +53,10 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guarder);
+
+        lay1 = (LinearLayout) findViewById(R.id.lay1);
+        lay1 = (LinearLayout) findViewById(R.id.lay2);
+
 
         etSearch = (EditText) findViewById(R.id.etSearch);
         btnSearch = (Button) findViewById(R.id.btnSearch);

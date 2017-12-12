@@ -116,7 +116,7 @@
                 <Button
                     android:id="@+id/btnSend"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/btn_Size_Commit"
                     android:layout_marginTop="50dp"
                     android:background="@drawable/btn_round_login"
                     android:text="확         인"

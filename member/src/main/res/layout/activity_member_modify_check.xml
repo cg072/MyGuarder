@@ -57,7 +57,7 @@
                 <Button
                     android:id="@+id/btnCheckPWD"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/btn_Size_Commit"
                     android:background="@drawable/btn_round_login"
                     android:text="입 력 확 인"
                     android:textColor="@color/colorWhite"

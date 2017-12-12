@@ -290,7 +290,7 @@
                 <Button
                     android:id="@+id/btnModify"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/btn_Size_Commit"
                     android:background="@drawable/btn_round_login"
                     android:text="수 정 완 료"
                     android:textSize="20dp"
