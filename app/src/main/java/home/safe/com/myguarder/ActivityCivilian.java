@@ -22,7 +22,9 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     Button btnCivilianLog;
     Button btnEmergency;
 
+    TextView tvJikimNameThisCivilian;
     TextView tvTransNameThisCivilian;
+    TextView tvMemoThisCivilian;
 
 
 
@@ -43,7 +45,9 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
         btnEmergency = (Button)findViewById(R.id.btnEmergency);
+        tvJikimNameThisCivilian = (TextView)findViewById(R.id.tvJikimNameThisCivilian);
         tvTransNameThisCivilian = (TextView)findViewById(R.id.tvTransNameThisCivilian);
+        tvMemoThisCivilian = (TextView)findViewById(R.id.tvMemoThisCivilian);
 
         buildGoogleApiClient();
         mGoogleApiClient.connect();
@@ -71,7 +75,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     protected void onResume() {
 
         loadData();
-        tvTransNameThisCivilian.setText(""+cycleCivilian);
+//        tvTransNameThisCivilian.setText(""+cycleCivilian);//전송주기 표시
         if(mGoogleApiClient.isConnected())
         {
             Log.d("onResume","isConnected");
@@ -214,6 +218,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     private void loadData()
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        tvTransNameThisCivilian.setText(preferences.getString("TransName","택시(기본값)"));
+        tvMemoThisCivilian.setText(preferences.getString("TransMemo","기본값"));
         cycleCivilian = preferences.getInt("cycleCivilian", 10000);
     }
 

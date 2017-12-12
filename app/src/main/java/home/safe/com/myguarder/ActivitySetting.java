@@ -64,11 +64,15 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
         {
             tbCivilianMode.setChecked(true);
             tbGuarderMode.setChecked(false);
+            btnCycleSetting.setEnabled(true);
+            btnGuarderSetting.setEnabled(true);
         }
         else if(".ActivityMyGuarder".equals(getCallingActivity().getShortClassName()))
         {
             tbCivilianMode.setChecked(false);
             tbGuarderMode.setChecked(true);
+            btnCycleSetting.setEnabled(false);
+            btnGuarderSetting.setEnabled(false);
         }
 
         btnCycleSetting.setOnClickListener(this);

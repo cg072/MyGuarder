@@ -83,7 +83,6 @@
                     android:layout_below="@+id/tvJikimNameThisCivilian"
                     android:layout_toRightOf="@+id/tvTransNameCivilian"
                     android:gravity="center_horizontal"
-                    android:text="택시"
                     android:textSize="20dp" />
 
                 <TextView
@@ -93,7 +92,6 @@
                     android:layout_below="@+id/tvTransNameThisCivilian"
                     android:layout_toRightOf="@+id/tvMemoCivilian"
                     android:gravity="center_horizontal"
-                    android:text="서울 1003"
                     android:textSize="20dp" />
 
             </RelativeLayout>
