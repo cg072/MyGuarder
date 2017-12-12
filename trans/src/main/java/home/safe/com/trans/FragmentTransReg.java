@@ -1,8 +1,10 @@
 package home.safe.com.trans;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
@@ -19,6 +21,9 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
 import home.safe.com.trans.R;
 
 /**
@@ -27,10 +32,15 @@ import home.safe.com.trans.R;
  */
 
 public class FragmentTransReg extends Fragment implements View.OnClickListener{
+    ArrayList<TestListViewDTO> dtoList = new ArrayList<TestListViewDTO>();
+    TestListViewDTO testDto;
     ActivityTrans mainActivity;
     TextView tvtranskind;
     EditText etTextTrans;
     Button btnRegTrans;
+
+    String kind;
+    String text;
 
 
 
@@ -103,9 +113,23 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
         }
 
         if(view == btnRegTrans){
-            String msg = tvtranskind.getText() + ":" + etTextTrans.getText();
 
-            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+            if(tvtranskind.getText().equals("이동수단 종류 선택")){
+                AlertDialog.Builder warnAlert = new AlertDialog.Builder(getActivity());
+                warnAlert.setTitle("이동수단을 등록하지 않음");
+                warnAlert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        etTextTrans.setText(null);
+
+                    }
+                });
+
+                warnAlert.create();
+                warnAlert.show();
+            }
+
+
 
         }
 
