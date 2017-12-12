@@ -10,6 +10,7 @@ import android.widget.ToggleButton;
 
 import home.safe.com.guarder.ActivityGuarder;
 import home.safe.com.member.ActivityMemberModify;
+import home.safe.com.member.ActivityMemberModifyCheck;
 import home.safe.com.notice.ActivityNotice;
 import home.safe.com.trans.ActivityTrans;
 
@@ -103,7 +104,7 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 startActivity(intent3);
                 break;
             case R.id.btnMyInfoSetting:
-                Intent intent4 = new Intent(this, ActivityMemberModify.class);
+                Intent intent4 = new Intent(this, ActivityMemberModifyCheck.class);
                 startActivity(intent4);
                 break;
             case R.id.btnNoticeSetting:
