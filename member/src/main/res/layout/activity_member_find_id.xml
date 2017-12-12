@@ -20,90 +20,75 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="아이디 찾기"
-                android:textSize="30dp"
+                android:textSize="45dp"
                 android:gravity="center"
-                android:layout_marginTop="100dp"></TextView>
+                android:layout_marginTop="100dp"
+                android:layout_marginBottom="50dp"></TextView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="50dp"
-                android:orientation="vertical">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="E-Mail"
                         android:textSize="@dimen/textSize" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
 
-                        <EditText
-                            android:id="@+id/etEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/textHeight"
-                            android:layout_weight="2"
-                            android:background="@color/colorWhite"
-                            android:paddingStart="10dp"
-                            android:textSize="@dimen/textSize"
-                            android:maxLines="1"
-                            android:lines="1"
-                            android:singleLine="true"
-                            android:imeOptions="actionDone"
-                            android:inputType="textEmailAddress"/>
-                    </LinearLayout>
+                    <EditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@color/colorWhite"
+                        android:paddingStart="10dp"
+                        android:textSize="@dimen/textSize"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"/>
                 </LinearLayout>
+
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="Phone"
                         android:textSize="@dimen/textSize" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/etPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@color/colorWhite"
+                        android:paddingStart="10dp"
+                        android:textSize="@dimen/textSize"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"/>
 
-                        <EditText
-                            android:id="@+id/etPhone"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/textHeight"
-                            android:layout_weight="2"
-                            android:background="@color/colorWhite"
-                            android:paddingStart="10dp"
-                            android:textSize="@dimen/textSize"
-                            android:maxLines="1"
-                            android:lines="1"
-                            android:singleLine="true"
-                            android:imeOptions="actionDone"
-                            android:inputType="number"/>
-
-                    </LinearLayout>
                 </LinearLayout>
 
                 <TextView
@@ -116,7 +101,7 @@
                 <Button
                     android:id="@+id/btnSend"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/btn_Size_Commit"
+                    android:layout_height="80dp"
                     android:layout_marginTop="50dp"
                     android:background="@drawable/btn_round_login"
                     android:text="확         인"
@@ -127,7 +112,6 @@
 
             </LinearLayout>
 
-        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

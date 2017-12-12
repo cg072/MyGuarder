@@ -42,7 +42,6 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
                 } else {
                     Toast.makeText(ActivityMemberModifyCheck.this, "Password를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
                 }
-                finish();
             }
         });
     }

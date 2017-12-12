@@ -30,7 +30,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
     private EditText etPWD;
     private EditText etCheckPWD;
     private EditText etName;
-    private EditText etPhone;
+    private TextView tvPhone;
     private EditText etBirth;
     private EditText etEMail;
 
@@ -50,6 +50,8 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
 
     final String TAG = "";
 
+    MemberCheck memberCheck = new MemberCheck();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         etPWD = (EditText)findViewById(R.id.etPWD);
         etCheckPWD = (EditText)findViewById(R.id.etCheckPWD);
         etName = (EditText)findViewById(R.id.etName);
-        etPhone = (EditText)findViewById(R.id.etPhone);
+        tvPhone = (TextView)findViewById(R.id.tvPhone);
         etBirth = (EditText)findViewById(R.id.etBirth);
         etEMail = (EditText)findViewById(R.id.etEmail);
 
@@ -78,15 +80,24 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View view) {
 
-                if(checkPWD(etPWD.getText().toString().trim())      == true &&
-                   checkName(etName.getText().toString().trim())    == true &&
-                   checkPWDEqual() == true ) {
+                String pwd = etPWD.getText().toString().trim();
+                String checkPWD = etCheckPWD.getText().toString().trim();
+                String name     = etName.getText().toString().trim();
+                String birth    = etBirth.getText().toString().trim();
+                String email    = etEMail.getText().toString().trim();
+
+                if(memberCheck.checkPWD(pwd, checkPWD, view.getContext())      == true &&
+                   memberCheck.checkName(name, view.getContext())              == true &&
+                   memberCheck.checkBirth(birth, view.getContext())            == true &&
+                   memberCheck.checkEmail(email, view.getContext())            == true ) {
 
                     memberVO.setMid(tvID.getText().toString().trim());
                     memberVO.setMpwd(etPWD.getText().toString().trim());
                     memberVO.setMname(etName.getText().toString().trim());
-                    memberVO.setMemail(etEMail.getText().toString().trim());
+                    memberVO.setMphone(hyphenRemove(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
                     memberVO.setMbirth(etBirth.getText().toString().trim());
+                    memberVO.setMemail(etEMail.getText().toString().trim());
+
 
                     // 성별 판단 f,m,u
                     if (rbFemale.isChecked()) {
@@ -122,7 +133,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 public void onDismiss(DialogInterface dialogInterface) {
                     if (settingCode.equals(certDialog.getSendCode())) {
                         Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                        etPhone.setEnabled(false);
+                        //tvPhone.setEnabled(false);
                         btnCertificationPhone.setEnabled(false);
                         btnModify.setEnabled(true);
                     } else {
@@ -132,41 +143,6 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
             });
             certDialog.show();
         }
-    }
-
-    private boolean checkName(String name) {
-        boolean check = false;
-
-        if( name.length() > 0 ) {
-            check = true;
-        } else {
-            Toast.makeText(ActivityMemberModify.this, "이름 기입 필수", Toast.LENGTH_SHORT).show();
-        }
-
-        return  check;
-    }
-
-    private boolean checkPWD(String pwd) {
-        boolean check = false;
-
-        if( pwd.length() >= 7 ) {
-            check = true ;
-        } else {
-            Toast.makeText(ActivityMemberModify.this, "Password 7자리 이상 요구", Toast.LENGTH_SHORT).show();
-        }
-
-        return check;
-    }
-
-    private boolean checkPWDEqual() {
-        boolean check = false;
-
-        if(etPWD.getText().toString().trim().equals(etCheckPWD.getText().toString().trim())) {
-            check = true;
-        } else {
-            Toast.makeText(this, "Password가 서로 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-        }
-        return check;
     }
 
 
@@ -256,7 +232,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 myNumber = mgr.getLine1Number();
                 myNumber = myNumber.replace("+82", "0");
                 Toast.makeText(this, myNumber, Toast.LENGTH_SHORT).show();
-                etPhone.setText(hyphenAdd(myNumber));
+                tvPhone.setText(hyphenAdd(myNumber));
             } catch (Exception e) {
                 Toast.makeText(this, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
@@ -291,4 +267,26 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         }
         return resultString;
     }
+
+
+    /*
+     *  date     : 2017.11.22
+     *  author   : Kim Jong-ha
+     *  title    : hyphenRemove() 메소드 생성
+     *  comment  : 전화 번호 사이의 '-' 를 제거한다
+     *  return   : String 형태
+     * */
+    private String hyphenRemove(String phone) {
+
+        String[] basePhone = phone.split("-");
+
+        Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
+        String resultPhone = basePhone[0];
+        if(basePhone[0].length() < 10) {
+            resultPhone = resultPhone + basePhone[1] + basePhone[2];
+        }
+
+        return resultPhone;
+    }
 }
+

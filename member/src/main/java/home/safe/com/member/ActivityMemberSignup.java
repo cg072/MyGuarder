@@ -27,12 +27,14 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
 
     private static final String settingCode = "200";
 
+    private static final String typeDuplication = "ID 중복 체크를";
+    private static final String typeCertification = "전화 번호 인증을";
 
     private EditText etID;
     private EditText etPWD;
     private EditText etCheckPWD;
     private EditText etName;
-    private EditText etPhone;
+    private TextView tvPhone;
     private EditText etBirth;
     private EditText etEMail;
     private RadioButton rbUndefine;
@@ -50,6 +52,10 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
 
     private ActivityMemberCertDialog certDialog = null;
 
+    MemberCheck memberCheck = new MemberCheck();
+
+    final String testID = "kkkk1111";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +65,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         etPWD = (EditText)findViewById(R.id.etPWD);
         etCheckPWD = (EditText)findViewById(R.id.etCheckPWD);
         etName = (EditText)findViewById(R.id.etName);
-        etPhone = (EditText)findViewById(R.id.etPhone);
+        tvPhone = (TextView) findViewById(R.id.tvPhone);
         etBirth = (EditText)findViewById(R.id.etBirth);
         etEMail = (EditText)findViewById(R.id.etEmail);
         rbUndefine = (RadioButton)findViewById(R.id.rbUndefine);
@@ -75,11 +81,19 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         btnDuplicationID.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String ID = etID.getText().toString().trim();
-                if(checkID(ID) == true) {}
+
+                String id = etID.getText().toString().trim();
+
+                if( memberCheck.checkID(id, view.getContext()) &&      // 아이디 조건에 적합하고
+                    !id.equals(testID)                            ) {   // 중복이 아니라면
+
+                    etID.setEnabled(false);
+                    btnDuplicationID.setEnabled(false);
+                    Toast.makeText(ActivityMemberSignup.this, "사용가능한 ID입니다", Toast.LENGTH_SHORT).show();
+                }
                 // 서버로 아이디 보낸다. 중복이 없으면 isEnable를 false로 해놓고 가입버튼시 false인지 체크한다.
                 else {
-                    Toast.makeText(ActivityMemberSignup.this, "ID 기입 오류", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityMemberSignup.this, "ID 중복", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -88,16 +102,28 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View view) {
 
-                if (checkID(etID.getText().toString().trim())       == true &&
-                    checkPWD(etPWD.getText().toString().trim())     == true &&
-                    checkName(etName.getText().toString().trim())   == true &&
-                    checkPWDEqual()                                  == true) {
+                String pwd      = etPWD.getText().toString().trim();
+                String checkPWD = etCheckPWD.getText().toString().trim();
+                String name     = etName.getText().toString().trim();
+                boolean btnDupli    = btnDuplicationID.isEnabled();
+                boolean btnCert    = btnDuplicationID.isEnabled();
+                String birth    = etBirth.getText().toString().trim();
+                String email    = etEMail.getText().toString().trim();
+
+                if (memberCheck.checkBtn(typeDuplication, btnDupli, view.getContext())   == true &&  // 중복 버튼이 비활성화 되어있고
+                    memberCheck.checkPWD(pwd, checkPWD, view.getContext())                 == true &&  // 비번이 형식이 맞고
+                    memberCheck.checkName(name , view.getContext())                        == true &&  // 이름이 기입되어있다면
+                    memberCheck.checkBtn(typeCertification, btnDupli, view.getContext()) == true &&  // 인증 버튼이 비활성화 되어있고
+                    memberCheck.checkBirth(birth, view.getContext())                       == true &&  // 생년월일 체크가 되어있고(빈칸가능)
+                    memberCheck.checkEmail(email, view.getContext())                       == true  ) {// 이메일 체크가 되었다면(빈칸가능)
 
                     memberVO.setMid(etID.getText().toString().trim());
                     memberVO.setMpwd(etPWD.getText().toString().trim());
                     memberVO.setMname(etName.getText().toString().trim());
-                    memberVO.setMemail(etEMail.getText().toString().trim());
+                    memberVO.setMphone(hyphenRemove(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
                     memberVO.setMbirth(etBirth.getText().toString().trim());
+                    memberVO.setMemail(etEMail.getText().toString().trim());
+
 
                     // 성별 판단 f,m,u
                     if (rbFemale.isChecked()) {
@@ -119,6 +145,8 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
     }
 
 
+
+
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnCertificationPhone) {
@@ -135,7 +163,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
                 public void onDismiss(DialogInterface dialogInterface) {
                     if (settingCode.equals(certDialog.getSendCode())) {
                         Toast.makeText(ActivityMemberSignup.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                        etPhone.setEnabled(false);
+                        //tvPhone.setEnabled(false);
                         btnCertificationPhone.setEnabled(false);
                         btnSignup.setEnabled(true);
                     } else {
@@ -147,7 +175,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private boolean checkName(String name) {
+/*    private boolean checkName(String name) {
         boolean check = false;
 
         if( name.length() > 0 ) {
@@ -222,7 +250,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         long hexLong = Long.parseLong(hexStr, 16);
 
         return hexLong;
-    }
+    }*/
 
     /*
     *  date     : 2017.11.12
@@ -310,7 +338,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
                 myNumber = mgr.getLine1Number();
                 myNumber = myNumber.replace("+82", "0");
                 Toast.makeText(this, myNumber, Toast.LENGTH_SHORT).show();
-                etPhone.setText(hyphenAdd(myNumber));
+                tvPhone.setText(hyphenAdd(myNumber));
             } catch (Exception e) {
                 Toast.makeText(this, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
@@ -344,5 +372,25 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
                 resultString = "Error";
         }
         return resultString;
+    }
+
+    /*
+     *  date     : 2017.11.22
+     *  author   : Kim Jong-ha
+     *  title    : hyphenRemove() 메소드 생성
+     *  comment  : 전화 번호 사이의 '-' 를 제거한다
+     *  return   : String 형태
+     * */
+    private String hyphenRemove(String phone) {
+
+        String[] basePhone = phone.split("-");
+
+        Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
+        String resultPhone = basePhone[0];
+        if(basePhone[0].length() < 10) {
+            resultPhone = resultPhone + basePhone[1] + basePhone[2];
+        }
+
+        return resultPhone;
     }
 }

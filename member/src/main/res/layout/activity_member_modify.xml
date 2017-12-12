@@ -80,7 +80,7 @@
                     android:layout_weight="3"
                     android:background="@color/colorWhite"
                     android:hint="Password 7자리 이상 입력"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:lines="1"
                     android:maxLines="1"
@@ -110,7 +110,7 @@
                     android:layout_weight="3"
                     android:background="@color/colorWhite"
                     android:hint="Password 한번 더 입력"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:lines="1"
                     android:maxLines="1"
@@ -172,16 +172,13 @@
                     android:layout_weight="3"
                     android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/etPhone"
+                    <TextView
+                        android:id="@+id/tvPhone"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:background="@color/colorWhite"
-                        android:enabled="false"
-                        android:imeOptions="actionDone"
-                        android:lines="1"
-                        android:maxLines="1"
+                        android:gravity="center"
                         android:paddingStart="10dp"
                         android:singleLine="true"
                         android:textSize="@dimen/textSize" />
@@ -219,7 +216,7 @@
                     android:layout_weight="3"
                     android:background="@drawable/et_round_signup"
                     android:hint="예) 19701201"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionNext"
                     android:inputType="number"
                     android:lines="1"
                     android:maxLines="1"
