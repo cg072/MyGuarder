@@ -17,8 +17,11 @@
             </intent-filter>-->
         </activity>
 
-        <!--이동수단 내역을 담는 ActivityTransListPopup 을 선언-->
-        <activity android:name=".ActivityTransListPopup" ></activity>
+        <!--이동수단 내역을 담는 ActivityTransListPopup 을 선언
+        <activity android:name=".ActivityTransListPopup" ></activity>-->
+
+
+
     </application>
 
 </manifest>

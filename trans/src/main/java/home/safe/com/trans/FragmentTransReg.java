@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -31,6 +32,24 @@ import home.safe.com.trans.R;
  * 이동수단 등록을 위한 프래그먼트 클래스 작성
  */
 
+/*해야할일
+1. fragment_transreg.xml에서 얼럿버튼 클릭시 에디트 텍스트 부분이 초기화 됨!! 수정해야함
+=>>안되면 토스트메시지로 대체하고 finish가 안되게 한다.
+
+2. 이동수단내역으로 탭이 옮겨질 때, 키보드를 사라지게 해야한다!!
+
+3. 에디트텍스트에 자동으로 포커싱 방지
+
+4. 이동수단 변경시 창현이 화면에 나타나야 하는데, 그것에 대한 협의가 필요!!
+=>>
+getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+(preferences.getString("TransName","택시(기본값)");
+preferences.getString("TransMemo","기본값");
+
+5.
+
+*/
+
 public class FragmentTransReg extends Fragment implements View.OnClickListener{
     ArrayList<TestListViewDTO> dtoList = new ArrayList<TestListViewDTO>();
     TestListViewDTO testDto;
@@ -38,6 +57,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
     TextView tvtranskind;
     EditText etTextTrans;
     Button btnRegTrans;
+    InputMethodManager imm;
 
     String kind;
     String text;
@@ -68,6 +88,9 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
         etTextTrans = (EditText) rootView.findViewById(R.id.etTextTrans);
         btnRegTrans = (Button) rootView.findViewById(R.id.btnRegTrans);
 
+        imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
         tvtranskind.setOnClickListener(this);
         btnRegTrans.setOnClickListener(this);
 
@@ -76,6 +99,9 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+
+        hideKeyboard();
+
         if(view == tvtranskind){
 
             PopupMenu popupMenu = new PopupMenu(getContext().getApplicationContext(), view);
@@ -132,6 +158,12 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
 
         }
+
+    }
+
+    public void hideKeyboard(){
+
+        imm.hideSoftInputFromWindow(etTextTrans.getWindowToken(), 0);
 
     }
 
