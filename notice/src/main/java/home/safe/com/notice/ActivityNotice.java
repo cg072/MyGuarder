@@ -33,7 +33,9 @@ import java.util.HashMap;
 * 해야할일 :
 * 1. 디자인 변경!!!
 * 2. 디비에서 정보 받아오기!!!
-* */
+* 3. text라인 막아야함!!!
+* 4. 공지사항 하나를 클릭하면 다른 공지사항들은 접혀야 함!!
+* 5. 작성자를 데이트로 바꾸어서 저장해야 함!! */
 
 
 public class ActivityNotice extends AppCompatActivity implements View.OnClickListener{
