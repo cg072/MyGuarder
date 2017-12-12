@@ -17,24 +17,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="인증 코드"
-            android:textSize="40dp"
-            android:layout_marginBottom="30dp"/>
+            android:textSize="60dp"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/tvCertCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0000"
-            android:textSize="40dp"
-            android:textColor="@color/colorAppbar"
-            android:layout_marginTop="10dp"/>
+            android:textSize="50dp"
+            android:textColor="@color/colorAppbar" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="상단의 인증코드를 입력하여 주세요"
-            android:textSize="15dp"
+            android:text="상단의 인증코드 입력"
+            android:textSize="25dp"
             android:layout_marginTop="30dp"></TextView>
 
         <EditText
@@ -42,7 +41,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
 
-            android:textSize="15dp"
+            android:textSize="25dp"
             android:gravity="center"
             android:maxLines="1"
             android:lines="1"
@@ -54,10 +53,10 @@
         <Button
             android:id="@+id/btnCheckCode"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/btn_Size_Commit"
+            android:layout_height="80dp"
             android:text="확         인"
-            android:textSize="@dimen/textSize"
-            android:layout_marginTop="20dp"/>
+            android:textSize="30dp"
+            android:layout_marginTop="30dp"/>
     </LinearLayout>
 </LinearLayout>
 

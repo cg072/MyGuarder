@@ -15,15 +15,16 @@
             android:orientation="vertical"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
-            android:paddingTop="80dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             >
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="회 원 가 입"
-                android:textSize="40dp"
+                android:textSize="55dp"
                 android:gravity="center"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,31 +33,32 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="ID"
                         android:textSize="@dimen/textSize" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:orientation="horizontal">
 
                         <EditText
                             android:id="@+id/etID"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/textHeight"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="2"
                             android:background="@color/colorWhite"
+                            android:hint="영숫자 6자리 이상"
                             android:imeOptions="actionDone"
                             android:inputType="textEmailAddress"
                             android:lines="1"
@@ -67,9 +69,9 @@
 
                         <Button
                             android:id="@+id/btnDuplicationID"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/textHeight"
-                            android:layout_weight="0.5"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.8"
                             android:background="@drawable/btn_round_signup"
                             android:text="중복"
                             android:textSize="@dimen/textSize" />
@@ -78,14 +80,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="PWD"
@@ -93,10 +95,11 @@
 
                     <EditText
                         android:id="@+id/etPWD"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:background="@drawable/et_round_signup"
+                        android:hint="Passowrd  7자리 이상"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:lines="1"
@@ -108,26 +111,27 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
-                        android:text="PWD      Check"
+                        android:text="PWD Check"
                         android:textSize="15dp"
                         android:maxLines="2"/>
 
                     <EditText
                         android:id="@+id/etCheckPWD"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:background="@drawable/et_round_signup"
+                        android:hint="Password 확인 입력"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:lines="1"
@@ -139,14 +143,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="Name"
@@ -154,10 +158,11 @@
 
                     <EditText
                         android:id="@+id/etName"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:background="@drawable/et_round_signup"
+                        android:hint="예) 홍길동"
                         android:imeOptions="actionDone"
                         android:inputType="textPersonName"
                         android:lines="1"
@@ -169,29 +174,29 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="Phone"
                         android:textSize="@dimen/textSize" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:orientation="horizontal">
 
                         <EditText
                             android:id="@+id/etPhone"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/textHeight"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_weight="2"
                             android:background="@color/colorWhite"
                             android:enabled="false"
@@ -205,9 +210,9 @@
 
                         <Button
                             android:id="@+id/btnCertificationPhone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/textHeight"
-                            android:layout_weight="0.5"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.8"
                             android:background="@drawable/btn_round_signup"
                             android:text="인증"
                             android:textSize="@dimen/textSize" />
@@ -216,14 +221,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="Birth"
@@ -231,9 +236,9 @@
 
                     <EditText
                         android:id="@+id/etBirth"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:background="@drawable/et_round_signup"
                         android:hint="예) 19701201"
                         android:imeOptions="actionDone"
@@ -247,14 +252,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="E-Mail"
@@ -262,10 +267,11 @@
 
                     <EditText
                         android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:background="@drawable/et_round_signup"
+                        android:hint="예) 이메일@도메인.com"
                         android:imeOptions="actionDone"
                         android:inputType="textEmailAddress"
                         android:lines="1"
@@ -277,74 +283,72 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_margin="@dimen/signup_EmptyDistance"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:background="@drawable/tv_round_signup"
                         android:gravity="center"
                         android:text="Gender"
                         android:textSize="@dimen/textSize" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:layout_weight="1"
-                        android:background="@color/colorWhite"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@color/colorBackground"
                         android:orientation="horizontal">
 
                         <RadioGroup
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/textHeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:orientation="horizontal">
 
                             <RadioButton
                                 android:id="@+id/rbUndefine"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/textHeight"
-                                android:checked="true"
-                                android:text="미지정   "
-                                android:textSize="15dp" />
-
-                            <LinearLayout
-                                android:layout_width="2dp"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:background="@color/colorBackground"></LinearLayout>
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:text="미지정"
+                                android:textSize="15dp"
+                                android:gravity="center"
+                                android:layout_marginRight="2dp"
+                                android:background="@color/colorWhite"/>
 
                             <RadioButton
                                 android:id="@+id/rbFemale"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/textHeight"
-                                android:layout_marginRight="25dp"
-                                android:text="여자"
-                                android:textSize="15dp" />
-
-                            <LinearLayout
-                                android:layout_width="2dp"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:background="@color/colorBackground"></LinearLayout>
+                                android:layout_weight="1"
+                                android:text="여자"
+                                android:textSize="15dp"
+                                android:gravity="center"
+                                android:layout_marginRight="2dp"
+                                android:background="@color/colorWhite"/>
 
                             <RadioButton
                                 android:id="@+id/rbMale"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/textHeight"
-                                android:text="남자 "
-                                android:textSize="15dp" />
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="남자"
+                                android:textSize="15dp"
+                                android:gravity="center"
+                                android:background="@color/colorWhite"/>
                         </RadioGroup>
-
-
                     </LinearLayout>
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btnSignup"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/btn_Size_Commit"
-                    android:layout_marginTop="30dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/btn_round_login"
                     android:text="확   인"
                     android:textColor="@color/colorWhite"

@@ -9,295 +9,328 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="30dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
-            android:paddingTop="30dp"
-            android:paddingBottom="30dp"
-            android:layout_marginTop="30dp"
-            >
+            android:paddingTop="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:text="내  정 보  수 정"
+                android:textSize="45dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
+                android:layout_height="60dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tv_round_signup"
+                    android:gravity="center"
+                    android:text="ID"
+                    android:textSize="@dimen/textSize" />
+
                 <TextView
                     android:id="@+id/tvID"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/textHeight"
-                    android:text="XXXX 님의 정보화면"
-                    android:textSize="@dimen/textSize"
-                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/colorWhite"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/textSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@drawable/tv_round_signup"
-                    android:layout_marginBottom="30dp"
-                    android:layout_marginTop="30dp"/>
+                    android:gravity="center"
+                    android:text="PWD"
+                    android:textSize="@dimen/textSize" />
+
+                <EditText
+                    android:id="@+id/etPWD"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/colorWhite"
+                    android:hint="Password 7자리 이상 입력"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/textSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tv_round_signup"
+                    android:gravity="center"
+                    android:text="PWD Check"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:id="@+id/etCheckPWD"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/colorWhite"
+                    android:hint="Password 한번 더 입력"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/textSize" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tv_round_signup"
+                    android:gravity="center"
+                    android:text="Name"
+                    android:textSize="@dimen/textSize" />
+
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@drawable/et_round_signup"
+                    android:hint="예) 홍길동"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/textSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tv_round_signup"
+                    android:gravity="center"
+                    android:text="Phone"
+                    android:textSize="@dimen/textSize" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="2dp">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:text="PWD"
-                        android:textSize="@dimen/textSize"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:background="@drawable/tv_round_signup"/>
                     <EditText
-                        android:id="@+id/etPWD"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:textSize="@dimen/textSize"
+                        android:id="@+id/etPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
                         android:background="@color/colorWhite"
-                        android:paddingStart="10dp"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:lines="1"
-                        android:singleLine="true"
+                        android:enabled="false"
                         android:imeOptions="actionDone"
-                        android:inputType="textPassword"/>
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/textSize" />
+
+                    <Button
+                        android:id="@+id/btnCertificationPhone"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.8"
+                        android:background="@drawable/btn_round_signup"
+                        android:text="인증"
+                        android:textSize="@dimen/textSize" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/tv_round_signup"
+                    android:gravity="center"
+                    android:text="Birth"
+                    android:textSize="@dimen/textSize" />
+
+                <EditText
+                    android:id="@+id/etBirth"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/et_round_signup"
+                    android:hint="예) 19701201"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/textSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tv_round_signup"
+                    android:gravity="center"
+                    android:text="E-Mail"
+                    android:textSize="@dimen/textSize" />
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@drawable/et_round_signup"
+                    android:hint="예) 계정명@도메인.com"
+                    android:imeOptions="actionDone"
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/textSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tv_round_signup"
+                    android:gravity="center"
+                    android:text="Gender"
+                    android:textSize="@dimen/textSize" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="2dp">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/colorBackground"
+                    android:orientation="horizontal">
 
-                    <TextView
+                    <RadioGroup
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:background="@drawable/tv_round_signup"
-                        android:gravity="center"
-                        android:text="PWD      Check"
-                        android:textSize="15dp"
-                        android:maxLines="2"/>
-                    <EditText
-                        android:id="@+id/etCheckPWD"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:textSize="@dimen/textSize"
-                        android:background="@color/colorWhite"
-                        android:paddingStart="10dp"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:lines="1"
-                        android:singleLine="true"
-                        android:imeOptions="actionDone"
-                        android:inputType="textPassword"/>
-                </LinearLayout>
+                        android:orientation="horizontal">
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="2dp"
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:text="Name"
-                        android:textSize="@dimen/textSize"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:background="@drawable/tv_round_signup"/>
-                    <EditText
-                        android:id="@+id/etName"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:textSize="@dimen/textSize"
-                        android:background="@drawable/et_round_signup"
-                        android:paddingStart="10dp"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:lines="1"
-                        android:singleLine="true"
-                        android:imeOptions="actionDone"
-                        android:inputType="textPersonName"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="2dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:text="Phone"
-                        android:textSize="@dimen/textSize"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:background="@drawable/tv_round_signup"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
-                        <EditText
-                            android:id="@+id/etPhone"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/textHeight"
-                            android:textSize="@dimen/textSize"
-                            android:paddingStart="10dp"
+                        <RadioButton
+                            android:id="@+id/rbUndefine"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="2dp"
+                            android:layout_weight="1"
                             android:background="@color/colorWhite"
-                            android:layout_weight="2"
-                            android:enabled="false"
-                            android:maxLines="1"
-                            android:lines="1"
-                            android:singleLine="true"
-                            android:imeOptions="actionDone"
-                            />
-                        <Button
-                            android:id="@+id/btnCertificationPhone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/textHeight"
-                            android:layout_weight="0.5"
-                            android:textSize="@dimen/textSize"
-                            android:text="인증"
-                            android:background="@drawable/btn_round_signup"/>
-                    </LinearLayout>
+                            android:checked="true"
+                            android:gravity="center"
+                            android:text="미지정"
+                            android:textSize="15dp" />
+
+                        <RadioButton
+                            android:id="@+id/rbFemale"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="2dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorWhite"
+                            android:gravity="center"
+                            android:text="여자"
+                            android:textSize="15dp" />
+
+                        <RadioButton
+                            android:id="@+id/rbMale"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/colorWhite"
+                            android:gravity="center"
+                            android:text="남자"
+                            android:textSize="15dp" />
+                    </RadioGroup>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="2dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:text="Birth"
-                        android:textSize="@dimen/textSize"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:background="@drawable/tv_round_signup"/>
-                    <EditText
-                        android:id="@+id/etBirth"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:textSize="@dimen/textSize"
-                        android:hint="예) 19701201"
-                        android:background="@drawable/et_round_signup"
-                        android:paddingStart="10dp"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:lines="1"
-                        android:singleLine="true"
-                        android:imeOptions="actionDone"
-                        android:inputType="number"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="2dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:text="E-Mail"
-                        android:textSize="@dimen/textSize"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:background="@drawable/tv_round_signup"/>
-                    <EditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:textSize="@dimen/textSize"
-                        android:background="@drawable/et_round_signup"
-                        android:paddingStart="10dp"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:lines="1"
-                        android:singleLine="true"
-                        android:imeOptions="actionDone"
-                        android:inputType="textEmailAddress"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="2dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:text="Gender"
-                        android:textSize="@dimen/textSize"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:background="@drawable/tv_round_signup"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/textHeight"
-                        android:orientation="horizontal"
-                        android:layout_weight="1"
-                        android:background="@color/colorWhite">
-
-                        <RadioGroup
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/textHeight"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/rbUndefine"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/textHeight"
-                                android:checked="true"
-                                android:text="미지정   "
-                                android:textSize="15dp" />
-
-                            <LinearLayout
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:background="@color/colorBackground"></LinearLayout>
-
-                            <RadioButton
-                                android:id="@+id/rbFemale"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/textHeight"
-                                android:text="여자"
-                                android:layout_marginRight="15dp"
-                                android:textSize="15dp" />
-
-                            <LinearLayout
-                                android:layout_width="2dp"
-                                android:layout_height="match_parent"
-                                android:background="@color/colorBackground"></LinearLayout>
-
-                            <RadioButton
-                                android:id="@+id/rbMale"
-                                android:layout_width="wrap_content"
-                                android:layout_height="@dimen/textHeight"
-                                android:text="남자 "
-                                android:textSize="15dp" />
-                        </RadioGroup>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnModify"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/btn_Size_Commit"
-                    android:background="@drawable/btn_round_login"
-                    android:text="수 정 완 료"
-                    android:textSize="20dp"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginTop="40dp"/>
-
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btnModify"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_round_login"
+                android:text="수 정 완 료"
+                android:textColor="@color/colorWhite"
+                android:textSize="20dp" />
 
         </LinearLayout>
     </ScrollView>

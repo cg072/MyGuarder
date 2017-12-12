@@ -5,9 +5,10 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="textSize">20dp</dimen>
-    <dimen name="textHeight">45dp</dimen>
+    <dimen name="textHeight">60dp</dimen>
     <dimen name="login_EmptyDistance">10dp</dimen>
     <dimen name="signup_EmptyDistance">2dp</dimen>
     <dimen name="btn_Size_Commit">60dp</dimen>
     <dimen name="et_Size_Commit">50dp</dimen>
+    <dimen name="weight_base">0dp</dimen>
 </resources>

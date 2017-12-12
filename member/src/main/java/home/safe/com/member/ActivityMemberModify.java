@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -109,7 +110,6 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         Log.v("버튼","클릭");
         if(view.getId() == R.id.btnCertificationPhone) {
             certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
-
             certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialogInterface) {
