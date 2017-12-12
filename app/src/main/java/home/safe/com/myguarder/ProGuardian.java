@@ -456,6 +456,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             locationList.add(mCurrentLocation); // 1. 위치를 저장해서 폴리라인을 추가하는 방법
             //polylinesLocation 치환 가능   ->  2. polylinesLocation을 보내서 폴리라인을 그려주는 방법(위치정보까지 들어있음 getPoint())
 
+
+
             printThisLocation();
         }
     }
@@ -477,6 +479,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         if(now - first > cycleCivilian )
         {
+            //서버에 위치 전송할 메서드
+            sendLocation();
+
             Log.d("TimeMillis", "now - first");
             first = now;
 
@@ -492,6 +497,18 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
             showCamera();
         }
+    }
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text 주기별로 위치정보 서버에 전송
+     * @since 2017-12-12 오후 5:15
+    **/
+    private void sendLocation() {
+        //locationList.add(mCurrentLocation);//이거를 이용하여 위치를 받아와 서버에 전송
+        //전송하는 메서드
     }
 
     /**
@@ -620,8 +637,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @version 1.0.0
      * @text 추가해야할 사항
      * 1. 테스크 설정 만들기
-     * 2. 지킴이 지난경로 그리는지 확인
-     * 3. 피지킴이지만 지킴이일 경우 위치 송신
+     * 2. 지킴이 지난경로 그리는지 확인 ok (위치요청은 메서드만 있다)
+     * 3. 피지킴이, 지킴이 둘다 서버에 현재 위치 송신
      * 4. 지킴이 화면에서 피지킴이 목록을 띄워 한명 선택 후 위치 확인 가능하게
      * 5.
      * @since 2017-12-11 오후 5:41

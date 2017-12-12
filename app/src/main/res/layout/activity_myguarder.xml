@@ -48,7 +48,7 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:text="피지킴이명"
+                    android:text="지킴이명"
                     android:textSize="20dp" />
 
                 <TextView
