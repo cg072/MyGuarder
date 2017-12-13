@@ -4,14 +4,27 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import home.safe.com.guarder.GuarderVO;
 
 public class ActivityPopupCivilianList extends Activity {
+
+    ListView lvCivilianList;
+    ArrayList<GuarderVO> alData;
+    AdapterCivilianList adapterCivilianList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup_civilian_list);
+
+        alData = new ArrayList<GuarderVO>();
+        alData.add(new GuarderVO());
+
     }
 
     /**

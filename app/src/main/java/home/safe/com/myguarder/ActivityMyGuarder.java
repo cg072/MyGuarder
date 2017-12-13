@@ -101,6 +101,10 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         {
 //            drawPolyline(new LatLng(37.2350000, 127.0620000),new LatLng(37.2353114, 127.0626726));
             civilianLocationRequest();
+
+            //피지킴이 리스트 테스트
+            Intent intent = new Intent(this,ActivityPopupCivilianList.class);
+            startActivity(intent);
         }
     }
 
