@@ -1,13 +1,16 @@
 package home.safe.com.member;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -37,20 +40,28 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 public class ActivityMemberLogin extends AppCompatActivity {
 
     final String TAG = "로그인";
 
+    private final static String LOGIN_ID = "loginID";
+    private final static String LOGIN_PWD = "loginPWD";
+
     private final static int SH_JOB_OK = 200;
 
     private final static int REQUEST_CODE_PHONE = 11;
 
+    // 기기내 파일 탐색
+
     // 변수 설정
     private EditText etID;
     private EditText etPWD;
-    private CheckBox cboxKeep;
+    private CheckBox cboxCheck;
     private Button btnLogin;
     private Button btnGoogle;
     private OAuthLoginButton btnNaver;
@@ -96,15 +107,20 @@ public class ActivityMemberLogin extends AppCompatActivity {
         // 변수에 아이디 연동
         etID = (EditText)findViewById(R.id.etID);
         etPWD = (EditText)findViewById(R.id.etPWD);
-        cboxKeep = (CheckBox)findViewById(R.id.cboxCheck);
+        cboxCheck = (CheckBox)findViewById(R.id.cboxCheck);
         btnLogin = (Button)findViewById(R.id.btnLogin);
         tvSignup = (TextView)findViewById(R.id.tvSignup);
         tvFIndID = (TextView)findViewById(R.id.tvFindID);
         tvFindPWD = (TextView)findViewById(R.id.tvFindPWD);
 
-
         naverSetting();
         googleSetting();
+
+
+        if(autoLogin() == true) {
+            loadData();
+            loginCheck();
+        }
 
         // Google 로그인
         btnGoogle.setOnClickListener( new View.OnClickListener( ) {
@@ -160,6 +176,60 @@ public class ActivityMemberLogin extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loginCheck() {
+        Map<String, String> map = new HashMap<String, String>();
+
+        String id = etID.getText().toString().trim();
+        String pwd = etPWD.getText().toString().trim();
+        map.put(LOGIN_ID,id);
+        map.put(LOGIN_PWD,pwd);
+
+        sendData(map);
+
+        // 서버의 Data 값과, 입력된 Data 값이 같다면 로그인.
+        if(id.equals(receiveData().get(LOGIN_ID)) && pwd.equals(receiveData().get(LOGIN_PWD))) {
+            saveData();
+
+        }
+    }
+
+    private void sendData (Map map) {
+        // db로 데이터를 보냄
+    }
+
+    private Map<String, String> receiveData () {
+        // 데이터를 받아서
+        Map<String, String> map = new HashMap<String, String>();
+        map = (Map)map;  // 여따 캐스팅해서 넣고
+
+        return map;
+    }
+
+    // 자동 로그인 여부 체크
+    private boolean autoLogin() {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        return preferences.getBoolean("MemberAuto", false);
+    }
+
+    // 아이디, 비번, 자동 로그인 여부 저장
+    private void saveData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("MemberID",etID.getText().toString().trim());
+        editor.putString("MemberPWD",etPWD.getText().toString().trim());
+        editor.putBoolean("MemberAuto",cboxCheck.isChecked());
+        editor.commit();
+    }
+
+    // 아이디, 비번 불러옴
+    private void loadData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        etID.setText(preferences.getString("TransName",""));
+        etPWD.setText(preferences.getString("TransMemo",""));
     }
 
     /*

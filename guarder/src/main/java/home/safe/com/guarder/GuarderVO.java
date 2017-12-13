@@ -12,6 +12,14 @@ public class GuarderVO {
     private int gstate;
     private long gregday;
 
+    public GuarderVO() {
+    }
+
+    public GuarderVO(String gmcid, int gstate) {
+        this.gmcid = gmcid;
+        this.gstate = gstate;
+    }
+
     public int getGseq() {
         return gseq;
     }
