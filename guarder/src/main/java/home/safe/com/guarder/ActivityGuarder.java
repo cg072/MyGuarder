@@ -14,11 +14,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 //import home.safe.com.guarder.R;
 
@@ -28,6 +32,11 @@ import java.util.Comparator;
 
 
 public class ActivityGuarder extends AppCompatActivity implements ListViewAdapterSearch.SearchListBtnClickListener, ListViewAdapterGuarders.GuardersListBtnClickListener{
+
+    final static private String TAB_FIRST = "회원 검색";
+    final static private String TAB_SECOND = "지킴이 등록/해제";
+
+    private TabHost tabHost;
 
     EditText etSearch;
     Button btnSearch;
@@ -40,9 +49,6 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     String nowGuarderName;
     String nowGuarderPhone;
 
-    LinearLayout lay1;
-    LinearLayout lay2;
-
     ArrayList<ListViewItemSearch> alSearch = null;
     ArrayList<ListViewItemSearch> alSearchResult = null;
     ArrayList<ListViewItemGuarders> alGuarders = null;
@@ -54,9 +60,21 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guarder);
 
-        lay1 = (LinearLayout) findViewById(R.id.lay1);
-        lay1 = (LinearLayout) findViewById(R.id.lay2);
+        // TapHost 셋팅
+        tabHost = (TabHost) findViewById(R.id.tabHost) ;
+        tabHost.setup() ;
 
+        // 첫 번째 Tab (new TabSpec 안의 tag는 식별자 값이다.
+        TabHost.TabSpec ts1 = tabHost.newTabSpec("MEMBER") ;
+        ts1.setContent(R.id.contentMember) ;
+        ts1.setIndicator(TAB_FIRST) ;
+        tabHost.addTab(ts1)  ;
+
+        // 두 번째 Tab
+        TabHost.TabSpec ts2 = tabHost.newTabSpec("GUARDER") ;
+        ts2.setContent(R.id.contentGuarders) ;
+        ts2.setIndicator(TAB_SECOND) ;
+        tabHost.addTab(ts2) ;
 
         etSearch = (EditText) findViewById(R.id.etSearch);
         btnSearch = (Button) findViewById(R.id.btnSearch);
@@ -71,6 +89,19 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
 
         // 서버와 연결 후 부터는 서버로부터 받아서 세팅하는 메소드
         listSetting();
+
+        etSearch.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i == EditorInfo.IME_ACTION_SEARCH) {
+                    // 검색 버튼을 눌렀을 시 해야할 행동
+
+                    sendToServerText(etSearch.getText().toString());
+                    searchAdapterUpdate(resultSearch());
+                }
+                return false;
+            }
+        });
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,30 +189,66 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
 
         ListViewItemSearch listViewItemSearch = new ListViewItemSearch();
 
+        listViewItemSearch.setTvName("지립니다");
+        listViewItemSearch.setTvPhone("01034561234");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
+        listViewItemSearch.setTvName("오집니다");
+        listViewItemSearch.setTvPhone("01083835465");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
+        listViewItemSearch.setTvName("개년잌");
+        listViewItemSearch.setTvPhone("01085901234");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
+        listViewItemSearch.setTvName("우성이잘가");
+        listViewItemSearch.setTvPhone("01000901123");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
+        listViewItemSearch.setTvName("짜이찌엔우성띄");
+        listViewItemSearch.setTvPhone("01080450912");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
+        listViewItemSearch.setTvName("별들에게물어봐");
+        listViewItemSearch.setTvPhone("01034567123");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
+        listViewItemSearch.setTvName("좀가자스트라");
+        listViewItemSearch.setTvPhone("01046327401");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
+        listViewItemSearch.setTvName("뉴이코씨발");
+        listViewItemSearch.setTvPhone("01043441234");
+        alReturnList.add(listViewItemSearch);
+
+        listViewItemSearch = new ListViewItemSearch();
         listViewItemSearch.setTvName("히히히");
         listViewItemSearch.setTvPhone("01011112222");
         alReturnList.add(listViewItemSearch);
 
         listViewItemSearch = new ListViewItemSearch();
-
         listViewItemSearch.setTvName("니나노");
         listViewItemSearch.setTvPhone("01033334444");
         alReturnList.add(listViewItemSearch);
 
         listViewItemSearch = new ListViewItemSearch();
-
         listViewItemSearch.setTvName("릴리리");
         listViewItemSearch.setTvPhone("0168887777");
         alReturnList.add(listViewItemSearch);
 
         listViewItemSearch = new ListViewItemSearch();
-
         listViewItemSearch.setTvName("지리구요");
         listViewItemSearch.setTvPhone("01083832562");
         alReturnList.add(listViewItemSearch);
 
         listViewItemSearch = new ListViewItemSearch();
-
         listViewItemSearch.setTvName("오졌구요");
         listViewItemSearch.setTvPhone("01099991111");
         alReturnList.add(listViewItemSearch);
@@ -200,13 +267,66 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         // 예시용 목록 2 지킴이
         ListViewItemGuarders listViewItemGuarders = new ListViewItemGuarders();
 
-        listViewItemGuarders.setTvName("지리구요");
-        listViewItemGuarders.setTvPhone("01083832562");
+        listViewItemGuarders.setTvName("스트라티스");
+        listViewItemGuarders.setTvPhone("01030000300");
         listViewItemGuarders.setUse(true);
         alGuarders.add(listViewItemGuarders);
 
         listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("가즈아");
+        listViewItemGuarders.setTvPhone("01011111111");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
 
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("김현중");
+        listViewItemGuarders.setTvPhone("01088888888");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("허이섭");
+        listViewItemGuarders.setTvPhone("01044444444");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("놔낭");
+        listViewItemGuarders.setTvPhone("01012389023");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("뻑");
+        listViewItemGuarders.setTvPhone("01098765678");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("지리구요형");
+        listViewItemGuarders.setTvPhone("01083832562");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("지리구요동생");
+        listViewItemGuarders.setTvPhone("01083832562");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("지리구요친구");
+        listViewItemGuarders.setTvPhone("01083832562");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
+        listViewItemGuarders.setTvName("지리구요");
+        listViewItemGuarders.setTvPhone("01083832562");
+        listViewItemGuarders.setUse(false);
+        alGuarders.add(listViewItemGuarders);
+
+        listViewItemGuarders = new ListViewItemGuarders();
         listViewItemGuarders.setTvName("오졌구요");
         listViewItemGuarders.setTvPhone("01099991111");
         listViewItemGuarders.setUse(false);
@@ -307,6 +427,7 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
 
         // 회원 어댑터 갱신
         searchAdapterUpdate(alSearch);
+        etSearch.setText("");
     }
 
 
