@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.Polyline;
 public class ActivityMyGuarder extends ProGuardian implements View.OnClickListener{
 
     Button btnGuarderLog;
+    Button btnCivilianList;
     Button btnLocation;
 
     @Override
@@ -31,12 +32,14 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         first = System.currentTimeMillis();
 
         btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
+        btnCivilianList = (Button)findViewById(R.id.btnCivilianList);
         btnLocation = (Button)findViewById(R.id.btnLocation);
 
         buildGoogleApiClient();
         mGoogleApiClient.connect();
 
         btnGuarderLog.setOnClickListener(this);
+        btnCivilianList.setOnClickListener(this);
         btnLocation.setOnClickListener(this);
     }
 
@@ -97,14 +100,17 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
             Intent intent = new Intent(this,ActivityPopup.class);
             startActivityForResult(intent,MY_REQUEST_CODE_POPUP);
         }
+        else if(view.getId() == btnCivilianList.getId())
+        {
+            Intent intent = new Intent(this,ActivityPopupCivilianList.class);
+            startActivity(intent);
+        }
         else if(view.getId() == btnLocation.getId())
         {
 //            drawPolyline(new LatLng(37.2350000, 127.0620000),new LatLng(37.2353114, 127.0626726));
             civilianLocationRequest();
 
-            //피지킴이 리스트 테스트
-            Intent intent = new Intent(this,ActivityPopupCivilianList.class);
-            startActivity(intent);
+
         }
     }
 

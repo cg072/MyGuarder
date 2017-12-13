@@ -35,6 +35,14 @@
                     android:elevation="4dp"
                     android:text="지난위치보기"
                     android:textSize="13dp" />
+                <Button
+                    android:id="@+id/btnCivilianList"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:elevation="4dp"
+                    android:layout_toRightOf="@+id/btnGuarderLog"
+                    android:text="피지킴이 목록"
+                    android:textSize="10dp"/>
             </RelativeLayout>
 
             <RelativeLayout
