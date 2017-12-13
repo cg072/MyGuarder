@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,8 @@ public class FragmentTransList extends Fragment {
     ListView lvtrans;
 
     ArrayList<TestListViewDTO> recvdto;
+
+    TestListViewDTO aaa;
 
 
     @Nullable
@@ -50,8 +53,10 @@ public class FragmentTransList extends Fragment {
 
     }
 
-    public void addItem(String num, String type, String name){
-
+    //이 메소드에서 서버에서 셀렉트를 해 와야함
+    //생각 해 볼 것 : 플래그먼트에서 이동수단내역으로 스와이프 했을 때, 셀렉트를 새로 해 와야함
+    //AdapterFragTabTrans.java 와 충돌이 일어 나는지 생각해 봐야 함
+    public void addItem(TestListViewDTO recvDto){
 
 
     }

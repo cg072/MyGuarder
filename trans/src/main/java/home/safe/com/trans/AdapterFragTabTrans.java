@@ -3,12 +3,16 @@ package home.safe.com.trans;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by plupin724 on 2017-12-03.
  */
 
 public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
+
 
     public AdapterFragTabTrans(FragmentManager fm) {
         super(fm);

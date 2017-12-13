@@ -59,6 +59,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
     Button btnRegTrans;
     InputMethodManager imm;
 
+    static int num;
     String kind;
     String text;
 
@@ -90,16 +91,17 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
         imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-
         tvtranskind.setOnClickListener(this);
         btnRegTrans.setOnClickListener(this);
 
         return rootView;
     }
 
+
+
     @Override
     public void onClick(View view) {
-
+        //에디트텍스트 영역 이외의 곳을 클릭시 키보드 닫음
         hideKeyboard();
 
         if(view == tvtranskind){
@@ -140,7 +142,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
         if(view == btnRegTrans){
 
-            if(tvtranskind.getText().equals("이동수단 종류 선택")){
+            /*if(tvtranskind.getText().equals("이동수단 종류 선택")){
                 AlertDialog.Builder warnAlert = new AlertDialog.Builder(getActivity());
                 warnAlert.setTitle("이동수단을 등록하지 않음");
                 warnAlert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
@@ -153,17 +155,65 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
                 warnAlert.create();
                 warnAlert.show();
+            }*/
+
+            if(tvtranskind.getText().equals("이동수단 종류 선택")){
+                Toast.makeText(getContext().getApplicationContext(), "이동수단이 선택되지 않음", Toast.LENGTH_LONG).show();
+            }else{
+                kind = tvtranskind.getText().toString();
+                text = etTextTrans.getText().toString();
+
+                AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());
+                regAlert.setTitle("이동수단 등록");
+                regAlert.setMessage("이동수단: " + kind +"\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
+
+                regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        regComfirm(num, kind, text);
+                        num += 1;
+                        Toast.makeText(getContext().getApplicationContext(), "등록되었습니다", Toast.LENGTH_LONG).show();
+                        tvtranskind.setText("이동수단 종류 선택");
+                        etTextTrans.setText(null);
+
+                    }
+                });
+
+                regAlert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                    }
+                });
+
+                regAlert.create();
+                regAlert.show();
             }
-
-
 
         }
 
     }
 
+    //키보드를 닫는 메소드
     public void hideKeyboard(){
 
         imm.hideSoftInputFromWindow(etTextTrans.getWindowToken(), 0);
+
+    }
+
+
+    //이 메소드에서 서버에 인서트를 해야 함.
+    //생각해 볼 것 : 가상으로 콘트롤러를 거쳐야 함
+    public void regComfirm(int makeNum, String makeKind, String makeText){
+
+        TestListViewDTO makeData = new TestListViewDTO(String.valueOf(makeNum), makeKind, makeText);
+
+        FragmentTransList ddd = new FragmentTransList();
+
+        ddd.addItem(makeData);
+        Log.v("어딥니까1", "어디죠?1");
 
     }
 
