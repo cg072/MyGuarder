@@ -89,8 +89,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     //intent PopupCycle key code
     public final static int MY_REQUEST_CODE = 1111;
     public final static int MY_REQUEST_CODE_POPUP = 2222;
+    public final static int MY_REQUEST_CODE_CIVILIAN_LIST = 3333;
     public final static String DATA_NAME = "cycle";
     public final static String DATA_NAME_POPUP = "dateList";
+    public final static String DATA_CIVILIAN_NAME = "civilianName";
     public final static int DEFAULT_NUMBER = 5;
 
     public int cycleCivilian = 10000;
@@ -632,11 +634,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     **/
 
     /**
-     *
      * @author 경창현
      * @version 1.0.0
      * @text 추가해야할 사항
-     * 1. 테스크 설정 만들기
+     * 1. 테스크 설정 만들기 ok
      * 2. 지킴이 지난경로 그리는지 확인 ok
      * 3. 피지킴이, 지킴이 둘다 서버에 현재 위치 송신
      * 4. 지킴이 화면에서 피지킴이 목록을 띄워 한명 선택 후 위치 확인 가능하게 -> 목록 생성 및 구분 완료 ->  위치를 뿌려주는 부분 해야함
