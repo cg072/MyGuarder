@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ToggleButton;
 
 import home.safe.com.guarder.ActivityGuarder;
-import home.safe.com.member.ActivityMemberModify;
 import home.safe.com.member.ActivityMemberModifyCheck;
 import home.safe.com.notice.ActivityNotice;
 import home.safe.com.trans.ActivityTrans;
@@ -89,27 +88,29 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
+        Intent intent;
+
         switch (view.getId())
         {
             case R.id.btnCycleSetting:
-                Intent intent = new Intent(this, ActivityPopupCycle.class);
+                intent = new Intent(this, ActivityPopupCycle.class);
                 startActivityForResult(intent,MY_REQUEST_CODE);
                 break;
             case R.id.btnGuarderSetting:
-                Intent intent2 = new Intent(this, ActivityGuarder.class);
-                startActivity(intent2);
+                intent = new Intent(this, ActivityGuarder.class);
+                startActivity(intent);
                 break;
             case R.id.btnTransSetting:
-                Intent intent3 = new Intent(this, ActivityTrans.class);
-                startActivity(intent3);
+                intent = new Intent(this, ActivityTrans.class);
+                startActivity(intent);
                 break;
             case R.id.btnMyInfoSetting:
-                Intent intent4 = new Intent(this, ActivityMemberModifyCheck.class);
-                startActivity(intent4);
+                intent = new Intent(this, ActivityMemberModifyCheck.class);
+                startActivity(intent);
                 break;
             case R.id.btnNoticeSetting:
-                Intent intent5 = new Intent(this, ActivityNotice.class);
-                startActivity(intent5);
+                intent = new Intent(this, ActivityNotice.class);
+                startActivity(intent);
                 break;
             case R.id.tbCivilianMode:
                 if(!tbCivilianMode.isChecked())
@@ -119,6 +120,10 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 else {
                     tbCivilianMode.setChecked(true);
                     tbGuarderMode.setChecked(false);
+
+                    intent = new Intent(this, ActivityCivilian.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }
 
                 break;
@@ -132,8 +137,9 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                     tbCivilianMode.setChecked(false);
                     tbGuarderMode.setChecked(true);
 
-                    Intent intent7 = new Intent(this, ActivityMyGuarder.class);
-                    startActivity(intent7);
+                    intent = new Intent(this, ActivityMyGuarder.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }
 
                 break;

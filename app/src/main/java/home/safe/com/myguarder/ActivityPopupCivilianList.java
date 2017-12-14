@@ -1,6 +1,7 @@
 package home.safe.com.myguarder;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,8 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
     Button btnCivilianEnter;
 
     String selectCivilianID;
+
+    private final static String DATA_CIVILIAN_NAME = "civilianName";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +86,25 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(this,""+selectCivilianID,Toast.LENGTH_SHORT).show();
+
 
         // 피지킴이 아이디로 지도에 위치정보 뿌리기
         //polylinesRequestLocation을 이용 해야할듯, 그리고 현재 위치정보를 주기마다 뿌려주는것을 설계해야함
+
+        if(null != selectCivilianID)
+        {
+            Toast.makeText(this,""+selectCivilianID,Toast.LENGTH_SHORT).show();
+            returnCivilianListData(selectCivilianID);
+        }
+    }
+
+    public void returnCivilianListData(String date)
+    {
+        //date로 sql에서 해당 날짜 리스트를 가져옴
+        Intent intentData = new Intent();
+        intentData.putExtra(DATA_CIVILIAN_NAME, date);
+        setResult(RESULT_OK, intentData);
+        finish();
     }
 
 }

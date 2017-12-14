@@ -103,7 +103,8 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         else if(view.getId() == btnCivilianList.getId())
         {
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);
-            startActivity(intent);
+            startActivityForResult(intent,MY_REQUEST_CODE_CIVILIAN_LIST);
+
         }
         else if(view.getId() == btnLocation.getId())
         {
@@ -136,10 +137,16 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
                 cycleGuarder = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER);
                 Log.d("주기 : ", "" +cycleGuarder);
             }
-            if(requestCode == MY_REQUEST_CODE_POPUP)
+            else if(requestCode == MY_REQUEST_CODE_POPUP)
             {
                 Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE_POPUP);
                 selectPopupList(data.getStringExtra(DATA_NAME_POPUP));
+            }
+            else if(requestCode == MY_REQUEST_CODE_CIVILIAN_LIST)
+            {
+                Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE_CIVILIAN_LIST);
+                data.getStringExtra(DATA_CIVILIAN_NAME);
+                // 지킴이가 선택한 피지킴이의 아이디를 가져옴
             }
         }
     }
