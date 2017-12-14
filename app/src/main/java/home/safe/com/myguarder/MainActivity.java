@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class MainActivity extends ProGuardian implements IProGuardian, View.OnClickListener {
 
     Button btnMain;
-
+    Button btnTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +41,10 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         setContentView(R.layout.activity_main);
 
         btnMain = (Button)findViewById(R.id.btnMain);
+        btnTest = (Button)findViewById(R.id.btnTest);
 
         btnMain.setOnClickListener(this);
+        btnTest.setOnClickListener(this);
 
 
     }
@@ -78,6 +80,9 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         if(view.getId() == btnMain.getId())
         {
             intent = new Intent(this, ActivityCivilian.class);
+        } else if(view.getId() == btnTest.getId())
+        {
+            intent = new Intent(this, ActivityTest.class);
         }
 
         startActivity(intent);

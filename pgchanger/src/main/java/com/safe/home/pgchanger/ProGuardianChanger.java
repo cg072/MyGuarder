@@ -1,4 +1,4 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,65 +16,69 @@ import java.util.List;
 public class ProGuardianChanger {
     private Context context;
     private IProGuardianController customController;
-    private ProGuardianDBHelper proGuardianDBHelper;
+    private ProGuardianDBHelper customDBHelper;
     private int tableN;
     private ContentValues contentValues;
 
     private ProGuardianChanger(){}
 
+
     public ProGuardianChanger(Context context) {
         this.context = context;
     }
 
-    public ProGuardianChanger(Context context, int table) {
-        this.context = context;
-        this.tableN = table;
+    public ProGuardianChanger(Context pcontext, int ptable) {
+        this.context = pcontext;
+        this.tableN = ptable;
         dbSelector();
     }
 
     //예제용 메서드
-    public void connectDB(int table) {
-        //this.proGuardianDBHelper = new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+    public void connectDB(int ptable) {
+        //this.customDBHelper = new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+        this.tableN = ptable;
         dbSelector();
     }
 
     private void dbSelector() {
         switch (tableN)
         {
-            case ProGuardianDBHelper.TABLE_MEMBER:
-                this.proGuardianDBHelper = null;//멤버DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+            case ProGuardianDBHelper.PG_MEMBER:
+                this.customDBHelper = null;//멤버DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
                 this.customController = null;
                     break;
-            case ProGuardianDBHelper.TABLE_GUARDER:
-                this.proGuardianDBHelper = null;//지킴이DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+            case ProGuardianDBHelper.PG_GUARDER:
+                this.customDBHelper = null;//지킴이DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
                 this.customController = null;
                     break;
-            case ProGuardianDBHelper.TABLE_LOCATION:
-                this.proGuardianDBHelper = null;//위치DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+            case ProGuardianDBHelper.PG_LOCATION:
+                this.customDBHelper = null;//위치DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
                 this.customController = null;
                     break;
-            case ProGuardianDBHelper.TABLE_NOTICE:
-                this.proGuardianDBHelper = null;//공지DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+            case ProGuardianDBHelper.PG_NOTICE:
+                this.customDBHelper = null;//공지DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
                 this.customController = null;
                     break;
-            case ProGuardianDBHelper.TABLE_TRANS:
-                this.proGuardianDBHelper = null;//이동수단DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+            case ProGuardianDBHelper.PG_TRANS:
+                this.customDBHelper = null;//이동수단DBHelper//new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
                 this.customController = null;
                     break;
-            case ProGuardianDBHelper.TABLE_TEST:
-                this.proGuardianDBHelper = new PreTestDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
-                this.customController = new PreTestController(proGuardianDBHelper);
+            case ProGuardianDBHelper.PG_TEST:
+                this.customDBHelper = new PreTestDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
+                this.customController = new PreTestController();
                     break;
             default:
-                this.proGuardianDBHelper = null;
+                this.customDBHelper = null;
                 this.customController = null;
                 break;
         }
 
+        customController.setDBHelper(customDBHelper);
+
     }
 
     public void removeTable() {
-        ((PreTestDBHelper)proGuardianDBHelper).removeTable();
+        ((PreTestDBHelper)(customDBHelper)).removeTable();
     }
 
     public int insertData(ContentValues contentValues) {
@@ -82,7 +86,7 @@ public class ProGuardianChanger {
     }
 
     public List<ProGuardianVO> searchData(ContentValues contentValues) {
-        int listsize = 0;
+        int listSize = 0;
         List<ContentValues> list = new ArrayList<ContentValues>();
         list = customController.search(contentValues);
 
@@ -90,10 +94,10 @@ public class ProGuardianChanger {
         ProGuardianVO returnVO = null;
 
         if(list != null) {
-            listsize = list.size();
+            listSize = list.size();
 
-            if (listsize > 0) {
-                for (int idx = 0; idx < listsize; idx++) {
+            if (listSize > 0) {
+                for (int idx = 0; idx < listSize; idx++) {
                     returnVO = new PreTestVO();
                     returnVO.convertContentValuesToData(list.get(idx));
 

@@ -1,4 +1,4 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 
@@ -14,6 +14,6 @@ import java.io.Serializable;
 abstract public class ProGuardianVO implements Serializable {
     abstract public ContentValues convertDataToContentValues();
     abstract public void convertContentValuesToData(ContentValues contentValues);
+    abstract public String getDetails();
     public String getString() { return  null;}
-
 }

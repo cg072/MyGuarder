@@ -1,4 +1,4 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 
@@ -16,5 +16,6 @@ public interface IProGuardianController {
     int remove(ContentValues contentValues);
     List<ContentValues> search(ContentValues contentValues);
     void setDBHelper(ProGuardianDBHelper proGuardianDBHelper);
+    ProGuardianDBHelper getDBHelper();
 
 }

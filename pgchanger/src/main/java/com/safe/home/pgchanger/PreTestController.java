@@ -1,4 +1,4 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 
@@ -14,10 +14,6 @@ public class PreTestController implements IProGuardianController {
     private ProGuardianDBHelper proGuardianDBHelper;
 
     public PreTestController () { }
-
-    public PreTestController (ProGuardianDBHelper cDBHelper) {
-        this.proGuardianDBHelper = cDBHelper;
-    }
 
     @Override
     public int insert(ContentValues contentValues) {
@@ -45,5 +41,10 @@ public class PreTestController implements IProGuardianController {
     @Override
     public void setDBHelper(ProGuardianDBHelper cDBHelper) {
         this.proGuardianDBHelper = cDBHelper;
+    }
+
+    @Override
+    public ProGuardianDBHelper getDBHelper() {
+        return proGuardianDBHelper;
     }
 }

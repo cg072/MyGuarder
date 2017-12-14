@@ -1,1 +1,1 @@
-include ':app', ':member', ':location', ':trans', ':guarder', ':notice'
+include ':app', ':member', ':location', ':trans', ':guarder', ':notice', ':pgchanger'

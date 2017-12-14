@@ -1,4 +1,4 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,15 +15,15 @@ import java.util.List;
  */
 
 abstract public class ProGuardianDBHelper extends SQLiteOpenHelper {
+    final static public String TAG = "ProGuardianDBHelper";
     final static public String DB_NAME = "safehome";
     final static public int DB_VERSION = 1;
-    final static public int TABLE_MEMBER = 101;
-    final static public int TABLE_GUARDER = 201;
-    final static public int TABLE_LOCATION = 301;
-    final static public int TABLE_NOTICE = 401;
-    final static public int TABLE_TRANS = 501;
-    final static public int TABLE_TEST = 1001;
-
+    final static public int PG_MEMBER = 101;
+    final static public int PG_GUARDER = 201;
+    final static public int PG_LOCATION = 301;
+    final static public int PG_NOTICE = 401;
+    final static public int PG_TRANS = 501;
+    final static public int PG_TEST = 9999;
 
     final private String T_MEMBER = "member";
     final private String T_GUARDER = "guarder";
@@ -31,6 +31,7 @@ abstract public class ProGuardianDBHelper extends SQLiteOpenHelper {
     final private String T_NOTICE = "notice";
     final private String T_TRANS = "transportation";
     final private String T_TEST = "test";
+
 
     private String table_name;
 
@@ -70,19 +71,19 @@ abstract public class ProGuardianDBHelper extends SQLiteOpenHelper {
     private void tableSelector(int table) {
         switch (table)
         {
-            case TABLE_MEMBER:
+            case PG_MEMBER:
                 table_name = T_MEMBER;
                 break;
-            case TABLE_GUARDER:
+            case PG_GUARDER:
                 table_name = T_GUARDER;
                 break;
-            case TABLE_LOCATION:
+            case PG_LOCATION:
                 table_name = T_LOCATION;
                 break;
-            case TABLE_NOTICE:
+            case PG_NOTICE:
                 table_name = T_NOTICE;
                 break;
-            case TABLE_TRANS:
+            case PG_TRANS:
                 table_name = T_TRANS;
                 break;
             default:
@@ -93,11 +94,9 @@ abstract public class ProGuardianDBHelper extends SQLiteOpenHelper {
     }
 
     abstract public int insert(ContentValues contentValues);
-
     abstract public List<ContentValues> search(ContentValues contentValues);
-
     abstract public int update(ContentValues contentValues);
-
     abstract public int remove(ContentValues contentValues);
+
 
 }

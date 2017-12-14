@@ -1,11 +1,12 @@
-apply plugin: 'com.android.application'
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        applicationId "home.safe.com.location"
+        //applicationId "home.safe.com.location"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1

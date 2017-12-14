@@ -1,4 +1,4 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 
@@ -63,15 +63,13 @@ public class PreTestVO extends ProGuardianVO {
         this.test3 = test3;
     }
 
-    public String getDetail() {
-        String detail = test1 + "\n" + String.valueOf(test2) + "\n" + test3;
-
+    public String getString() {
+        String detail = test1 + " / " + String.valueOf(test2) + " / " + test3 + "\n";
         return detail;
     }
 
     public String getDetails() {
-        String detail = test1 + " / " + String.valueOf(test2) + " / " + test3 + "\n";
-
+        String detail = test1 + "\n" + String.valueOf(test2) + "\n" + test3 + "\n";
         return detail;
     }
 

@@ -1,11 +1,10 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQuery;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
@@ -26,8 +25,7 @@ public class PreTestDBHelper extends ProGuardianDBHelper {
     final static public String COL2 = "tcol2";
     final static public String COL3 = "tcol3";
     String KEY_TEST = "test";
-    String TAG = "test_tag";
-    String NAME = "ProGuardianDBHelper";
+    String NAME = "PreTestDBHelper";
     String CLASS = NAME + "@" + Integer.toHexString(hashCode());
 
     public PreTestDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
@@ -76,7 +74,7 @@ public class PreTestDBHelper extends ProGuardianDBHelper {
 
     public void removeTable() {
         db = getWritableDatabase();
-        String sql = "drop table " + TABLE_NAME;
+        String sql = "drop table IF EXISTS " + TABLE_NAME;
         execUserQuery(sql);
         onCreate(db);
     }
@@ -142,17 +140,17 @@ public class PreTestDBHelper extends ProGuardianDBHelper {
         List<ContentValues> returnList = new ArrayList<ContentValues>();
 
         if(cursor != null) {
-            Log.d(TAG, CLASS + " ===== search cnt= " + String.valueOf(cursor.getCount()));
+            //Log.d(TAG, CLASS + " ===== search cnt= " + String.valueOf(cursor.getCount()));
             String val = "";
             int columnIndex = 0;
 
             while (cursor.moveToNext()) {
-                Log.d(TAG, CLASS + " ===== search while in" );
+                //Log.d(TAG, CLASS + " ===== search while in" );
                 ContentValues values = new ContentValues();
                 for (int a = 0; a < cols.length; a++) {
                     columnIndex = cursor.getColumnIndex(cols[a]);
                     val = cursor.getString(columnIndex);
-                    Log.d(TAG, CLASS + " ===== search val= " + val);
+                    //Log.d(TAG, CLASS + " ===== search val= " + val);
                     values.put(cols[a], val);
                 }
 

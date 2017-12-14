@@ -1,4 +1,4 @@
-package home.safe.com.myguarder.changer;
+package com.safe.home.pgchanger;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,14 +18,14 @@ public class PreTest {
     Context context;
     ProGuardianChanger proGuardianChanger;
 
-    public PreTest(Context context1) {
-        this.context = context1;
+    public PreTest(Context pcontext) {
+        this.context = pcontext;
     }
 
 
     public int testInsert() {
         //changer 사용시 어떤 데이터
-        proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.TABLE_TEST);
+        proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.PG_TEST);
         int result = 0;
         for(int a=1; a <= 25; a++ ) {
             //입력 데이터
@@ -43,7 +43,7 @@ public class PreTest {
     }
 
     public ProGuardianVO testSearch() {
-        proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.TABLE_TEST);
+        proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.PG_TEST);
 
         //조건
         PreTestVO conditionVO = new PreTestVO();
@@ -65,7 +65,7 @@ public class PreTest {
 
     public List<PreTestVO> testListSearch() {
         proGuardianChanger = new ProGuardianChanger(context);
-        proGuardianChanger.connectDB(ProGuardianDBHelper.TABLE_TEST);
+        proGuardianChanger.connectDB(ProGuardianDBHelper.PG_TEST);
 
         //조건
         PreTestVO conditionVO = new PreTestVO();
@@ -90,7 +90,9 @@ public class PreTest {
     }
 
     public void testRemoveTable() {
-        proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.TABLE_TEST);
+        //proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.PG_TEST);
+        proGuardianChanger = new ProGuardianChanger(context);
+        proGuardianChanger.connectDB(ProGuardianDBHelper.PG_TEST);
         proGuardianChanger.removeTable();
     }
 

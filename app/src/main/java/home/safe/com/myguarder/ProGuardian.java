@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -106,6 +107,11 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     private SQLiteOpenHelper sqLiteOpenHelper;
     public static boolean loginCheck;
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public SQLiteOpenHelper getSqLiteOpenHelper() {
         return  sqLiteOpenHelper;
