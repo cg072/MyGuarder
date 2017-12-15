@@ -650,4 +650,16 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 4. 지킴이 화면에서 피지킴이 목록을 띄워 한명 선택 후 위치 확인 가능하게 -> 목록 생성 및 구분 완료 ->  위치를 뿌려주는 부분 해야함 ok
      * @since 2017-12-11 오후 5:41
     **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. 지킴이가 피지킴이 경로 뿌렸을때 현재위치 누르면 지우기 해야함
+     * 2. 버튼 백 눌렀을때 버튼 호환이 안됨(해결사항 : Setting을 피니쉬시키는 방향으로 )
+     * 3. 서버를 찾아보자
+     *
+     * @since 2017-12-15 오후 3:36
+    **/
 }
