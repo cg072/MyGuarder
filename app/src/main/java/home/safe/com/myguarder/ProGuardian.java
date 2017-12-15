@@ -389,6 +389,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                         line.remove();
                     }
                     polylinesLastLocation.clear();
+                    polylinesRequestLocation.clear();
                     return false;
                 }
             });
@@ -645,8 +646,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @text 추가해야할 사항
      * 1. 테스크 설정 만들기 ok
      * 2. 지킴이 지난경로 그리는지 확인 ok
-     * 3. 피지킴이, 지킴이 둘다 서버에 현재 위치 송신
-     * 4. 지킴이 화면에서 피지킴이 목록을 띄워 한명 선택 후 위치 확인 가능하게 -> 목록 생성 및 구분 완료 ->  위치를 뿌려주는 부분 해야함
+     * 3. 피지킴이, 지킴이 둘다 서버에 현재 위치 송신 ok
+     * 4. 지킴이 화면에서 피지킴이 목록을 띄워 한명 선택 후 위치 확인 가능하게 -> 목록 생성 및 구분 완료 ->  위치를 뿌려주는 부분 해야함 ok
      * @since 2017-12-11 오후 5:41
     **/
 }

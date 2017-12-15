@@ -147,8 +147,20 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
                 Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE_CIVILIAN_LIST);
                 data.getStringExtra(DATA_CIVILIAN_NAME);
                 // 지킴이가 선택한 피지킴이의 아이디를 가져옴
+
+                //피지킴이의 아이디로 DB에서 위치정보 SELECT해온후 그려준다
+                selectCivilianLocation(data.getStringExtra(DATA_CIVILIAN_NAME));
             }
         }
+    }
+
+    private void selectCivilianLocation(String id) {
+        //DB로 위치정보를 가져옴
+
+
+        //가져온 위치정보를 그려준다.
+        Toast.makeText(this,id,Toast.LENGTH_SHORT).show();
+        drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000), polylinesRequestLocation);
     }
 
 
