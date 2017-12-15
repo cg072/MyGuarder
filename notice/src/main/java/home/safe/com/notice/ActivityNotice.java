@@ -36,7 +36,9 @@ import java.util.HashMap;
 * 2. 디비에서 정보 받아오기!!!
 * 3. text라인 막아야함!!!
 * 4. 공지사항 하나를 클릭하면 다른 공지사항들은 접혀야 함!!
-* 5. 작성자를 데이트로 바꾸어서 저장해야 함!! */
+* 5. 작성자를 데이트로 바꾸어서 저장해야 함!!
+* 6. 키보드의 엔터키를 액션 done 혹은 완료로 바꾸어야 함!!
+* 7. 목록을 따로 관리하는 메소드가 필요함*/
 
 
 public class ActivityNotice extends AppCompatActivity implements View.OnClickListener{

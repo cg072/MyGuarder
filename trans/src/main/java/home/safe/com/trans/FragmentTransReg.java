@@ -46,9 +46,12 @@ getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
 (preferences.getString("TransName","택시(기본값)");
 preferences.getString("TransMemo","기본값");
 
-5.
+5. 얼럿박스에 앞의 한 줄만 보여주게끔 만들어야 함!!!! 맥스라인도 잡아주셈!!!!
+
+6. 메모는 100자 한정으로 한다!!!!!
 
 */
+
 
 public class FragmentTransReg extends Fragment implements View.OnClickListener{
     ArrayList<TestListViewDTO> dtoList = new ArrayList<TestListViewDTO>();
@@ -165,6 +168,8 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
                 AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());
                 regAlert.setTitle("이동수단 등록");
+
+                //얼럿 박스에 긴 내용이 들어가는 이슈 !!
                 regAlert.setMessage("이동수단: " + kind +"\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {

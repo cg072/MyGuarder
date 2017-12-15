@@ -14,6 +14,9 @@ import java.util.HashMap;
  * Created by plupin724 on 2017-12-15.
  */
 
+
+
+
 public class AdapterListNotice extends BaseExpandableListAdapter {
 
     //Context context;

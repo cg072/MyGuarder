@@ -19,6 +19,12 @@ import java.util.ArrayList;
  * 이동수단 등록을 위한 프래그먼트 클래스 작성
  */
 
+//지킴이가 다수의 피지킴이의 내역을 볼 때, 피지킴이 마다 리스트가 따로 설정 되어야 한다.
+//아이디를 가지고, 이름을 표시해주기
+//창현이와 협의를 하여야 함
+//최초 실행시 서버에서 정보를 받아 안드로이드 디비에 저장
+//아이디를 가져와서 화면에 표시해주는 것까지 완성 해야 한다
+
 public class FragmentTransList extends Fragment {
 
     AdapterListTrans adapter;
