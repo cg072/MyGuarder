@@ -40,8 +40,6 @@ public class ListViewItemTitle extends LinearLayout{
         tvAuthor.setText(author);
     }
 
-    /*public void setAuthor(String author){
-        tvTitle.setText(author);
-    }*/
+
 
 }

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,7 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
     EditText etSearText;
     ImageButton btnSearButton;
     ExpandableListView elvNotice;
+    InputMethodManager imm;
     int stat;
     ArrayList<TestDtoNotice> plusItem = new ArrayList<>();
     ArrayList<TestDtoNotice> resultitem = new ArrayList<>();
@@ -70,11 +72,15 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
         //리스트뷰를 보여줄 영역의 아이디를 호출
         elvNotice = (ExpandableListView)findViewById(R.id.elvNotice);
 
+        //inputmethodmanger 선언
+        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
         //어댑터 생성
-        AdapterNotice adapter = new AdapterNotice();
+        //AdapterNotice adapter = new AdapterNotice();
+
+        AdapterListNotice adapter = new AdapterListNotice();
 
         //어댑터에 데이터를 넣어줌
-        Log.v("됩니까", "돼요?");
         adapter.addItem(new TestDtoNotice("111", "aaa", "bbb"));
         adapter.addItem(new TestDtoNotice("222", "ccc", "ddd"));
         adapter.addItem(new TestDtoNotice("333", "eee", "fff"));
@@ -87,10 +93,15 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    //이 메소드에서 서버에서 정보를 받아와야 함
+    public void noticeToServer(){
 
+    }
 
     @Override
     public void onClick(View view) {
+
+        hideKeyboard();
 
         //검색종류 클릭시
         if(view == tvSearSelect){
@@ -125,11 +136,14 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
 
         //검색아이콘 클릭시
         if(view == btnSearButton){
-
-
             Toast.makeText(getApplicationContext(), "클릭됨요", Toast.LENGTH_LONG).show();
 
         }
+    }
+
+    //다른곳을 클릭시 키보드 숨김
+    public void hideKeyboard(){
+        imm.hideSoftInputFromWindow(etSearText.getWindowToken(), 0);
     }
 
 
@@ -140,7 +154,7 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
     * */
 
 
-    public class AdapterNotice extends BaseExpandableListAdapter {
+    /*public class AdapterNotice extends BaseExpandableListAdapter {
 
         ArrayList<TestDtoNotice> items = new ArrayList<TestDtoNotice>();
         HashMap<TestDtoNotice, String> hash = new HashMap<>();
@@ -222,7 +236,7 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
         public boolean isChildSelectable(int i, int i1) {
             return false;
         }
-    }
+    }*/
 
 
 }

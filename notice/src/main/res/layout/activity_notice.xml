@@ -29,22 +29,25 @@
                 android:id="@+id/tvSearSelect"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_weight="1"
                 android:background="@android:color/holo_blue_bright"
                 android:text="전체"
-                android:textSize="30dp" />
+                android:textSize="25dp" />
 
             <EditText
                 android:id="@+id/etSearText"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:hint="검색어를 입력하세요"/>
+                android:layout_marginLeft="10dp"
+                android:layout_weight="3"
+                android:hint="검색어를 입력하세요"
+                android:singleLine="true"/>
 
             <ImageButton
                 android:id="@+id/btnSearButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@android:drawable/ic_menu_search" />
 
 
