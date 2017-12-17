@@ -5,7 +5,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="listItemText">20dp</dimen>
+    <dimen name="listItemText">18dp</dimen>
     <dimen name="textHeight">45dp</dimen>
     <dimen name="layout_EmptyDistance">10dp</dimen>
 </resources>

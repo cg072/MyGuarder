@@ -1,10 +1,12 @@
 package home.safe.com.guarder;
 
+import java.io.Serializable;
+
 /**
  * Created by hotki on 2017-11-28.
  */
 
-public class GuarderVO {
+public class GuarderVO implements Serializable {
 
     private int gseq;
     private String gmid;

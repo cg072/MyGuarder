@@ -1,6 +1,7 @@
 package home.safe.com.guarder;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Handler;
@@ -16,10 +17,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -58,6 +61,10 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     ArrayList<ListViewItemGuarders> alGuarders = null;
 
     final private String TAG = "가드";
+    private int preDragX = 0;
+    private int preDragY = 0;
+    private int postDragX = 0;
+    private int postDragY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

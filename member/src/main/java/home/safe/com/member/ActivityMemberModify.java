@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,9 +26,11 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
 
 
     final static String settingCode = "200";
+    final static String TAG = "내  정 보  수 정";
 
-    private TextView tvID;
+    private TextView tvTitle;
 
+    private EditText etID;
     private EditText etPWD;
     private EditText etCheckPWD;
     private EditText etName;
@@ -40,24 +44,23 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
 
     private Button btnCertificationPhone;
     private Button btnModify;
+    private Button btnDuplicationID;
 
     private boolean checkPermission = false;
     private String myNumber = "";
 
-    private MemberVO memberVO = new MemberVO();
-
     ActivityMemberCertDialog certDialog = null;
-
-    final String TAG = "";
 
     MemberCheck memberCheck = new MemberCheck();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member_modify);
+        setContentView(R.layout.activity_member_signup);
 
-        tvID = (TextView) findViewById(R.id.tvID);
+        tvTitle = (TextView) findViewById(R.id.tvTitle);
+
+        etID = (EditText) findViewById(R.id.etID);
 
         etPWD = (EditText)findViewById(R.id.etPWD);
         etCheckPWD = (EditText)findViewById(R.id.etCheckPWD);
@@ -72,8 +75,13 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
 
         btnCertificationPhone = (Button)findViewById(R.id.btnCertificationPhone);
         btnCertificationPhone.setOnClickListener(this);
-        btnModify = (Button)findViewById(R.id.btnModify);
+        btnModify = (Button)findViewById(R.id.btnSignup);
+        btnDuplicationID = (Button) findViewById(R.id.btnDuplicationID);
 
+        // 사전 셋팅(사전에 셋팅해야할 서버로부터 받은 정보 등을 받고 셋팅)
+        beforeSetting();
+
+        // 기기에서 번호 가져오기
         getMemberPhone();
 
         btnModify.setOnClickListener(new Button.OnClickListener() {
@@ -91,22 +99,8 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                    memberCheck.checkBirth(birth, view.getContext())            == true &&
                    memberCheck.checkEmail(email, view.getContext())            == true ) {
 
-                    memberVO.setMid(tvID.getText().toString().trim());
-                    memberVO.setMpwd(etPWD.getText().toString().trim());
-                    memberVO.setMname(etName.getText().toString().trim());
-                    memberVO.setMphone(hyphenRemove(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
-                    memberVO.setMbirth(etBirth.getText().toString().trim());
-                    memberVO.setMemail(etEMail.getText().toString().trim());
-
-
-                    // 성별 판단 f,m,u
-                    if (rbFemale.isChecked()) {
-                        memberVO.setMgender("f");
-                    } else if (rbMale.isChecked()) {
-                        memberVO.setMgender("m");
-                    } else if (rbUndefine.isChecked()) {
-                        memberVO.setMgender("u");
-                    }
+                    MemberVO memberVO = new MemberVO();
+                    memberVO = setMemberVO();
 
                     Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     // 서버로 memberVO를 보냄(update)
@@ -114,6 +108,65 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 }
             }
         });
+    }
+
+    private void phoneCompare() {
+        // 서버로부터 받은 회원의 전화번호와 기기로부터 받은 전화번호 값이 다를때,
+        // 인증을 꼭 해야하도록 한다.
+    }
+
+    private void beforeSetting() {
+        // 타이틀 셋팅
+        tvTitle.setText(TAG);
+
+        // 아이디 셋팅
+        setID();
+    }
+
+    private void setID() {
+        etID.setText("아이디 셋팅");
+        etID.setEnabled(false);
+
+        // 버튼 셋팅
+        btnDuplicationID.setEnabled(false);
+        btnDuplicationID.setBackgroundColor(Color.WHITE);
+        btnDuplicationID.setText("");
+        /* 버튼 숨기기
+        btnDuplicationID.setVisibility(View.INVISIBLE);
+        */
+
+        // Password Edittext로 포커스를 옮기고 키보드를 띄운다.
+        etPWD.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        /* 키보드를 숨기는 부분
+        InputMethodManager immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        */
+    }
+
+    private MemberVO setMemberVO() {
+
+        MemberVO memberVO = new MemberVO();
+
+        memberVO.setMid(etID.getText().toString().trim());
+        memberVO.setMpwd(etPWD.getText().toString().trim());
+        memberVO.setMname(etName.getText().toString().trim());
+        memberVO.setMphone(hyphenRemove(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
+        memberVO.setMbirth(etBirth.getText().toString().trim());
+        memberVO.setMemail(etEMail.getText().toString().trim());
+
+        // 성별 판단 f,m,u
+        if (rbFemale.isChecked()) {
+            memberVO.setMgender("f");
+        } else if (rbMale.isChecked()) {
+            memberVO.setMgender("m");
+        } else if (rbUndefine.isChecked()) {
+            memberVO.setMgender("u");
+        }
+
+        return memberVO;
     }
 
     @Override
@@ -145,15 +198,13 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         }
     }
 
-
-
     /*
-*  date     : 2017.11.12
-*  author   : Kim Jong-ha
-*  title    : checkPermission 메소드 생성
-*  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
-*             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
-* */
+    *  date     : 2017.11.12
+    *  author   : Kim Jong-ha
+    *  title    : checkPermission 메소드 생성
+    *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
+    *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
+    * */
     private void checkPermission()
     {
         Log.v(TAG, "checkPermission들어옴");
@@ -211,6 +262,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 return;
         }
     }
+
     /*
     *  date     : 2017.11.12
     *  author   : Kim Jong-ha

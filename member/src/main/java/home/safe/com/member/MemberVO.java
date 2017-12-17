@@ -1,10 +1,12 @@
 package home.safe.com.member;
 
+import java.io.Serializable;
+
 /**
  * Created by hotki on 2017-11-28.
  */
 
-public class MemberVO {
+public class MemberVO implements Serializable {
     private int mseq;
     private String mname;
     private String mphone;
