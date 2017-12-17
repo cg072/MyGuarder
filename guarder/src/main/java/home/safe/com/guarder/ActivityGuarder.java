@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 //import home.safe.com.guarder.R;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,6 +39,8 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     final static private String TAB_SECOND = "지킴이 등록/해제";
 
     private TabHost tabHost;
+    private TabHost.TabSpec tabMember;
+    private TabHost.TabSpec tabGuarder;
 
     EditText etSearch;
     Button btnSearch;
@@ -60,22 +64,6 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guarder);
 
-        // TapHost 셋팅
-        tabHost = (TabHost) findViewById(R.id.tabHost) ;
-        tabHost.setup() ;
-
-        // 첫 번째 Tab (new TabSpec 안의 tag는 식별자 값이다.
-        TabHost.TabSpec ts1 = tabHost.newTabSpec("MEMBER") ;
-        ts1.setContent(R.id.contentMember) ;
-        ts1.setIndicator(TAB_FIRST) ;
-        tabHost.addTab(ts1)  ;
-
-        // 두 번째 Tab
-        TabHost.TabSpec ts2 = tabHost.newTabSpec("GUARDER") ;
-        ts2.setContent(R.id.contentGuarders) ;
-        ts2.setIndicator(TAB_SECOND) ;
-        tabHost.addTab(ts2) ;
-
         etSearch = (EditText) findViewById(R.id.etSearch);
         btnSearch = (Button) findViewById(R.id.btnSearch);
 
@@ -87,9 +75,12 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         // 기기에 있는 전화번호를 불러온다. 추후에는 기기에 있는 번호를 보내는 메소드가 필요함
         // private ArrayList<ListViewItemSearch> listSetting로 값을 반환하여 서버에 보내야한다.
 
+        // 탭을 셋팅하는 메소드
+        TabSetting();
         // 서버와 연결 후 부터는 서버로부터 받아서 세팅하는 메소드
         listSetting();
 
+        // EditText에서 키보드의 검색 버튼을 눌렀을 시, 취하는 행동
         etSearch.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -103,6 +94,7 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
             }
         });
 
+        // 검색 Button을 눌렀을 시, 취하는 행동
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,6 +113,30 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     }
     private void sendToServerVO() {
 
+    }
+
+    /*
+    *  date     : 2017.12.13
+    *  author   : Kim Jong-ha
+    *  title    : TabSetting() 메소드 생성
+    *  comment  : Tab을 셋팅하는 메소드 (Member와 Guarder탭이 있음)
+    * */
+    private void TabSetting() {
+        // TapHost 셋팅
+        tabHost = (TabHost) findViewById(R.id.tabHost) ;
+        tabHost.setup() ;
+
+        // 첫 번째 Tab (new TabSpec 안의 tag는 식별자 값이다.
+        TabHost.TabSpec tabMember = tabHost.newTabSpec("MEMBER") ;    // 식별값
+        tabMember.setContent(R.id.contentMember) ;                          // 들어갈 내용 레이아웃
+        tabMember.setIndicator(TAB_FIRST) ;                                // 탭 이름
+        tabHost.addTab(tabMember)  ;                                       // 탭 추가
+
+        // 두 번째 Tab
+        TabHost.TabSpec tabGuarder = tabHost.newTabSpec("GUARDER") ;
+        tabGuarder.setContent(R.id.contentGuarders) ;
+        tabGuarder.setIndicator(TAB_SECOND) ;
+        tabHost.addTab(tabGuarder) ;
     }
 
     /*
@@ -252,7 +268,6 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         listViewItemSearch.setTvName("오졌구요");
         listViewItemSearch.setTvPhone("01099991111");
         alReturnList.add(listViewItemSearch);
-
         Collections.sort(alReturnList ,new NameDescCompareSearch());
 
         alSearch = alReturnList;
@@ -333,7 +348,6 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         alGuarders.add(listViewItemGuarders);
 
         // 지킴이 어댑터 갱신
-
         guarderAdapterUpdate();
         searchAdapterUpdate(searchUpdate(alSearch, alGuarders));
         //searchUpdate(alSearch, alGuarders);
@@ -353,11 +367,12 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         // 역방향 시 Collections.reverse 로 해주면 된다
     }
 
-    /**
-     * 이름 내림차순
-     * @author falbb
-     *
-     */
+    /*
+    *  date     : 2017.11.22
+    *  author   : Kim Jong-ha
+    *  title    : NameDescCompareGuarders, NameDescCompareSearch 메소드 생성
+    *  comment  : 이름순 정렬
+    * */
     private class NameDescCompareGuarders implements Comparator<ListViewItemGuarders> {
         @Override
         public int compare(ListViewItemGuarders arg0, ListViewItemGuarders arg1) {
@@ -373,12 +388,12 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     }
 
     /*
-*  date     : 2017.11.20
-*  author   : Kim Jong-ha
-*  title    : guarderSearchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders 메소드 생성
-*  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
-*  return   : ArrayList<ListViewItemSearch> 형태
-* */
+    *  date     : 2017.11.20
+    *  author   : Kim Jong-ha
+    *  title    : guarderSearchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders 메소드 생성
+    *  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
+    *  return   : ArrayList<ListViewItemSearch> 형태
+    * */
     private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> searchs, ArrayList<ListViewItemGuarders> guarders) {
 
         Log.v("사이즈", String.valueOf(searchs.size()));

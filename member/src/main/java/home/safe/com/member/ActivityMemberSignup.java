@@ -142,9 +142,18 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         });
 
         getMemberPhone();
+        setTestSignup();
     }
 
 
+    private void setTestSignup() {
+        etID.setText("abcd123");
+        etPWD.setText("aAbBcC11");
+        etCheckPWD.setText("aAbBcC11");
+        etName.setText("김종핰");
+        etBirth.setText("");
+        etEMail.setText("sdf@fds.com");
+    }
 
 
     @Override

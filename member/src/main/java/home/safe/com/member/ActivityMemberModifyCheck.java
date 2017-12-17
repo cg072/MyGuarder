@@ -39,6 +39,7 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
                 if(password.equals(etPWD.getText().toString().trim())) {
                     Intent intent = new Intent(ActivityMemberModifyCheck.this, ActivityMemberModify.class);
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(ActivityMemberModifyCheck.this, "Password를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
                 }

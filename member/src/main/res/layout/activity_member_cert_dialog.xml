@@ -47,8 +47,9 @@
             android:lines="1"
             android:singleLine="true"
             android:imeOptions="actionDone"
-            android:inputType="number"
-            />
+            android:inputType="number">
+            <requestFocus/>
+        </EditText>
         <!--android:hint="인증코드 입력란"-->
         <Button
             android:id="@+id/btnCheckCode"

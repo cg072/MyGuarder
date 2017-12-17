@@ -36,16 +36,36 @@ public class MemberCheck {
 
     public boolean checkPWD(String pwd, String pwdCheck, Context context) {
         boolean check = false;
+        int checkNum = 0;
+        int checkChar = 0;
 
-        if( pwd.length() >= 7 ) {
-            if(pwd.equals(pwdCheck)) {
-                check = true;
-            } else {
-                Toast.makeText(context, "Password가 서로 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+        if( pwd.length() >= 7 && pwd.length() <= 20) {
+            for( int i = 0 ; i < pwd.length() ; i++) {
+
+                long hexLong = toHex(pwd.charAt(i));
+
+                if(hexLong >= toHex('0') && hexLong <= toHex('9')) { // 숫자
+                    checkNum += 1;
+                } else if(hexLong >= toHex('a') && hexLong <= toHex('z') || // 소문자 및
+                           hexLong >= toHex('A') && hexLong <= toHex('Z')) { // 대문자
+                    checkChar += 1;
+                }
             }
-
+            if((checkNum > 0 && checkChar > 0) &&           // 혼합 여부 체크
+               (checkNum + checkChar) == pwd.length()) {
+                if(pwd.equals(pwdCheck)) {
+                    check = true;
+                } else {
+                    Toast.makeText(context, "Password가 서로 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.v("체크", String.valueOf(checkChar));
+                Log.v("체크", String.valueOf(checkNum));
+                Log.v("체크", String.valueOf(pwd.length()));
+                Toast.makeText(context, "Password는 영숫자 혼합이어야 합니다.", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(context, "Password 7자리 이상 요구", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Password 필요 문자는 7 ~ 20 자리 입니다", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -60,38 +80,39 @@ public class MemberCheck {
         int checkNum = 0;
         int checkChar = 0;
 
+        boolean firstCheck = false;
+        long firstChar = toHex(newID.charAt(0));
 
-        if( newID.length() >= 6 && newID.length() <= 15) {
-            for( int i = 0 ; i < newID.length() ; i++) {
+        if(firstChar >= toHex('a') && firstChar <= toHex('z')) {
+            firstCheck = true;
+        }
 
-                long hexLong = toHex(newID.charAt(i));
+        // 길이 체크
+        if(firstCheck == true) {
+            if (newID.length() >= 6 && newID.length() <= 15) {
+                for (int i = 0; i < newID.length(); i++) {
 
-                Log.v("차",String.valueOf(newID.charAt(i)));
-                Log.v("롱",String.valueOf(hexLong));
+                    long hexLong = toHex(newID.charAt(i));
 
-                if(hexLong >= toHex('0') && hexLong <= toHex('9')) { // 숫자
-                    checkNum += 1;
-                } else if(hexLong >= toHex('a') && hexLong <= toHex('z')) {// 소문자
-                    checkChar += 1;
+                    if (hexLong >= toHex('0') && hexLong <= toHex('9')) { // 숫자
+                        checkNum += 1;
+                    } else if (hexLong >= toHex('a') && hexLong <= toHex('z')) {// 소문자
+                        checkChar += 1;
+                    }
                 }
-            }
 
-            if((checkNum > 0) && (checkChar > 0) &&             // 숫자와 문자가 1글자 이상씩 있고
-               (checkNum + checkChar) == newID.length()) {      // 잡문자 없이, 숫자와 문자의 합이 전체 길이일 때
-                check = true ;
-                Log.v("숫자",String.valueOf(checkNum));
-                Log.v("문자",String.valueOf(checkChar));
-                Log.v("글자", newID);
-                Log.v("길이",String.valueOf(newID.length()));
+                // 영숫자 혼합으로 이루어졌는지 체크
+                if ((checkNum > 0) && (checkChar > 0) &&             // 숫자와 문자가 1글자 이상씩 있고
+                        (checkNum + checkChar) == newID.length()) {      // 잡문자 없이, 숫자와 문자의 합이 전체 길이일 때
+                    check = true;
+                } else {
+                    Toast.makeText(context, "영문자, 숫자만 가능", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Log.v("숫자",String.valueOf(checkNum));
-                Log.v("문자",String.valueOf(checkChar));
-                Log.v("글자", newID);
-                Log.v("길이",String.valueOf(newID.length()));
-                Toast.makeText(context, "영문자, 숫자만 가능", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "ID 필요 문자는 6 ~ 15 자리 입니다.", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(context, "ID 필요 문자 수는 6 ~ 15 개 입니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "ID의 첫글자는 영어 입니다.", Toast.LENGTH_SHORT).show();
         }
 
         return check;
@@ -110,23 +131,7 @@ public class MemberCheck {
     // 대문자를 소문자로 치환하는 메소드
     private String replaceID(String id) {
 
-        String replace = "";
-        String temp;
-
-        for( int i = 0 ; i < id.length() ; i++) {
-
-            temp = String.valueOf(id.charAt(i));
-
-            long hexLong = toHex(id.charAt(i));
-
-            if(hexLong >= toHex('A') && hexLong <= toHex('Z')) {  // 대문자
-                hexLong += 32;
-                temp = String.valueOf((char)hexLong);
-            }
-            replace += temp;
-        }
-
-        return replace;
+        return id.toLowerCase();
     }
 
     // 중복 버튼이 비활성화 되어있는가를 확인하는 메소드
@@ -144,14 +149,20 @@ public class MemberCheck {
 
     public boolean checkBirth (String birth, Context context) {
         boolean check = false;
-        if(birth.length() == 8 || birth.length() == 0) {
+        if(birth.length() == 0) {
+            check = true;
+        }
+        else if(birth.length() == 8) {
             try {
                 Double.parseDouble(birth);
-                return true;
+                check =  true;
             } catch (NumberFormatException e) {
-                Toast.makeText(context, "8자리의 숫자만 입력해주세요(빈칸 가능)", Toast.LENGTH_SHORT).show();
-                return false;
+                Toast.makeText(context, "생년월일은 8자리의 숫자만 입력해주세요(빈칸 가능)", Toast.LENGTH_SHORT).show();
+                check =  false;
             }
+        } else {
+            Toast.makeText(context, "생년월일은 8자리의 숫자만 입력해주세요(빈칸 가능)", Toast.LENGTH_SHORT).show();
+            check =  false;
         }
 
         return check;
@@ -160,11 +171,16 @@ public class MemberCheck {
     public boolean checkEmail(String email, Context context) {
         boolean check = false;
 
-        Pattern p = Pattern.compile("^[a-zA-X0-9]@[a-zA-Z0-9].[a-zA-Z0-9]");
+        // 한개이상 + @ +  한개이상 + 해석금지. + 두개이상
+        Pattern p = Pattern.compile("^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\\.([a-zA-Z])+([a-zA-Z])+");
         Matcher m = p.matcher(email);
 
-        if ( !email.equals("") && !m.matches()){
+        if( email.equals("")) {
+            check = true;
+        }else if ( !m.matches()){
             Toast.makeText(context, "Email형식으로 입력하세요(빈칸가능)", Toast.LENGTH_SHORT).show();
+
+            Log.v("이메일",email + " //" + m.toString());
         } else {
             check = true;
         }

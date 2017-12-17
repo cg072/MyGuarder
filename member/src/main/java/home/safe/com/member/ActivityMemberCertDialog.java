@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,6 +35,10 @@ public class ActivityMemberCertDialog extends Dialog {
         tvCertCode = (TextView) findViewById(R.id.tvCertCode);
         etCertCode = (EditText) findViewById(R.id.etCertCode);
         btnCheckCode = (Button) findViewById(R.id.btnCheckCode);
+
+        //키보드 보이게 하는 부분
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         btnCheckCode.setOnClickListener(new Button.OnClickListener() {
             @Override

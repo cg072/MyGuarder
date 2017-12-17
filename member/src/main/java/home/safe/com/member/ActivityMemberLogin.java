@@ -178,6 +178,13 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     }
 
+    private void setTestLogin() {
+        String testID = "root";
+        String testPWD = "1111";
+        etID.setText(testID);
+        etPWD.setText(testPWD);
+    }
+
     private void loginCheck() {
         Map<String, String> map = new HashMap<String, String>();
 

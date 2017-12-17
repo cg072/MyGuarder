@@ -41,9 +41,9 @@
             android:label="@string/title_activity_member_modify"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ActivityMemberModifyCheck"
-            android:label="ActivityMemberModifyCheck"
-            android:theme="@style/AppTheme.NoActionBar" />
+        android:name=".ActivityMemberModifyCheck"
+        android:label="ActivityMemberModifyCheck"
+        android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ActivityMemberSignup"
             android:label="@string/title_activity_member_signup"
