@@ -113,34 +113,25 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 startActivity(intent);
                 break;
             case R.id.tbCivilianMode:
-                if(!tbCivilianMode.isChecked())
-                {
-                    finish();
-                }
-                else {
-                    tbCivilianMode.setChecked(true);
-                    tbGuarderMode.setChecked(false);
 
-                    intent = new Intent(this, ActivityCivilian.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+                tbGuarderMode.setChecked(false);
+
+                intent = new Intent(this, ActivityCivilian.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+                finish();
 
                 break;
             case R.id.tbGuarderMode:
-                if(!tbGuarderMode.isChecked())
-                {
-                    finish();
-                }
-                else
-                {
-                    tbCivilianMode.setChecked(false);
-                    tbGuarderMode.setChecked(true);
 
-                    intent = new Intent(this, ActivityMyGuarder.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+                tbCivilianMode.setChecked(false);
+
+                intent = new Intent(this, ActivityMyGuarder.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+                finish();
 
                 break;
             case R.id.btnSignOutSetting:

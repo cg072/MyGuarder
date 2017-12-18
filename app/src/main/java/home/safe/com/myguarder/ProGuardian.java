@@ -389,6 +389,11 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                         line.remove();
                     }
                     polylinesLastLocation.clear();
+
+                    for(Polyline line : polylinesRequestLocation)
+                    {
+                        line.remove();
+                    }
                     polylinesRequestLocation.clear();
                     return false;
                 }
@@ -656,10 +661,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @author 경창현
      * @version 1.0.0
      * @text
-     * 1. 지킴이가 피지킴이 경로 뿌렸을때 현재위치 누르면 지우기 해야함
-     * 2. 버튼 백 눌렀을때 버튼 호환이 안됨(해결사항 : Setting을 피니쉬시키는 방향으로 )
+     * 1. 지킴이가 피지킴이 경로 뿌렸을때 현재위치 누르면 지우기 해야함 ok
+     * 2. 버튼 백 눌렀을때 버튼 호환이 안됨(해결사항 : Setting을 피니쉬시키는 방향으로  ok
      * 3. 서버를 찾아보자
-     *
+     * https://blog.naver.com/xiaoyu00
+     * 223.195.109.70
+     * kyungch123
+     * 1515
      * @since 2017-12-15 오후 3:36
     **/
 }
