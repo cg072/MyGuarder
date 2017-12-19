@@ -670,4 +670,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 1515
      * @since 2017-12-15 오후 3:36
     **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text  피지킴이 모드 불켜지는거 확인
+     * @since 2017-12-19 오후 4:50
+    **/
 }
