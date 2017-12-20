@@ -1,53 +1,28 @@
 package home.safe.com.guarder;
 
-import android.Manifest;
-import android.app.Fragment;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.os.Handler;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+
 //import home.safe.com.guarder.R;
 
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-
-public class ActivityGuarder extends AppCompatActivity implements ListViewAdapterSearch.SearchListBtnClickListener, ListViewAdapterGuarders.GuardersListBtnClickListener{
+public class ActivityGuarder extends AppCompatActivity {
 
     final static private String TAB_FIRST = "회원 검색";
     final static private String TAB_SECOND = "지킴이 등록/해제";
 
-    private TabHost tabHost;
-    private TabHost.TabSpec tabMember;
-    private TabHost.TabSpec tabGuarder;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
-    EditText etSearch;
-    Button btnSearch;
-    ListView lvSearch;
     ListView lvGuarders;
     ListViewItemSearch lvItemSearch;
     ListViewItemGuarders lvItemGuarders;
@@ -61,90 +36,49 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     ArrayList<ListViewItemGuarders> alGuarders = null;
 
     final private String TAG = "가드";
-    private int preDragX = 0;
-    private int preDragY = 0;
-    private int postDragX = 0;
-    private int postDragY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guarder);
 
-        etSearch = (EditText) findViewById(R.id.etSearch);
-        btnSearch = (Button) findViewById(R.id.btnSearch);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        lvSearch = (ListView) findViewById(R.id.lvSearch);
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager()));
+        tabLayout.addTab(tabLayout.newTab().setText(TAB_FIRST), 0, true);
+        tabLayout.addTab(tabLayout.newTab().setText(TAB_SECOND), 1);
+        tabLayout.addOnTabSelectedListener(tabSelectedListener);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+
         lvGuarders = (ListView) findViewById(R.id.lvGuarders);
 
         alGuarders = new ArrayList<ListViewItemGuarders>();
-
-        // 기기에 있는 전화번호를 불러온다. 추후에는 기기에 있는 번호를 보내는 메소드가 필요함
-        // private ArrayList<ListViewItemSearch> listSetting로 값을 반환하여 서버에 보내야한다.
-
-        // 탭을 셋팅하는 메소드
-        TabSetting();
-        // 서버와 연결 후 부터는 서버로부터 받아서 세팅하는 메소드
-        listSetting();
-
-        // EditText에서 키보드의 검색 버튼을 눌렀을 시, 취하는 행동
-        etSearch.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if(i == EditorInfo.IME_ACTION_SEARCH) {
-                    // 검색 버튼을 눌렀을 시 해야할 행동
-
-                    sendToServerText(etSearch.getText().toString());
-                    searchAdapterUpdate(resultSearch());
-                }
-                return false;
-            }
-        });
-
-        // 검색 Button을 눌렀을 시, 취하는 행동
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 검색 버튼을 눌렀을 시 해야할 행동
-
-                sendToServerText(etSearch.getText().toString());
-
-                searchAdapterUpdate(resultSearch());
-
-           }
-        });
     }
 
-    private void sendToServerText(String phone) {
+    TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
 
-    }
-    private void sendToServerVO() {
+            EditText etSearch = (EditText) findViewById(R.id.etSearch);
 
-    }
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
 
-    /*
-    *  date     : 2017.12.13
-    *  author   : Kim Jong-ha
-    *  title    : TabSetting() 메소드 생성
-    *  comment  : Tab을 셋팅하는 메소드 (Member와 Guarder탭이 있음)
-    * */
-    private void TabSetting() {
-        // TapHost 셋팅
-        tabHost = (TabHost) findViewById(R.id.tabHost) ;
-        tabHost.setup() ;
+            viewPager.setCurrentItem(tab.getPosition());
+        }
 
-        // 첫 번째 Tab (new TabSpec 안의 tag는 식별자 값이다.
-        TabHost.TabSpec tabMember = tabHost.newTabSpec("MEMBER") ;    // 식별값
-        tabMember.setContent(R.id.contentMember) ;                          // 들어갈 내용 레이아웃
-        tabMember.setIndicator(TAB_FIRST) ;                                // 탭 이름
-        tabHost.addTab(tabMember)  ;                                       // 탭 추가
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
 
-        // 두 번째 Tab
-        TabHost.TabSpec tabGuarder = tabHost.newTabSpec("GUARDER") ;
-        tabGuarder.setContent(R.id.contentGuarders) ;
-        tabGuarder.setIndicator(TAB_SECOND) ;
-        tabHost.addTab(tabGuarder) ;
-    }
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
 
     /*
      *  date     : 2017.11.27
@@ -160,14 +94,14 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         alSearchResult = new ArrayList<ListViewItemSearch>();
 
         // EditText로부터 필터링할 값 가져옴
-        String strSearch = etSearch.getText().toString();
+        //String strSearch = etSearch.getText().toString();
 
         // 필터링된 값들을 초기화된 alSearchResult에 담는다.
-        for(ListViewItemSearch a : alSearch) {
+/*        for(ListViewItemSearch a : alSearch) {
             if(a.getTvPhone().contains(strSearch) == true || a.getTvName().contains(strSearch) == true) {
                 alSearchResult.add(a);
             }
-        }
+        }*/
 
         // 필터링된 결과값 반환
         return alSearchResult;
@@ -208,191 +142,19 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
             3. 지킴이 목록에 있는 회원은 보여주지 않는다.
          */
         // 예시용 목록 회원
-        ArrayList<ListViewItemSearch> alReturnList = new ArrayList<ListViewItemSearch>();
+        //Collections.sort(alReturnList ,new ActivityGuarder.NameDescCompareSearch());
 
-        ListViewItemSearch listViewItemSearch = new ListViewItemSearch();
-
-        listViewItemSearch.setTvName("지립니다");
-        listViewItemSearch.setTvPhone("01034561234");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("오집니다");
-        listViewItemSearch.setTvPhone("01083835465");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("개년잌");
-        listViewItemSearch.setTvPhone("01085901234");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("우성이잘가");
-        listViewItemSearch.setTvPhone("01000901123");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("짜이찌엔우성띄");
-        listViewItemSearch.setTvPhone("01080450912");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("별들에게물어봐");
-        listViewItemSearch.setTvPhone("01034567123");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("좀가자스트라");
-        listViewItemSearch.setTvPhone("01046327401");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("뉴이코씨발");
-        listViewItemSearch.setTvPhone("01043441234");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("히히히");
-        listViewItemSearch.setTvPhone("01011112222");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("니나노");
-        listViewItemSearch.setTvPhone("01033334444");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("릴리리");
-        listViewItemSearch.setTvPhone("0168887777");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("지리구요");
-        listViewItemSearch.setTvPhone("01083832562");
-        alReturnList.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("오졌구요");
-        listViewItemSearch.setTvPhone("01099991111");
-        alReturnList.add(listViewItemSearch);
-        Collections.sort(alReturnList ,new NameDescCompareSearch());
-
-        alSearch = alReturnList;
-        alSearchResult = alSearch;
-
-        Log.v("어디냐1","ㅇ");
-        for(ListViewItemSearch a : alSearch) {
-            Log.v(a.getTvName(), a.getTvPhone());
-        }
-
-
-        // 예시용 목록 2 지킴이
-        ListViewItemGuarders listViewItemGuarders = new ListViewItemGuarders();
-
-        listViewItemGuarders.setTvName("스트라티스");
-        listViewItemGuarders.setTvPhone("01030000300");
-        listViewItemGuarders.setUse(true);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("가즈아");
-        listViewItemGuarders.setTvPhone("01011111111");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("김현중");
-        listViewItemGuarders.setTvPhone("01088888888");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("허이섭");
-        listViewItemGuarders.setTvPhone("01044444444");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("놔낭");
-        listViewItemGuarders.setTvPhone("01012389023");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("뻑");
-        listViewItemGuarders.setTvPhone("01098765678");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요형");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요동생");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요친구");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("오졌구요");
-        listViewItemGuarders.setTvPhone("01099991111");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
+        //alSearch = alReturnList;
+        //alSearchResult = alSearch;
 
         // 지킴이 어댑터 갱신
-        guarderAdapterUpdate();
-        searchAdapterUpdate(searchUpdate(alSearch, alGuarders));
+        //guarderAdapterUpdate();
+        //searchAdapterUpdate(searchUpdate(alSearch, alGuarders));
         //searchUpdate(alSearch, alGuarders);
 
     }
 
-    // ArrayList에 지킴이를 추가함 [서버와 연결 후 부터는 서버로부터 받아와야한다.]
-    private void guarderAdd(String name, String phone) {
-        lvItemGuarders = new ListViewItemGuarders();
-        lvItemGuarders.setTvName(name);
-        lvItemGuarders.setTvPhone(phone);
-        lvItemGuarders.setUse(false);
 
-        alGuarders.add(lvItemGuarders);
-
-        Collections.sort(alGuarders ,new NameDescCompareGuarders());
-        // 역방향 시 Collections.reverse 로 해주면 된다
-    }
-
-    /*
-    *  date     : 2017.11.22
-    *  author   : Kim Jong-ha
-    *  title    : NameDescCompareGuarders, NameDescCompareSearch 메소드 생성
-    *  comment  : 이름순 정렬
-    * */
-    private class NameDescCompareGuarders implements Comparator<ListViewItemGuarders> {
-        @Override
-        public int compare(ListViewItemGuarders arg0, ListViewItemGuarders arg1) {
-            return  arg0.getTvName().compareTo(arg1.getTvName());
-        }
-    }
-
-    private class NameDescCompareSearch implements Comparator<ListViewItemSearch> {
-        @Override
-        public int compare(ListViewItemSearch arg0, ListViewItemSearch arg1) {
-            return  arg0.getTvName().compareTo(arg1.getTvName());
-        }
-    }
 
     /*
     *  date     : 2017.11.20
@@ -401,7 +163,7 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
     *  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
     *  return   : ArrayList<ListViewItemSearch> 형태
     * */
-    private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> searchs, ArrayList<ListViewItemGuarders> guarders) {
+/*    private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> searchs, ArrayList<ListViewItemGuarders> guarders) {
 
         Log.v("사이즈", String.valueOf(searchs.size()));
 
@@ -414,16 +176,16 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
             }
         }
         return searchs;
-    }
-
+    }*/
+/*
 
     // 회원 리스트에서 등록 버튼을 눌렀을 시
-    /*
+    *//*
     *  date     : 2017.11.20
     *  author   : Kim Jong-ha
     *  title    : onSearchListBtnClick(int position, ListViewItemSearch lvItemSearch) 메소드 생성
     *  comment  : 회원 목록에 있는 '등록' Button을 눌렀을 시의 작동 코딩.
-    * */
+    * *//*
     @Override
     public void onSearchListBtnClick(int position) {
 
@@ -441,8 +203,8 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         for(ListViewItemSearch a : alSearch) {
             if(a.getTvPhone().equals(phone)){
                 alSearch.remove(a);
-                /*alSearchResult.remove(position); <- 이게 왜 alSearch까지 지우는지 모르겠음
-                searchAdapterUpdate(alSearchResult);*/
+                *//*alSearchResult.remove(position); <- 이게 왜 alSearch까지 지우는지 모르겠음
+                searchAdapterUpdate(alSearchResult);*//*
                 break;
             }
         }
@@ -454,13 +216,13 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
 
 
     // 지킴이 리스트에서 슬라이딩 버튼을 눌렀을 시
-    /*
+    *//*
     *  date     : 2017.11.20
     *  author   : Kim Jong-ha
     *  title    : onGuardersListBtnClick(int position, int count) 메소드 생성
     *  comment  : 지킴이 목록에 있는 SlidingButton을 눌렀을 경우의 작동 코딩
     *             지킴이는 1명만 지정이 가능하기 때문에, 지킴이로 지정된 ListView의 item을 제외하고는 모두 Button 상태가 false가 되어야한다.
-    * */
+    * *//*
     @Override
     public void onGuardersListBtnClick(int position, int count) {
 
@@ -496,16 +258,7 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         guarderAdapterUpdate();
     }
 
-    // 회원 목록의 어댑터 갱신
-    private void searchAdapterUpdate(ArrayList<ListViewItemSearch> list) {
-        // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
-        //lvAdapterSearch = new ListViewAdapterSearch(this, R.layout.listview_item_search, alSearch, this);
-        lvAdapterSearch = new ListViewAdapterSearch(this, R.layout.listview_item_search, list, this);
-        // 변경된 Adapter 적용
-        lvAdapterSearch.notifyDataSetChanged();
-        // 리스트뷰 참조 및 Adapter 달기
-        lvSearch.setAdapter(lvAdapterSearch);
-    }
+
 
     // 지킴이 목록의 어댑터 갱신
     private void guarderAdapterUpdate() {
@@ -515,13 +268,5 @@ public class ActivityGuarder extends AppCompatActivity implements ListViewAdapte
         lvAdapterGuarders.notifyDataSetChanged();
         // 리스트뷰 참조 및 Adapter 달기
         lvGuarders.setAdapter(lvAdapterGuarders);
-    }
-
-    private void getGuarderVO() {
-
-    }
-
-    private void setGuarderVO() {
-
-    }
+    }*/
 }

@@ -1,15 +1,11 @@
 package home.safe.com.guarder;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -60,7 +56,8 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         // 생성자로부터 저장된 resourceID(listview_item_guarders)에 해당하는 Layout을 inflate하여 convertView 참조 획득
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(this.resourceID/*R.Layout.listview_item_guarders*/, parent, false);
+            //convertView = inflater.inflate(this.resourceID/*R.Layout.listview_item_guarders*/, parent, false);
+            convertView = inflater.inflate(R.layout.listview_item_guarders, parent, false);
         }
 
         // 화면에 표시될 View(Layout이 inflate된) 로부터 위젯에 대한 참조 획득

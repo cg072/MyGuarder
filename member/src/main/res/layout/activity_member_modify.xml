@@ -25,7 +25,7 @@
                 android:layout_marginBottom="25dp"
                 android:layout_marginTop="25dp"
                 android:gravity="center"
-                android:text="내  정 보  수 정"
+                android:text="내  정 보"
                 android:textSize="45dp" />
 
             <LinearLayout
@@ -268,7 +268,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/tv_round_signup"
                     android:gravity="center"
-                    android:text="Gender"
+                    android:text="성별"
                     android:textSize="@dimen/textSize" />
 
                 <LinearLayout

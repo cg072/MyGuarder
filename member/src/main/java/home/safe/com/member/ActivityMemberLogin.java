@@ -116,7 +116,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
         naverSetting();
         googleSetting();
 
-
+        loadData();
         if(autoLogin() == true) {
             loadData();
             loginCheck();
@@ -145,7 +145,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
         btnLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                saveData();
             }
         });
 
@@ -235,8 +235,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private void loadData()
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        etID.setText(preferences.getString("TransName",""));
-        etPWD.setText(preferences.getString("TransMemo",""));
+        etID.setText(preferences.getString("MemberID","없어"));
+        etPWD.setText(preferences.getString("MemberPWD","없다고"));
     }
 
     /*

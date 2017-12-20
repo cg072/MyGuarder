@@ -1,9 +1,7 @@
 package home.safe.com.guarder;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -11,10 +9,8 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by hotki on 2017-11-14.
@@ -24,7 +20,7 @@ import java.util.Map;
  * 그러므로 Custom Adapter를 만들 때는 ArrayAdapter 대신에 BaseAdapter를 사용하는 것이 좋다
  */
 
-public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickListener, Filterable, View.OnTouchListener{
+public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickListener, Filterable{
 
     ListViewItemSearch saveItem = new ListViewItemSearch();
     Button btnSearchAdd ;
@@ -99,32 +95,6 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
         if(this.listBtnClickListener != null) {
             this.listBtnClickListener.onSearchListBtnClick((int) view.getTag());
         }
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-
-        int preDragX = 0;
-        int preDragY = 0;
-        int postDragX = 0;
-        int postDragY = 0;
-
-        Log.v("여긴2222","오냐ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
-
-        if( event.getAction() == MotionEvent.ACTION_UP ) {
-            postDragX = (int) event.getX();
-            postDragY = (int) event.getY();
-            Log.v("드래그","끝");
-            Log.v("X" + postDragX,"Y" + postDragY);
-        }
-        if( event.getAction() == MotionEvent.ACTION_DOWN) {
-
-            preDragX = (int) event.getX();
-            preDragY = (int) event.getY();
-            Log.v("드래그","시작");
-            Log.v("X" + preDragX,"Y" + preDragY);
-        }
-        return false;
     }
 
     /*

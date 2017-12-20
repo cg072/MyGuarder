@@ -160,6 +160,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         if(view.getId() == R.id.btnCertificationPhone) {
             certDialog = new ActivityMemberCertDialog(ActivityMemberSignup.this);
+            certDialog.setCancelable(false);
             certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialogInterface) {

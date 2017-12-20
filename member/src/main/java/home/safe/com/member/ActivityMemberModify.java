@@ -174,6 +174,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         Log.v("버튼","클릭");
         if(view.getId() == R.id.btnCertificationPhone) {
             certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
+            certDialog.setCancelable(false);
             certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialogInterface) {
