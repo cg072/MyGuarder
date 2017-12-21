@@ -29,7 +29,6 @@ public class AdapterListNotice extends BaseExpandableListAdapter {
         parentArrItems.add(test);
         childHashItems.put(test, test.getTestcontents());
 
-
     }
 
     @Override

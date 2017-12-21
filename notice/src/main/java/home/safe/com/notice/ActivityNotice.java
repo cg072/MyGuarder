@@ -49,8 +49,6 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
     ExpandableListView elvNotice;
     InputMethodManager imm;
     int stat;
-    ArrayList<TestDtoNotice> plusItem = new ArrayList<>();
-    ArrayList<TestDtoNotice> resultitem = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +76,7 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
         imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
         //어댑터 생성
+        //내부클래스
         //AdapterNotice adapter = new AdapterNotice();
 
         AdapterListNotice adapter = new AdapterListNotice();
@@ -95,10 +94,9 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    //이 메소드에서 서버에서 정보를 받아와야 함
-    public void noticeToServer(){
 
-    }
+
+
 
     @Override
     public void onClick(View view) {
@@ -148,6 +146,10 @@ public class ActivityNotice extends AppCompatActivity implements View.OnClickLis
         imm.hideSoftInputFromWindow(etSearText.getWindowToken(), 0);
     }
 
+    //이 메소드에서 서버에서 정보를 받아와야 함
+    public void toServNotice(){
+
+    }
 
     /*
     * 2017. 11. 23

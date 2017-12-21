@@ -31,12 +31,18 @@
         android:padding="24dp">
 
 
-        <ListView
+        <!--<ListView
             android:id="@+id/lvtrans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </ListView>
+        </ListView>-->
+        <ExpandableListView
+            android:id="@+id/lvtrans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ExpandableListView>
 
     </LinearLayout>
     <!-- Notice -->

@@ -17,10 +17,19 @@
             android:descendantFocusability="beforeDescendants">
 
             <TextView
+                android:id="@+id/tvtransstat"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text=""
+                android:textSize="10dp"/>
+
+            <TextView
                 android:id="@+id/tvtranskind"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="15dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
                 android:background="@android:color/holo_blue_dark"
                 android:gravity="center"
                 android:text="이동수단 종류 선택"
@@ -29,7 +38,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/edit_text_area"
                 android:orientation="vertical">
 
@@ -48,8 +57,8 @@
             <Button
                 android:id="@+id/btnRegTrans"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="15dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
                 android:background="@android:color/holo_blue_dark"
                 android:text="확인"
                 android:textSize="18dp" />

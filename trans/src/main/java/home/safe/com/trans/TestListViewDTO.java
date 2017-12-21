@@ -10,16 +10,21 @@ import java.io.Serializable;
 
 public class TestListViewDTO implements Serializable{
     String num;
-    String type;
-    String name;
+    String tranName;
+    String time;
+    String author;
+    String text;
+    
 
 
-    public TestListViewDTO(String num, String type, String name) {
+
+    public TestListViewDTO(String num, String tranName, String time, String author, String text) {
         this.num = num;
-        this.type = type;
-        this.name = name;
+        this.tranName = tranName;
+        this.time = time;
+        this.author = author;
+        this.text = text;
     }
-
 
     public String getNum() {
         return num;
@@ -29,28 +34,46 @@ public class TestListViewDTO implements Serializable{
         this.num = num;
     }
 
-    public String getType() {
-        return type;
+    public String getTranName() {
+        return tranName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTranName(String tranName) {
+        this.tranName = tranName;
     }
 
-    public String getName() {
-        return name;
+    public String getTime() {
+        return time;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
     public String toString() {
         return "TestListViewDTO{" +
                 "num='" + num + '\'' +
-                ", type='" + type + '\'' +
-                ", name='" + name + '\'' +
+                ", tranName='" + tranName + '\'' +
+                ", time='" + time + '\'' +
+                ", author='" + author + '\'' +
+                ", text='" + text + '\'' +
                 '}';
     }
 }

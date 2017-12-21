@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,17 +56,19 @@ preferences.getString("TransMemo","기본값");
 
 
 public class FragmentTransReg extends Fragment implements View.OnClickListener{
-    ArrayList<TestListViewDTO> dtoList = new ArrayList<TestListViewDTO>();
-    TestListViewDTO testDto;
+
     ActivityTrans mainActivity;
+    TextView tvtransstat;
     TextView tvtranskind;
     EditText etTextTrans;
     Button btnRegTrans;
     InputMethodManager imm;
-
-    static int num;
+    String num;
     String kind;
     String text;
+
+
+    int fragmentStat;
 
 
 
@@ -88,9 +92,21 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_transreg, container, false);
 
+        tvtransstat = (TextView) rootView.findViewById(R.id.tvtransstat);
         tvtranskind = (TextView) rootView.findViewById(R.id.tvtranskind);
         etTextTrans = (EditText) rootView.findViewById(R.id.etTextTrans);
         btnRegTrans = (Button) rootView.findViewById(R.id.btnRegTrans);
+
+        if(fragmentStat == 0){
+            tvtransstat.setText("피지킴이 입니다 : 자신의 이동수단을 등록하세요");
+        }
+
+        //상대방의 이동수단을 등록할 때는, 상대방의 아이디를 받아와서 화면에 표시해주어야 한다 한다!!
+        //ex) 지킴이 입니다: ???님의 이동수단을 등록하세요
+        if(fragmentStat == 1){
+            tvtransstat.setText("지킴이 입니다: 상대방의 이동수단을 등록하세요");
+        }
+
 
         imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -145,21 +161,6 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
         if(view == btnRegTrans){
 
-            /*if(tvtranskind.getText().equals("이동수단 종류 선택")){
-                AlertDialog.Builder warnAlert = new AlertDialog.Builder(getActivity());
-                warnAlert.setTitle("이동수단을 등록하지 않음");
-                warnAlert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        etTextTrans.setText(null);
-
-                    }
-                });
-
-                warnAlert.create();
-                warnAlert.show();
-            }*/
-
             if(tvtranskind.getText().equals("이동수단 종류 선택")){
                 Toast.makeText(getContext().getApplicationContext(), "이동수단이 선택되지 않음", Toast.LENGTH_LONG).show();
             }else{
@@ -170,14 +171,18 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
                 regAlert.setTitle("이동수단 등록");
 
                 //얼럿 박스에 긴 내용이 들어가는 이슈 !!
-                regAlert.setMessage("이동수단: " + kind +"\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
+                regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text.trim() + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        regComfirm(num, kind, text);
-                        num += 1;
+                        //서버디비에 인서트
+                        toServTransReg(num, kind, text);
+
+                        //sharedpreference를 호출
+                        //toShared(kind, text);
+
                         Toast.makeText(getContext().getApplicationContext(), "등록되었습니다", Toast.LENGTH_LONG).show();
                         tvtranskind.setText("이동수단 종류 선택");
                         etTextTrans.setText(null);
@@ -211,14 +216,27 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
     //이 메소드에서 서버에 인서트를 해야 함.
     //생각해 볼 것 : 가상으로 콘트롤러를 거쳐야 함
-    public void regComfirm(int makeNum, String makeKind, String makeText){
+    public void toServTransReg(String makeNum, String makeKind, String makeText){
 
-        TestListViewDTO makeData = new TestListViewDTO(String.valueOf(makeNum), makeKind, makeText);
+        ArrayList reg = new TestTransFakeDB().insertDB(makeNum, makeKind, makeText);
 
-        FragmentTransList ddd = new FragmentTransList();
+    }
 
-        ddd.addItem(makeData);
-        Log.v("어딥니까1", "어디죠?1");
+    //toSharedPreference를 만드는 메소드
+    public void toShared(String sharedkind, String sharedtext){
+
+        SharedPreferences preferences = getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("TransName", sharedkind);
+        editor.putString("TransMemo", sharedtext);
+        editor.commit();
+    }
+
+    public void fragStat (int fragRecvStat){
+        this.fragmentStat = fragRecvStat;
+
+        String a = Integer.toString(fragRecvStat);
+        Log.v("받은 스탯2", a);
 
     }
 

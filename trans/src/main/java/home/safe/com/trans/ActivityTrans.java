@@ -1,8 +1,10 @@
 package home.safe.com.trans;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -55,6 +57,12 @@ public class ActivityTrans extends AppCompatActivity {
     ViewPager vpagerTrans;
 
 
+    //AdapterFragTabTrans fragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
+    AdapterFragTabTrans adapterFragTabTrans;
+
+    //지킴이 피지킴이를 구분하기 위한 플래그
+    int mainStat = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +72,21 @@ public class ActivityTrans extends AppCompatActivity {
         tabbarTrans = (TabLayout)findViewById(R.id.tabbarTrans);
         vpagerTrans = (ViewPager)findViewById(R.id.vpagerTrans);
 
-        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
+        adapterFragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
+
+        //받은 지킴/피지킴이의 스탯의 정보를 기본으로 어댑터를 다르게 생성
+        if(mainStat == 0){
+            adapterFragTabTrans.adapterstat(0);
+            vpagerTrans.setAdapter(adapterFragTabTrans);
+        }
+        if(mainStat == 1){
+            adapterFragTabTrans.adapterstat(1);
+            vpagerTrans.setAdapter(adapterFragTabTrans);
+        }
+
+
+
+       // vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
 
         //플래그먼트를 미리 로딩 시켜놓음
         //vpagerTrans.setOffscreenPageLimit(1);
@@ -104,5 +126,14 @@ public class ActivityTrans extends AppCompatActivity {
 
         }
     };
+
+
+
+
+
+      /*getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+    (preferences.getString("TransName","택시(기본값)");
+    preferences.getString("TransMemo","기본값");*/
+
 
 }

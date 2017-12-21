@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,12 +30,49 @@ public class FragmentTransList extends Fragment {
 
     AdapterListTrans adapter;
 
+    ExpandableListView lvtrans;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
+        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment_translist, container, false);
+
+
+        lvtrans = (ExpandableListView) rootview.findViewById(R.id.lvtrans);
+
+        adapter = new AdapterListTrans();
+
+        adapter.addItem(new TestListViewDTO("1", "택시", "2017.05.1", "jdkd", "대중교통"));
+        adapter.addItem(new TestListViewDTO("2", "택시", "2017.05.1", "jdkd", "대중교통"));
+        adapter.addItem(new TestListViewDTO("3", "택시", "2017.05.1", "jdkd", "대중교통"));
+
+        lvtrans.setAdapter(adapter);
+
+
+       return rootview;
+
+    }
+
+
+
+
+    //이 메소드에서 서버에서 셀렉트를 해 와야함
+    //생각 해 볼 것 : 플래그먼트에서 이동수단내역으로 스와이프 했을 때, 셀렉트를 새로 해 와야함
+    //AdapterFragTabTrans.java 와 충돌이 일어 나는지 생각해 봐야 함
+    public void toServTransList(TestListViewDTO recvDto){
+
+
+    }
+}
+
+
+/*public class FragmentTransList extends Fragment {
+
+    AdapterListTrans adapter;
+
     ListView lvtrans;
-
-    ArrayList<TestListViewDTO> recvdto;
-
-    TestListViewDTO aaa;
-
 
     @Nullable
     @Override
@@ -55,15 +93,23 @@ public class FragmentTransList extends Fragment {
 
         lvtrans.setAdapter(adapter);
 
-       return rootview;
+        return rootview;
 
     }
+
+    public void addAdapter(TestListViewDTO addadabt){
+
+
+
+    }
+
+
 
     //이 메소드에서 서버에서 셀렉트를 해 와야함
     //생각 해 볼 것 : 플래그먼트에서 이동수단내역으로 스와이프 했을 때, 셀렉트를 새로 해 와야함
     //AdapterFragTabTrans.java 와 충돌이 일어 나는지 생각해 봐야 함
-    public void addItem(TestListViewDTO recvDto){
+    public void toServTransList(TestListViewDTO recvDto){
 
 
     }
-}
+}*/
