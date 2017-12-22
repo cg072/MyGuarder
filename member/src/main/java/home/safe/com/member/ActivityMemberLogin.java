@@ -58,6 +58,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private final static int SH_JOB_OK = 200;
 
     private final static int REQUEST_CODE_PHONE = 11;
+    private boolean autoLoginCheck;
 
     // 기기내 파일 탐색
 
@@ -125,7 +126,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
             loginCheck();
         }
 
-        if(setTestLogin() == true) {
+        if(setTestLogin() == true && autoLoginCheck == true) {
             goMainTest();
         } else {
             Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
@@ -268,6 +269,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         etID.setText(preferences.getString("MemberID","없어"));
         etPWD.setText(preferences.getString("MemberPWD","없다고"));
+        autoLoginCheck = preferences.getBoolean("MemberAuto", false);
+        cboxCheck.setChecked(autoLoginCheck);
     }
 
     /*
