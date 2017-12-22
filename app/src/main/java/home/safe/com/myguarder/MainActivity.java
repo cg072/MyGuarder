@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import home.safe.com.member.ActivityMemberLogin;
+
 /*
  * @author 경창현
  * @version 1.0.0
@@ -46,10 +48,24 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         btnMain.setOnClickListener(this);
         btnTest.setOnClickListener(this);
 
-
+        Intent intent = new Intent(this, ActivityMemberLogin.class);
+        startActivityForResult(intent,MY_LOGIN_SUCCESS_CODE);
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == MY_LOGIN_SUCCESS_CODE) {
+            Intent intent = new Intent(this, ActivityCivilian.class);
+            startActivityForResult(intent,MY_LOGOUT_CODE);
+        }
+        if(resultCode == MY_LOGOUT_CODE) {
+            Intent intent = new Intent(this, ActivityMemberLogin.class);
+            startActivityForResult(intent, MY_LOGIN_SUCCESS_CODE);
+        }
+    }
 
     @Override
     public ArrayList searchList(ContentValues contentValues) {

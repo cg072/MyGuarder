@@ -87,10 +87,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     //marker 요청위치마커
     List<Marker> markersRequestLocation = new ArrayList<>();
 
-    //intent PopupCycle key code
+    //intent key code
     public final static int MY_REQUEST_CODE = 1111;
     public final static int MY_REQUEST_CODE_POPUP = 2222;
     public final static int MY_REQUEST_CODE_CIVILIAN_LIST = 3333;
+    public final static int MY_LOGIN_SUCCESS_CODE = 200;
+    public final static int MY_LOGOUT_CODE = 300;
     public final static String DATA_NAME = "cycle";
     public final static String DATA_NAME_POPUP = "dateList";
     public final static String DATA_CIVILIAN_NAME = "civilianName";
@@ -677,5 +679,15 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @version 1.0.0
      * @text  피지킴이 모드 불켜지는거 확인
      * @since 2017-12-19 오후 4:50
+    **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. 로그인화면을 메인에 올려서 시작순서대로 정렬하기
+     * 2. 종하형과 연동
+     * @since 2017-12-22 오후 3:54
     **/
 }
