@@ -35,7 +35,7 @@
                 android:lines="1"
                 android:singleLine="true"
                 android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/etPWD"
