@@ -50,6 +50,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     final String TAG = "로그인";
 
+    private final static int MY_LOGIN_SUCCESS_CODE = 200;
+
     private final static String LOGIN_ID = "loginID";
     private final static String LOGIN_PWD = "loginPWD";
 
@@ -190,13 +192,18 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 
     private void goMainTest() {
         Log.v("로그인", "가즈아");
         // 회원일 경우이므로, 메인액티비티를 띄워준다.
-        Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
-        startActivity(intent);
+        Intent intentData = new Intent();
+        setResult(MY_LOGIN_SUCCESS_CODE, intentData);
+        finish();
+        //Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
+        //startActivity(intent);
         finish();
     }
 
