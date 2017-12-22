@@ -182,7 +182,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/tv_round_signup"
                     android:gravity="center"
-                    android:text="Gender"
+                    android:text="성별"
                     android:textSize="@dimen/textSize" />
 
                 <LinearLayout
