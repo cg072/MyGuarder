@@ -2,21 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://E:\androidProject\MyGuarder1214\MyGuarder.iml" filepath="E:\androidProject\MyGuarder1214\MyGuarder.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyGuarder1214.iml" filepath="$PROJECT_DIR$/MyGuarder1214.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyGuarder.iml" filepath="$PROJECT_DIR$/MyGuarder.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://E:\androidProject\MyGuarder1214\app\app.iml" filepath="E:\androidProject\MyGuarder1214\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/guarder/guarder.iml" filepath="$PROJECT_DIR$/guarder/guarder.iml" />
-      <module fileurl="file://E:\androidProject\MyGuarder1214\guarder\guarder.iml" filepath="E:\androidProject\MyGuarder1214\guarder\guarder.iml" />
       <module fileurl="file://$PROJECT_DIR$/location/location.iml" filepath="$PROJECT_DIR$/location/location.iml" />
-      <module fileurl="file://E:\androidProject\MyGuarder1214\location\location.iml" filepath="E:\androidProject\MyGuarder1214\location\location.iml" />
       <module fileurl="file://$PROJECT_DIR$/member/member.iml" filepath="$PROJECT_DIR$/member/member.iml" />
-      <module fileurl="file://E:\androidProject\MyGuarder1214\member\member.iml" filepath="E:\androidProject\MyGuarder1214\member\member.iml" />
       <module fileurl="file://$PROJECT_DIR$/notice/notice.iml" filepath="$PROJECT_DIR$/notice/notice.iml" />
-      <module fileurl="file://E:\androidProject\MyGuarder1214\notice\notice.iml" filepath="E:\androidProject\MyGuarder1214\notice\notice.iml" />
       <module fileurl="file://$PROJECT_DIR$/pgchanger/pgchanger.iml" filepath="$PROJECT_DIR$/pgchanger/pgchanger.iml" />
       <module fileurl="file://$PROJECT_DIR$/trans/trans.iml" filepath="$PROJECT_DIR$/trans/trans.iml" />
-      <module fileurl="file://E:\androidProject\MyGuarder1214\trans\trans.iml" filepath="E:\androidProject\MyGuarder1214\trans\trans.iml" />
     </modules>
   </component>
 </project>

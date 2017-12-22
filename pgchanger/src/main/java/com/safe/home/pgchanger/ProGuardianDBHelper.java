@@ -60,6 +60,11 @@ abstract public class ProGuardianDBHelper extends SQLiteOpenHelper {
         //oldVersion 이면 newVersion으로 업그레이드
     }
 
+    abstract public int insert(ContentValues contentValues);
+    abstract public List<ContentValues> search(ContentValues contentValues);
+    abstract public int update(ContentValues contentValues);
+    abstract public int remove(ContentValues contentValues);
+
     public String getTableName() {
         return table_name;
     }
@@ -92,11 +97,6 @@ abstract public class ProGuardianDBHelper extends SQLiteOpenHelper {
         }
 
     }
-
-    abstract public int insert(ContentValues contentValues);
-    abstract public List<ContentValues> search(ContentValues contentValues);
-    abstract public int update(ContentValues contentValues);
-    abstract public int remove(ContentValues contentValues);
 
 
 }

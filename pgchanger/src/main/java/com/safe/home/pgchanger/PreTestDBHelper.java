@@ -47,6 +47,7 @@ public class PreTestDBHelper extends ProGuardianDBHelper {
                 ");";
 
         db = sqLiteDatabase;
+        Log.d(TAG, CLASS + " ===== 테이블 생성 " );
         execUserQuery(sql);
     }
 
@@ -75,6 +76,7 @@ public class PreTestDBHelper extends ProGuardianDBHelper {
     public void removeTable() {
         db = getWritableDatabase();
         String sql = "drop table IF EXISTS " + TABLE_NAME;
+        Log.d(TAG, CLASS + " ===== 테이블 삭제 " );
         execUserQuery(sql);
         onCreate(db);
     }

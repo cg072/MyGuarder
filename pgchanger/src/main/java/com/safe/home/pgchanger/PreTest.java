@@ -9,9 +9,9 @@ import java.util.List;
 
 /**
  * Created by 김진복 on 2017-11-21.
- * activity 기능관리 class.
+ * 데이터 관련 접근 관리용 클래스
+ * activity에서 생성되는 기능관리 class.
  * changer 사용 예제
- * 데이터 관련 접근 및 이동을 관리하기 위한 클래스
  */
 
 public class PreTest {
@@ -20,12 +20,17 @@ public class PreTest {
 
     public PreTest(Context pcontext) {
         this.context = pcontext;
+        connectChanger();
     }
 
+    private void connectChanger() {
+        //proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.PG_TEST);
+        proGuardianChanger = new ProGuardianChanger(context);
+        proGuardianChanger.connectDB(ProGuardianDBHelper.PG_TEST);
+    }
 
     public int testInsert() {
-        //changer 사용시 어떤 데이터
-        proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.PG_TEST);
+
         int result = 0;
         for(int a=1; a <= 25; a++ ) {
             //입력 데이터
@@ -34,8 +39,10 @@ public class PreTest {
             preTestVO.setTest2(String.valueOf(a));
             preTestVO.setTest3("test3" + String.valueOf(a));
 
-            //입력
+            //변환
             ContentValues contentValues = preTestVO.convertDataToContentValues();
+
+            //db접근
             result += proGuardianChanger.insertData(contentValues);
         }
 
@@ -43,7 +50,6 @@ public class PreTest {
     }
 
     public ProGuardianVO testSearch() {
-        proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.PG_TEST);
 
         //조건
         PreTestVO conditionVO = new PreTestVO();
@@ -54,7 +60,7 @@ public class PreTest {
         List<ProGuardianVO> list = new ArrayList<ProGuardianVO>();
         list = proGuardianChanger.searchData(conditionValues);
 
-        //결과 응용
+        //결과
         ProGuardianVO returnValue = new PreTestVO();
         if(list.size() > 0) {
             returnValue = list.get(0);
@@ -64,8 +70,6 @@ public class PreTest {
     }
 
     public List<PreTestVO> testListSearch() {
-        proGuardianChanger = new ProGuardianChanger(context);
-        proGuardianChanger.connectDB(ProGuardianDBHelper.PG_TEST);
 
         //조건
         PreTestVO conditionVO = new PreTestVO();
@@ -77,7 +81,7 @@ public class PreTest {
         List<ProGuardianVO> list = new ArrayList<ProGuardianVO>();
         list = proGuardianChanger.searchData(conditionValues);
 
-        //결과 응용
+        //결과
         List<PreTestVO> returnList = new ArrayList<PreTestVO>();
         PreTestVO vo = new PreTestVO();
         for(int a=0; a < list.size(); a++)
@@ -89,10 +93,8 @@ public class PreTest {
         return returnList;
     }
 
+    //테스트 테이블 삭제용 메서드
     public void testRemoveTable() {
-        //proGuardianChanger = new ProGuardianChanger(context, ProGuardianDBHelper.PG_TEST);
-        proGuardianChanger = new ProGuardianChanger(context);
-        proGuardianChanger.connectDB(ProGuardianDBHelper.PG_TEST);
         proGuardianChanger.removeTable();
     }
 

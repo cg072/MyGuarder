@@ -44,7 +44,7 @@ public class PreTestVO extends ProGuardianVO {
     }
 
     public void setTest1(String test1) {
-        this.test1 = test1;
+        this.test1 = test1.trim();
     }
 
     public String getTest2() {
@@ -52,7 +52,7 @@ public class PreTestVO extends ProGuardianVO {
     }
 
     public void setTest2(String test2) {
-        this.test2 = test2;
+        this.test2 = test2.trim();
     }
 
     public String getTest3() {
@@ -60,7 +60,7 @@ public class PreTestVO extends ProGuardianVO {
     }
 
     public void setTest3(String test3) {
-        this.test3 = test3;
+        this.test3 = test3.trim();
     }
 
     public String getString() {

@@ -27,6 +27,26 @@ public class PreTestController implements IProGuardianController {
     }
 
     @Override
+    public int insertServer(ContentValues contentValues) {
+        return 0;
+    }
+
+    @Override
+    public int updateServer(ContentValues contentValues) {
+        return 0;
+    }
+
+    @Override
+    public int removeServer(ContentValues contentValues) {
+        return 0;
+    }
+
+    @Override
+    public List<ContentValues> searchServer(ContentValues contentValues) {
+        return null;
+    }
+
+    @Override
     public int update(ContentValues contentValues) {
         proGuardianDBHelper.update(contentValues);
         return 0;

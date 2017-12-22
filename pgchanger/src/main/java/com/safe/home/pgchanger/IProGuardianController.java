@@ -15,6 +15,10 @@ public interface IProGuardianController {
     int update(ContentValues contentValues);
     int remove(ContentValues contentValues);
     List<ContentValues> search(ContentValues contentValues);
+    int insertServer(ContentValues contentValues);
+    int updateServer(ContentValues contentValues);
+    int removeServer(ContentValues contentValues);
+    List<ContentValues> searchServer(ContentValues contentValues);
     void setDBHelper(ProGuardianDBHelper proGuardianDBHelper);
     ProGuardianDBHelper getDBHelper();
 

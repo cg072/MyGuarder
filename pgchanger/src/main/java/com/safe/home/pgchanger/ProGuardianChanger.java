@@ -26,17 +26,17 @@ public class ProGuardianChanger {
     public ProGuardianChanger(Context context) {
         this.context = context;
     }
-
-    public ProGuardianChanger(Context pcontext, int ptable) {
+    /*
+    public ProGuardianChanger(Context pcontext, int ptableID) {
         this.context = pcontext;
-        this.tableN = ptable;
+        this.tableN = ptableID;
         dbSelector();
     }
+    */
 
     //예제용 메서드
-    public void connectDB(int ptable) {
-        //this.customDBHelper = new ProGuardianDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, tableN);
-        this.tableN = ptable;
+    public void connectDB(int ptableID) {
+        this.tableN = ptableID;
         dbSelector();
     }
 
