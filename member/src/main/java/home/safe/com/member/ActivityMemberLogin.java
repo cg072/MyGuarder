@@ -125,6 +125,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
         if(setTestLogin() == true) {
             goMainTest();
+        } else {
+            Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -156,6 +158,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 saveData();
                 if(setTestLogin() == true) {
                     goMainTest();
+                } else {
+                    Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -198,7 +202,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     private boolean setTestLogin() {
         String testID = "root";
-        String testPWD = "111";
+        String testPWD = "11111";
         if(etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD)) {
             return true;
         }

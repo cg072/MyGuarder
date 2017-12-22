@@ -71,7 +71,7 @@
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:background="@drawable/btn_round_login"
                 android:text="로   그   인"
                 android:textSize="20dp"
@@ -84,15 +84,16 @@
                 android:layout_gravity="center"
                 android:id="@+id/buttonOAuthLoginImg"
                 android:scaleType="centerInside"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
                 android:background="@drawable/naver_login"
                 android:layout_marginBottom="10dp"/>
 
             <Button
                 android:id="@+id/btn_google"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:scaleType="centerInside"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
                 android:background="@drawable/google_login"
                 android:layout_marginBottom="10dp"
                 />
