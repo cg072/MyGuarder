@@ -61,6 +61,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
             Intent intent = new Intent(this, ActivityCivilian.class);
             startActivityForResult(intent,MY_LOGOUT_CODE);
         }
+        //사용 안하는중 사이트 참고해서 하던가 안하던가 선택
         if(resultCode == MY_LOGOUT_CODE) {
             Intent intent = new Intent(this, ActivityMemberLogin.class);
             startActivityForResult(intent, MY_LOGIN_SUCCESS_CODE);

@@ -1,6 +1,8 @@
 package home.safe.com.myguarder;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.ToggleButton;
 
 import home.safe.com.guarder.ActivityGuarder;
+import home.safe.com.member.ActivityMemberLogin;
 import home.safe.com.member.ActivityMemberModifyCheck;
 import home.safe.com.notice.ActivityNotice;
 import home.safe.com.trans.ActivityTrans;
@@ -41,6 +44,7 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
 
     //intent PopupCycle key code
     private final static int MY_REQUEST_CODE = 1111;
+    private final static int MY_LOGOUT_CODE = 300;
     private final static String DATA_NAME = "cycle";
     private final static int DEFAULT_NUMBER = 5;
 
@@ -139,9 +143,27 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
 
                 break;
             case R.id.btnSignOutSetting:
+
+                saveData();
+
+//                Intent intentData = new Intent();
+//                setResult(MY_LOGOUT_CODE, intentData);
+//                finish();
+
+                Intent intentData = new Intent();
+                setResult(123, intentData);
+                finish();
                 break;
         }
 
+    }
+
+    private void saveData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("MemberAuto",false);
+        editor.commit();
     }
 
     @Override

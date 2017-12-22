@@ -151,6 +151,12 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
                 selectPopupList(data.getStringExtra(DATA_NAME_POPUP));
             }
         }
+        else if(resultCode == 123)
+        {
+            Intent intentData = new Intent();
+            setResult(MY_LOGOUT_CODE, intentData);
+            finish();
+        }
     }
 
     /**

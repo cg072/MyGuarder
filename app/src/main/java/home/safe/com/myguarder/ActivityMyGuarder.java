@@ -152,6 +152,12 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
                 selectCivilianLocation(data.getStringExtra(DATA_CIVILIAN_NAME));
             }
         }
+        else if(resultCode == 123)
+        {
+            Intent intentData = new Intent();
+            setResult(MY_LOGOUT_CODE, intentData);
+            finish();
+        }
     }
 
     private void selectCivilianLocation(String id) {

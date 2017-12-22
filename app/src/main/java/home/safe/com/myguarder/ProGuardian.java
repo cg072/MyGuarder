@@ -686,8 +686,14 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @author 경창현
      * @version 1.0.0
      * @text
-     * 1. 로그인화면을 메인에 올려서 시작순서대로 정렬하기
-     * 2. 종하형과 연동
+     * 1. 로그인화면을 메인에 올려서 시작순서대로 정렬하기 ok
+     * 2. 종하형과 연동 ok
+     * http://kylblog.tistory.com/21
+     * - 로그아웃할때 문제점 해결방법 2가지 중 택 1
+     *  1. 메인엑티비티에서 메서드 만들어서 list로 콘텍스트 넣고 관리
+     *  2. 로그아웃할때 메인 종료하고 다시 띄우기
+     *
+     *  쌓인 엑티비티 다 지우기 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
      * @since 2017-12-22 오후 3:54
     **/
 }
