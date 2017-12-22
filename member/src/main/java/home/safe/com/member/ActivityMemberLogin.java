@@ -18,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -122,6 +123,12 @@ public class ActivityMemberLogin extends AppCompatActivity {
             loginCheck();
         }
 
+        if(setTestLogin() == true) {
+            goMainTest();
+        }
+
+
+
         // Google 로그인
         btnGoogle.setOnClickListener( new View.OnClickListener( ) {
             @Override public void onClick( View view ) {
@@ -145,7 +152,11 @@ public class ActivityMemberLogin extends AppCompatActivity {
         btnLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.v("로그인 버튼", "눌림");
                 saveData();
+                if(setTestLogin() == true) {
+                    goMainTest();
+                }
             }
         });
 
@@ -175,14 +186,23 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
-    private void setTestLogin() {
+    private void goMainTest() {
+        Log.v("로그인", "가즈아");
+        // 회원일 경우이므로, 메인액티비티를 띄워준다.
+        Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private boolean setTestLogin() {
         String testID = "root";
-        String testPWD = "1111";
-        etID.setText(testID);
-        etPWD.setText(testPWD);
+        String testPWD = "111";
+        if(etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD)) {
+            return true;
+        }
+        return false;
     }
 
     private void loginCheck() {
@@ -404,10 +424,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     private void loginAfter() {
         if(memberCheck() == true) {
-            // 회원일 경우이므로, 메인액티비티를 띄워준다.
-            Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
-            startActivity(intent);
-            finish();
+            goMainTest();
         } else {
             // 회원이 아니었는데, 가입한 경우 이므로 전화번호 인증 창으로 간다.
             Intent intent = new Intent(ActivityMemberLogin.this, ActivityMemberCertPhone.class);

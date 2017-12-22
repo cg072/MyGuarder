@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center"
     android:background="@color/colorBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -11,154 +10,141 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
-            android:paddingTop="100dp"
-            android:paddingBottom="30dp">
+            android:paddingTop="70dp"
+            android:paddingBottom="30dp"
+            >
+
+            <EditText
+                android:id="@+id/etID"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:textSize="@dimen/textSize"
+                android:hint="아이디"
+                android:background="@drawable/et_round_login"
+                android:paddingStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:maxLines="1"
+                android:lines="1"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"/>
+
+            <EditText
+                android:id="@+id/etPWD"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/et_round_login"
+                android:hint="비밀번호"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:singleLine="true"
+                android:textSize="@dimen/textSize"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
-
-                <EditText
-                    android:id="@+id/etID"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/textHeight"
-                    android:textSize="@dimen/textSize"
-                    android:hint="아이디"
-                    android:background="@drawable/et_round_login"
-                    android:paddingStart="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:maxLines="1"
-                    android:lines="1"
-                    android:singleLine="true"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"/>
-
-                <EditText
-                    android:id="@+id/etPWD"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/textHeight"
-                    android:textSize="@dimen/textSize"
-                    android:hint="비밀번호"
-                    android:background="@drawable/et_round_login"
-                    android:paddingStart="10dp"
-                    android:maxLines="1"
-                    android:lines="1"
-                    android:singleLine="true"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="30dp">
-                    <CheckBox
-                        android:id="@+id/cboxCheck"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:checked="true"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="자동 로그인"/>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnLogin"
+                android:layout_height="50dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="10dp">
+                <CheckBox
+                    android:id="@+id/cboxCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="50dp"
+                    android:checked="true"/>
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_round_login"
-                    android:text="로  그  인"
-                    android:textSize="20dp"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginBottom="10dp"/>
+                    android:text="자동 로그인"
+                    android:textSize="@dimen/textSize"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/btn_round_login"
+                android:text="지킴이 아이디로 로그인"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="10dp"/>
+
+
+            <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+                android:layout_gravity="center"
+                android:id="@+id/buttonOAuthLoginImg"
+                android:scaleType="centerInside"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/naver_login"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/btn_google"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/google_login"
+                android:layout_marginBottom="10dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center|bottom"
+                android:layout_marginTop="20dp"
+                >
+
+                <TextView
+                    android:id="@+id/tvSignup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSize"
+                    android:text="회원가입"
+                    android:clickable="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="또는"
-                    android:layout_gravity="center"
-                    android:textSize="20dp"
-                    android:layout_marginBottom="10dp"
-                    />
-                <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
-                    android:layout_gravity="center"
-                    android:id="@+id/buttonOAuthLoginImg"
-                    android:scaleType="centerInside"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:textSize="@dimen/textSize"
+                    android:text="|"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"/>
 
-                <Button
-                    android:id="@+id/btn_google"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvFindID"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn3_round_login"
-                    android:text="Google 로그인"
-                    android:textSize="20dp"
-                    android:textColor="@color/colorLoginBtn"
-                    android:layout_marginBottom="10dp"
-                    />
+                    android:textSize="@dimen/textSize"
+                    android:text="아이디"
+                    android:clickable="true"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center|bottom"
-                    android:layout_marginTop="75dp"
-                    >
+                    android:textSize="@dimen/textSize"
+                    android:text="|"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"/>
 
-                    <TextView
-                        android:id="@+id/tvSignup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/textSize"
-                        android:text="회원가입"
-                        android:clickable="true"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/textSize"
-                        android:text="|"
-                        android:paddingRight="10dp"
-                        android:paddingLeft="10dp"/>
-
-                    <TextView
-                        android:id="@+id/tvFindID"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/textSize"
-                        android:text="아이디"
-                        android:clickable="true"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/textSize"
-                        android:text="|"
-                        android:paddingRight="10dp"
-                        android:paddingLeft="10dp"/>
-
-                    <TextView
-                        android:id="@+id/tvFindPWD"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/textSize"
-                        android:text="비밀번호"
-                        android:clickable="true"/>
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/tvFindPWD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSize"
+                    android:text="비밀번호"
+                    android:clickable="true"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
-
-
-
