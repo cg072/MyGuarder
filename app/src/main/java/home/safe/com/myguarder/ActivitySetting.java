@@ -115,6 +115,8 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
             case R.id.tbCivilianMode:
 
                 tbGuarderMode.setChecked(false);
+                if(!tbGuarderMode.isChecked())
+                    tbCivilianMode.setChecked(true);
 
                 intent = new Intent(this, ActivityCivilian.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -126,6 +128,8 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
             case R.id.tbGuarderMode:
 
                 tbCivilianMode.setChecked(false);
+                if(!tbCivilianMode.isChecked())
+                    tbGuarderMode.setChecked(true);
 
                 intent = new Intent(this, ActivityMyGuarder.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
