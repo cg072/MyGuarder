@@ -19,13 +19,12 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     FragmentTransList fragmentTransList;
 
     int adapterTabStat;
+    TestListViewDTO recvDto;
 
 
     public AdapterFragTabTrans(FragmentManager fm) {
         super(fm);
     }
-
-
 
     @Override
     public Fragment getItem(int position) {
@@ -47,7 +46,13 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
                 return fragmentTransReg;
 
             case 1 :
+
                 return new FragmentTransList();
+
+
+                /*getDto();
+                fragmentTransList = new FragmentTransList();*/
+
         }
 
 
@@ -66,6 +71,13 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
         String a = Integer.toString(adapterTabStat);
         Log.v("받은 스탯", a);
+    }
+
+    //fragementreg에서 작성된 정보를 불러오는 메소드
+
+    public void getDto(){
+        this.recvDto = new TestListViewDTO();
+        this.recvDto = fragmentTransReg.dto;
     }
 
 }

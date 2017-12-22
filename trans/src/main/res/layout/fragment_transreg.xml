@@ -23,7 +23,7 @@
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:text=""
-                android:textSize="10dp"/>
+                android:textSize="15dp"/>
 
             <TextView
                 android:id="@+id/tvtranskind"
@@ -49,7 +49,8 @@
                     android:layout_margin="20dp"
                     android:background="@null"
                     android:gravity="top"
-                    android:hint="이곳에 부가 정보를 입력하세요(200byte)"
+                    android:inputType="textMultiLine"
+                    android:hint="이곳에 부가 정보를 입력하세요(20자)"
                     android:scrollbars="vertical"/>
 
             </LinearLayout>

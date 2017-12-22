@@ -32,6 +32,8 @@ public class FragmentTransList extends Fragment {
 
     ExpandableListView lvtrans;
 
+    TestListViewDTO getDto;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,6 +65,11 @@ public class FragmentTransList extends Fragment {
     //AdapterFragTabTrans.java 와 충돌이 일어 나는지 생각해 봐야 함
     public void toServTransList(TestListViewDTO recvDto){
 
+
+
+    }
+
+    public void getTabDto(){
 
     }
 }

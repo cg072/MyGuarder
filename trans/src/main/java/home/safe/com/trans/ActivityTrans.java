@@ -46,6 +46,20 @@ import java.util.ArrayList;
 * 3. 이동수단등록 fragmaent_transreg.xml의 콘텐츠를 weight가 아닌 수동 크기로 주기!! 최소사이즈 지정!!
 * */
 
+/*
+* 클래스를 새로 생성!!
+* 액티비티는 - > 뷰만
+* 디비연동할때는 새로 만든 클래스!!
+* 새로만든 클래스를 피쥐체인저로
+*
+* 만들어야 할것
+* 디비매니져 -> 접두어 trans
+* 디비매니저에 pgchager - > pretest에 있는 것들 만들어야 함
+*
+*
+*
+* */
+
 
 public class ActivityTrans extends AppCompatActivity {
 
@@ -61,7 +75,7 @@ public class ActivityTrans extends AppCompatActivity {
     AdapterFragTabTrans adapterFragTabTrans;
 
     //지킴이 피지킴이를 구분하기 위한 플래그
-    int mainStat = 0;
+    int mainStat;
 
 
     @Override
@@ -127,13 +141,24 @@ public class ActivityTrans extends AppCompatActivity {
         }
     };
 
+    public void getShared(){
+        SharedPreferences sharedPreferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
 
+        /*this.mainStat*/
 
+    }
 
+    /*
+    * public void toShared(String sharedkind, String sharedtext){
 
-      /*getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-    (preferences.getString("TransName","택시(기본값)");
-    preferences.getString("TransMemo","기본값");*/
+        SharedPreferences preferences = getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("TransName", sharedkind);
+        editor.putString("TransMemo", sharedtext);
+        editor.commit();
+    }
+    *
+    * */
 
 
 }

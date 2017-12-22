@@ -70,6 +70,8 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
     int fragmentStat;
 
+    TestListViewDTO dto;
+
 
 
 /*    @Override
@@ -96,6 +98,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
         tvtranskind = (TextView) rootView.findViewById(R.id.tvtranskind);
         etTextTrans = (EditText) rootView.findViewById(R.id.etTextTrans);
         btnRegTrans = (Button) rootView.findViewById(R.id.btnRegTrans);
+
 
         if(fragmentStat == 0){
             tvtransstat.setText("피지킴이 입니다 : 자신의 이동수단을 등록하세요");
@@ -167,18 +170,30 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
                 kind = tvtranskind.getText().toString();
                 text = etTextTrans.getText().toString();
 
+                if(text.length() >= 20){
+                    text = text.substring(0, 20);
+                }
+
+                text = text.trim();
+
+                Log.v("텍스트입니다", text);
+
                 AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());
                 regAlert.setTitle("이동수단 등록");
 
-                //얼럿 박스에 긴 내용이 들어가는 이슈 !!
-                regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text.trim() + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
+                //에디트텍스트 필드에서 엔터키를 눌렀을 때, 빈 내용까지 추가되는 이슈 해결해야 함!!!!!
+                //엔터키 후 숫자가 먼저 들어갈 경우 에러 발생 해결해야 함!!!!!
+
+                //regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text.trim() + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
+
+                regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         //서버디비에 인서트
-                        toServTransReg(num, kind, text);
+                        toTabAdapt(num, kind, text);
 
                         //sharedpreference를 호출
                         //toShared(kind, text);
@@ -216,11 +231,18 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
     //이 메소드에서 서버에 인서트를 해야 함.
     //생각해 볼 것 : 가상으로 콘트롤러를 거쳐야 함
-    public void toServTransReg(String makeNum, String makeKind, String makeText){
-
-        ArrayList reg = new TestTransFakeDB().insertDB(makeNum, makeKind, makeText);
+    public void toServTransReg(){
 
     }
+
+    //입력된 값을 탭 어댑터로 보내주는 메소드
+    public void toTabAdapt(String makeNum, String makeKind, String makeText){
+        dto = new TestListViewDTO();
+        dto.setNum(makeNum);
+        dto.setTranName(makeKind);
+        dto.setText(makeText);
+    }
+
 
     //toSharedPreference를 만드는 메소드
     public void toShared(String sharedkind, String sharedtext){

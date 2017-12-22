@@ -14,9 +14,11 @@ public class TestListViewDTO implements Serializable{
     String time;
     String author;
     String text;
-    
 
 
+    public TestListViewDTO() {
+
+    }
 
     public TestListViewDTO(String num, String tranName, String time, String author, String text) {
         this.num = num;
