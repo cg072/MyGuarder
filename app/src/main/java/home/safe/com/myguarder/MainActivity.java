@@ -73,9 +73,12 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
                 Intent intent = new Intent(this, ActivityMemberLogin.class);
                 startActivityForResult(intent, MAIN_REQUEST_MEMBER_CODE);
             }
-            else if(resultCode == MY_END_CODE) {
-                finish();
-            }
+        }
+
+
+
+        if(resultCode == MY_END_CODE) {
+            finish();
         }
     }
 
