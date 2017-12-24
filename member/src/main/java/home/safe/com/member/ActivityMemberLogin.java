@@ -10,19 +10,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +38,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 
 public class ActivityMemberLogin extends AppCompatActivity {
@@ -210,7 +204,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     private boolean setTestLogin() {
         String testID = "root";
-        String testPWD = "11111";
+        String testPWD = "1111";
         if(etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD)) {
             return true;
         }
@@ -328,6 +322,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
         // 네아로 버튼을 resource와 연동
         btnNaver = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
+        //btnNaver.setOAuthLoginHandler(mOAuthLoginHandler);
+        btnNaver.setBgResourceId(R.drawable.naver_login);
     }
 
 
