@@ -44,7 +44,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     final String TAG = "로그인";
 
-    private final static int MY_LOGIN_SUCCESS_CODE = 200;
+    private final static int MY_LOGIN_SUCCESS_CODE = 201;
 
     private final static String LOGIN_ID = "loginID";
     private final static String LOGIN_PWD = "loginPWD";
