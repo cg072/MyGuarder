@@ -1,17 +1,10 @@
 package home.safe.com.myguarder;
 
-import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -49,7 +42,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         btnTest.setOnClickListener(this);
 
         Intent intent = new Intent(this, ActivityMemberLogin.class);
-        startActivityForResult(intent,MY_LOGIN_SUCCESS_CODE);
+        startActivityForResult(intent, MAIN_REQUEST_MEMBER_CODE);
     }
 
 
@@ -57,14 +50,32 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == MY_LOGIN_SUCCESS_CODE) {
-            Intent intent = new Intent(this, ActivityCivilian.class);
-            startActivityForResult(intent,MY_LOGOUT_CODE);
+        if(requestCode == MAIN_REQUEST_MEMBER_CODE) {
+
+            if(resultCode == MY_LOGIN_SUCCESS_CODE) {
+                Intent intent = new Intent(this, ActivityCivilian.class);
+                startActivityForResult(intent, MY_MENU_CHANGE_CODE);
+            }
         }
-        //사용 안하는중 사이트 참고해서 하던가 안하던가 선택
-        if(resultCode == MY_LOGOUT_CODE) {
-            Intent intent = new Intent(this, ActivityMemberLogin.class);
-            startActivityForResult(intent, MY_LOGIN_SUCCESS_CODE);
+        if(requestCode == MY_MENU_CHANGE_CODE) {
+
+            if(resultCode == MY_CIVILIAN_CODE)
+            {
+                Intent intent = new Intent(this, ActivityCivilian.class);
+                startActivityForResult(intent, MY_MENU_CHANGE_CODE);
+            }
+            else if(resultCode == MY_GUARDER_CODE)
+            {
+                Intent intent = new Intent(this, ActivityMyGuarder.class);
+                startActivityForResult(intent, MY_MENU_CHANGE_CODE);
+            }
+            else if(resultCode == MY_LOGOUT_CODE) {
+                Intent intent = new Intent(this, ActivityMemberLogin.class);
+                startActivityForResult(intent, MAIN_REQUEST_MEMBER_CODE);
+            }
+            else if(resultCode == MY_END_CODE) {
+                finish();
+            }
         }
     }
 

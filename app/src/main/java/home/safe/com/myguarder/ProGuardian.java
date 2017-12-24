@@ -3,6 +3,7 @@ package home.safe.com.myguarder;
 import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -13,9 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,11 +89,16 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     List<Marker> markersRequestLocation = new ArrayList<>();
 
     //intent key code
-    public final static int MY_REQUEST_CODE = 1111;
-    public final static int MY_REQUEST_CODE_POPUP = 2222;
-    public final static int MY_REQUEST_CODE_CIVILIAN_LIST = 3333;
-    public final static int MY_LOGIN_SUCCESS_CODE = 200;
+    public final static int MAIN_REQUEST_SETTING_CODE = 1111;
+    public final static int MYGUARDER_REQUEST_POPUP_CODE = 2222;
+    public final static int MYGUARDER_REQUEST_CIVILIAN_LIST_CODE = 3333;
+    public final static int MY_END_CODE = 100;
+    public final static int MAIN_REQUEST_MEMBER_CODE = 200;
+    public final static int MY_LOGIN_SUCCESS_CODE = 201;        //201
     public final static int MY_LOGOUT_CODE = 300;
+    public final static int MY_MENU_CHANGE_CODE = 400;
+    public final static int MY_CIVILIAN_CODE = 601;
+    public final static int MY_GUARDER_CODE = 602;
     public final static String DATA_NAME = "cycle";
     public final static String DATA_NAME_POPUP = "dateList";
     public final static String DATA_CIVILIAN_NAME = "civilianName";
@@ -172,7 +178,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             case R.id.action_setting:
                 txt = "action_setting";
                 Intent intent = new Intent(this,ActivitySetting.class);
-                startActivityForResult(intent,MY_REQUEST_CODE);
+                startActivityForResult(intent, MAIN_REQUEST_SETTING_CODE);
                 break;
         }
 
@@ -190,6 +196,40 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             super.onSaveInstanceState(outState);
         }
     }
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text Back 버튼
+     * @since 2017-12-24 오후 7:37
+    **/
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage("어플을 종료하시겠습니까?");
+        alert.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intentData = new Intent();
+                setResult(MY_END_CODE, intentData);
+                finish();
+            }
+        });
+
+        alert.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog alertDialog = alert.create();
+        alertDialog.show();
+
+    }
+
+
 
     /**
     * 
@@ -690,10 +730,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 2. 종하형과 연동 ok
      * http://kylblog.tistory.com/21
      * - 로그아웃할때 문제점 해결방법 2가지 중 택 1
-     *  1. 메인엑티비티에서 메서드 만들어서 list로 콘텍스트 넣고 관리
-     *  2. 로그아웃할때 메인 종료하고 다시 띄우기
-     *
+     *  1. 메인엑티비티에서 메서드 만들어서 list로 콘텍스트 넣고 관리 x
+     *  2. 로그아웃할때 메인 종료하고 다시 띄우기 x
+     *  3. 메인 엑티비티에서 주요 엑티비티 관리 o
      *  쌓인 엑티비티 다 지우기 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+     *
+     *  -> 엑티비티리절트 통합해야 하는지 검토해야함
      * @since 2017-12-22 오후 3:54
     **/
 }

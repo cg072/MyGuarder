@@ -98,12 +98,12 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         if(view.getId() == btnGuarderLog.getId())
         {
             Intent intent = new Intent(this,ActivityPopup.class);
-            startActivityForResult(intent,MY_REQUEST_CODE_POPUP);
+            startActivityForResult(intent, MYGUARDER_REQUEST_POPUP_CODE);
         }
         else if(view.getId() == btnCivilianList.getId())
         {
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);
-            startActivityForResult(intent,MY_REQUEST_CODE_CIVILIAN_LIST);
+            startActivityForResult(intent, MYGUARDER_REQUEST_CIVILIAN_LIST_CODE);
 
         }
         else if(view.getId() == btnLocation.getId())
@@ -129,22 +129,43 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK)
+        if(requestCode == MAIN_REQUEST_SETTING_CODE)
         {
-            if(requestCode == MY_REQUEST_CODE)
-            {
-                Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE);
+            if(resultCode == RESULT_OK) {
+                Log.d("onActivityResult", "MyGuarder - " + MAIN_REQUEST_SETTING_CODE);
                 cycleGuarder = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER);
-                Log.d("주기 : ", "" +cycleGuarder);
+                Log.d("주기 : ", "" + cycleGuarder);
             }
-            else if(requestCode == MY_REQUEST_CODE_POPUP)
+            if(resultCode == MY_LOGOUT_CODE)
             {
-                Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE_POPUP);
+                Intent intentData = new Intent();
+                setResult(MY_LOGOUT_CODE, intentData);
+                finish();
+            }
+            if(resultCode == MY_CIVILIAN_CODE)
+            {
+                Intent intentData = new Intent();
+                setResult(MY_CIVILIAN_CODE, intentData);
+                finish();
+            }
+            if(resultCode == MY_GUARDER_CODE)
+            {
+                Intent intentData = new Intent();
+                setResult(MY_GUARDER_CODE, intentData);
+                finish();
+            }
+        }
+        else if(requestCode == MYGUARDER_REQUEST_POPUP_CODE)
+        {
+            if(resultCode == RESULT_OK) {
+                Log.d("onActivityResult", "MyGuarder - " + MYGUARDER_REQUEST_POPUP_CODE);
                 selectPopupList(data.getStringExtra(DATA_NAME_POPUP));
             }
-            else if(requestCode == MY_REQUEST_CODE_CIVILIAN_LIST)
-            {
-                Log.d("onActivityResult", "MyGuarder - " +MY_REQUEST_CODE_CIVILIAN_LIST);
+        }
+        else if(requestCode == MYGUARDER_REQUEST_CIVILIAN_LIST_CODE)
+        {
+            if(resultCode == RESULT_OK) {
+                Log.d("onActivityResult", "MyGuarder - " + MYGUARDER_REQUEST_CIVILIAN_LIST_CODE);
                 data.getStringExtra(DATA_CIVILIAN_NAME);
                 // 지킴이가 선택한 피지킴이의 아이디를 가져옴
 
@@ -155,7 +176,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         else if(resultCode == 123)
         {
             Intent intentData = new Intent();
-            setResult(MY_LOGOUT_CODE, intentData);
+            setResult(MY_MENU_CHANGE_CODE, intentData);
             finish();
         }
     }

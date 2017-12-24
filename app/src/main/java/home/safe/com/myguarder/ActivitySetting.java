@@ -45,6 +45,8 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
     //intent PopupCycle key code
     private final static int MY_REQUEST_CODE = 1111;
     private final static int MY_LOGOUT_CODE = 300;
+    public final static int MY_CIVILIAN_CODE = 601;
+    public final static int MY_GUARDER_CODE = 602;
     private final static String DATA_NAME = "cycle";
     private final static int DEFAULT_NUMBER = 5;
 
@@ -118,26 +120,41 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.tbCivilianMode:
 
-                tbGuarderMode.setChecked(false);
-                if(!tbGuarderMode.isChecked())
+
+                if(tbGuarderMode.isChecked()) {
+                    tbGuarderMode.setChecked(false);
+                    Intent intentData = new Intent();
+                    setResult(MY_CIVILIAN_CODE, intentData);
+                }
+                else
+                {
                     tbCivilianMode.setChecked(true);
 
-                intent = new Intent(this, ActivityCivilian.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                }
+
+//                intent = new Intent(this, ActivityCivilian.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
 
                 finish();
 
                 break;
             case R.id.tbGuarderMode:
 
-                tbCivilianMode.setChecked(false);
-                if(!tbCivilianMode.isChecked())
-                    tbGuarderMode.setChecked(true);
 
-                intent = new Intent(this, ActivityMyGuarder.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                if(tbCivilianMode.isChecked()) {
+                    tbCivilianMode.setChecked(false);
+                    Intent intentData = new Intent();
+                    setResult(MY_GUARDER_CODE, intentData);
+                }
+                else
+                {
+                    tbGuarderMode.setChecked(true);
+                }
+
+//                intent = new Intent(this, ActivityMyGuarder.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
 
                 finish();
 
@@ -146,12 +163,8 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
 
                 saveData();
 
-//                Intent intentData = new Intent();
-//                setResult(MY_LOGOUT_CODE, intentData);
-//                finish();
-
                 Intent intentData = new Intent();
-                setResult(123, intentData);
+                setResult(MY_LOGOUT_CODE, intentData);
                 finish();
                 break;
         }
@@ -170,9 +183,9 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK)
+        if(requestCode == MY_REQUEST_CODE)
         {
-            if(requestCode == MY_REQUEST_CODE)
+            if(resultCode == RESULT_OK)
             {
                 cycleNum = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER);
                 btnCycleSetting.setText("전송주기 - "+cycleNum+"분");

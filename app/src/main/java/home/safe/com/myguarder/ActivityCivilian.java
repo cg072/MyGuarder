@@ -2,9 +2,11 @@ package home.safe.com.myguarder;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -123,7 +125,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         if(view.getId() == btnCivilianLog.getId())
         {
             Intent intent = new Intent(this,ActivityPopup.class);
-            startActivityForResult(intent,MY_REQUEST_CODE_POPUP);
+            startActivityForResult(intent, MYGUARDER_REQUEST_POPUP_CODE);
         }
         else if(view.getId() == btnEmergency.getId())
         {
@@ -136,27 +138,44 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK)
+
+        if(requestCode == MAIN_REQUEST_SETTING_CODE)
         {
-            if(requestCode == MY_REQUEST_CODE)
-            {
-                Log.d("onActivityResult", "Civilian - " +MY_REQUEST_CODE);
-                cycleCivilian = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER)*60000;
-                Log.d("주기 : ", "" +cycleCivilian);
+            if(resultCode == RESULT_OK) {
+                Log.d("onActivityResult", "Civilian - " + MAIN_REQUEST_SETTING_CODE);
+                cycleCivilian = data.getIntExtra(DATA_NAME, DEFAULT_NUMBER) * 60000;
+                Log.d("주기 : ", "" + cycleCivilian);
+
                 saveData();
             }
-            if(requestCode == MY_REQUEST_CODE_POPUP)
+            if(resultCode == MY_LOGOUT_CODE)
             {
-                Log.d("onActivityResult", "Civilian - " +MY_REQUEST_CODE_POPUP);
+                Intent intentData = new Intent();
+                setResult(MY_LOGOUT_CODE, intentData);
+                finish();
+            }
+            if(resultCode == MY_CIVILIAN_CODE)
+            {
+                Intent intentData = new Intent();
+                setResult(MY_CIVILIAN_CODE, intentData);
+                finish();
+            }
+            if(resultCode == MY_GUARDER_CODE)
+            {
+                Intent intentData = new Intent();
+                setResult(MY_GUARDER_CODE, intentData);
+                finish();
+            }
+        }
+        if(requestCode == MYGUARDER_REQUEST_POPUP_CODE)
+        {
+            if(resultCode == RESULT_OK) {
+                Log.d("onActivityResult", "Civilian - " + MYGUARDER_REQUEST_POPUP_CODE);
                 selectPopupList(data.getStringExtra(DATA_NAME_POPUP));
             }
         }
-        else if(resultCode == 123)
-        {
-            Intent intentData = new Intent();
-            setResult(MY_LOGOUT_CODE, intentData);
-            finish();
-        }
+
+
     }
 
     /**
