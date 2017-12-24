@@ -204,7 +204,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     private boolean setTestLogin() {
         String testID = "root";
-        String testPWD = "1111";
+        String testPWD = "11111";
         if(etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD)) {
             return true;
         }
