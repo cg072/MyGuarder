@@ -2,7 +2,9 @@ package home.safe.com.member;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -45,6 +47,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     final String TAG = "로그인";
 
     private final static int MY_LOGIN_SUCCESS_CODE = 201;
+    private final static int MY_END_CODE = 100;
 
     private final static String LOGIN_ID = "loginID";
     private final static String LOGIN_PWD = "loginPWD";
@@ -733,6 +736,30 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 }
                 return;
         }
+    }
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage("어플을 종료하시겠습니까?");
+        alert.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intentData = new Intent();
+                setResult(MY_END_CODE, intentData);
+                finish();
+            }
+        });
+
+        alert.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog alertDialog = alert.create();
+        alertDialog.show();
+
     }
 }
 
