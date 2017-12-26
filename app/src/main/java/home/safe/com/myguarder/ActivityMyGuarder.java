@@ -235,5 +235,12 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         }
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
 
+        Intent intentData = new Intent();
+        setResult(MY_CIVILIAN_CODE, intentData);
+        finish();
+    }
 }

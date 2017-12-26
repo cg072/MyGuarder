@@ -22,9 +22,9 @@ import java.util.ArrayList;
 **/
 public class AdapterPopupList extends BaseAdapter{
 
-    ArrayList<LocationVO> alData;
+    ArrayList<MyGuarderVO> alData;
 
-    public AdapterPopupList(ArrayList<LocationVO> alData)
+    public AdapterPopupList(ArrayList<MyGuarderVO> alData)
     {
         this.alData = alData;
     }

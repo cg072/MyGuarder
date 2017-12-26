@@ -4,6 +4,12 @@ package home.safe.com.myguarder;
  * Created by JINNY_ on 2017-12-04.
  */
 
+import android.content.ContentValues;
+
+import com.safe.home.pgchanger.ProGuardianVO;
+
+import java.io.Serializable;
+
 /**
 *
 * @author 경창현
@@ -11,7 +17,7 @@ package home.safe.com.myguarder;
 * @text LocationVo
 * @since 2017-12-04 오후 5:03
 **/
-public class LocationVO {
+public class MyGuarderVO extends ProGuardianVO implements Serializable{
 
     private int lseq;
     private String llat;
@@ -20,12 +26,12 @@ public class LocationVO {
     private String ltime;
     private String lid;
 
-    public LocationVO(int lseq, String lday) {
+    public MyGuarderVO(int lseq, String lday) {
         this.lseq = lseq;
         this.lday = lday;
     }
 
-    public LocationVO(int lseq, String llat, String llong, String lday, String ltime, String lid) {
+    public MyGuarderVO(int lseq, String llat, String llong, String lday, String ltime, String lid) {
         this.lseq = lseq;
         this.llat = llat;
         this.llong = llong;
@@ -81,5 +87,20 @@ public class LocationVO {
 
     public void setLid(String lid) {
         this.lid = lid;
+    }
+
+    @Override
+    public ContentValues convertDataToContentValues() {
+        return null;
+    }
+
+    @Override
+    public void convertContentValuesToData(ContentValues contentValues) {
+
+    }
+
+    @Override
+    public String getDetails() {
+        return null;
     }
 }

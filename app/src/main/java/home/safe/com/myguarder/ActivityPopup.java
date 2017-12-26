@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class ActivityPopup extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener{
 
     ListView lvPopupList;
-    ArrayList<LocationVO> alData;
+    ArrayList<MyGuarderVO> alData;
     AdapterPopupList adapterPopupList;
 
     Button btnPopupOk;
@@ -78,10 +78,10 @@ public class ActivityPopup extends Activity implements View.OnClickListener, Ada
     **/
     public void selectPopupDate(String date)
     {
-        alData = new ArrayList<LocationVO>();
-        alData.add(new LocationVO(1,"2017.12.05"));
-        alData.add(new LocationVO(2,"2017.12.04"));
-        alData.add(new LocationVO(3,"2017.12.03"));
+        alData = new ArrayList<MyGuarderVO>();
+        alData.add(new MyGuarderVO(1,"2017.12.05"));
+        alData.add(new MyGuarderVO(2,"2017.12.04"));
+        alData.add(new MyGuarderVO(3,"2017.12.03"));
     }
 
     /**

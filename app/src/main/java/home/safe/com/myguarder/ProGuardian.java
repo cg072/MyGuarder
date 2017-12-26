@@ -94,7 +94,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public final static int MYGUARDER_REQUEST_CIVILIAN_LIST_CODE = 3333;
     public final static int MY_END_CODE = 100;
     public final static int MAIN_REQUEST_MEMBER_CODE = 200;
-    public final static int MY_LOGIN_SUCCESS_CODE = 201;        //201
+    public final static int MY_LOGIN_SUCCESS_CODE = 201;
     public final static int MY_LOGOUT_CODE = 300;
     public final static int MY_MENU_CHANGE_CODE = 400;
     public final static int MY_CIVILIAN_CODE = 601;
@@ -737,5 +737,20 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      *
      *  -> 엑티비티리절트 통합해야 하는지 검토해야함
      * @since 2017-12-22 오후 3:54
+    **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. 지킴이 모드일때 백 버튼 눌렀을때 피지킴이 화면으로 이동  ok
+     * 2. 컨트롤러, DB헬퍼, VO 생성 ok
+     * 3. 개개인 컨트롤러,DB헬퍼, VO를 통해서 만들고, 나중에 PGchang로 연동
+     * 4. 컨트롤러 IProGuardianController로 구현, DB헬퍼 ProGuardianDBHelper상속받아서 구현
+     * VO는 ProGuardianVO상속받아서 구현
+     * 5. 피지킴이 화면에 현재위치 그리기
+     * 6. 글씨체
+     * @since 2017-12-26 오후 4:09
     **/
 }
