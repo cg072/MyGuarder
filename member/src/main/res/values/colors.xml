@@ -11,4 +11,6 @@
     <color name="colorBackground">#dddddd</color>
     <color name="colorNaverBackground">#1ec800</color>
     <color name="colorNaverText">#ffffff</color>
+    <color name="colorGoogleBackGround">#4885ed</color>
+    <color name="colorGoogleText">#ffffff</color>
 </resources>

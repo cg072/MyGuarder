@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,12 +67,14 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private EditText etPWD;
     private CheckBox cboxCheck;
     private Button btnLogin;
-    private Button btnGoogle;
     private OAuthLoginButton btnNaver;
     private TextView tvSignup;
     private TextView tvFIndID;
     private TextView tvFindPWD;
     private boolean checkPermission = false;
+    private RelativeLayout googleLogin;
+    private RelativeLayout naverLogin;
+    private TextView tvNaver;
 
     // 구글 로그인 변수들
     //private static final int RESOLVE_CONNECTION_REQUEST_CODE = 1;
@@ -113,6 +118,9 @@ public class ActivityMemberLogin extends AppCompatActivity {
         tvSignup = (TextView)findViewById(R.id.tvSignup);
         tvFIndID = (TextView)findViewById(R.id.tvFindID);
         tvFindPWD = (TextView)findViewById(R.id.tvFindPWD);
+        googleLogin = (RelativeLayout) findViewById(R.id.btnGoogleLogin);
+        naverLogin = (RelativeLayout) findViewById(R.id.btnNaverLogin);
+        tvNaver = (TextView)findViewById(R.id.tvNaver);
 
         naverSetting();
         googleSetting();
@@ -131,6 +139,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
 
 
+/*
         // Google 로그인
         btnGoogle.setOnClickListener( new View.OnClickListener( ) {
             @Override public void onClick( View view ) {
@@ -139,11 +148,30 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 startActivityForResult( signInIntent, REQUEST_CODE_GOOGLE );
             }
         } );
+*/
 
-        // 네아로 로그인
+        googleLogin.setOnClickListener(new LinearLayout.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 구글 로그인 화면을 출력합니다. 화면이 닫힌 후 onActivityResult가 실행됩니다.
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent( mGoogleApiClient );
+                startActivityForResult( signInIntent, REQUEST_CODE_GOOGLE );
+            }
+        });
+
+/*        // 네아로 로그인
         btnNaver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 클릭시 OAuthLogin의 생성자를 담은 것에서 네로아 액티비티를 시작한다. (인자 : 액티비티, 핸들러)
+                mOAuthLoginModule.startOauthLoginActivity(ActivityMemberLogin.this,
+                        mOAuthLoginHandler);
+            }
+        });*/
+
+        naverLogin.setOnClickListener(new LinearLayout.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 // 클릭시 OAuthLogin의 생성자를 담은 것에서 네로아 액티비티를 시작한다. (인자 : 액티비티, 핸들러)
                 mOAuthLoginModule.startOauthLoginActivity(ActivityMemberLogin.this,
                         mOAuthLoginHandler);
@@ -293,7 +321,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 // 필요한 api가 있으면 아래에 추가
                 .addApi( Auth.GOOGLE_SIGN_IN_API, gso )
                 .build( );
-        btnGoogle = ( Button ) findViewById( R.id.btn_google );
+        googleLogin = ( RelativeLayout ) findViewById( R.id.btnGoogleLogin );
     }
 
     /*
@@ -303,6 +331,10 @@ public class ActivityMemberLogin extends AppCompatActivity {
     *  comment  : Naver 로그인에 필요한 것들 세팅
     * */
     private void naverSetting() {
+
+        Typeface type = Typeface.createFromAsset(this.getAssets(), "NanumBarunGothic_Bold(subset).otf"); // asset 폴더에 넣은 폰트 파일 명
+        tvNaver.setTypeface(type);
+
 
          /*
          Context : 어떤 액티비티(또는 어플리케이션)를 구분하는 정보 (신분증 같은 개념 = 액티비티 자신의 존재 자체로 증명이 아니라, 쓰여진 정보에 의해 구분되어짐)

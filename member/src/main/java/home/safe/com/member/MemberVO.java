@@ -1,12 +1,16 @@
 package home.safe.com.member;
 
+import android.content.ContentValues;
+
+import com.safe.home.pgchanger.ProGuardianVO;
+
 import java.io.Serializable;
 
 /**
  * Created by hotki on 2017-11-28.
  */
 
-public class MemberVO implements Serializable {
+public class MemberVO extends ProGuardianVO implements Serializable {
     private int mseq;
     private String mname;
     private String mphone;
@@ -123,5 +127,20 @@ public class MemberVO implements Serializable {
 
     public void setMnickname(String mnickname) {
         this.mnickname = mnickname;
+    }
+
+    @Override
+    public ContentValues convertDataToContentValues() {
+        return null;
+    }
+
+    @Override
+    public void convertContentValuesToData(ContentValues contentValues) {
+
+    }
+
+    @Override
+    public String getDetails() {
+        return null;
     }
 }

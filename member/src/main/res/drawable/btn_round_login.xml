@@ -3,10 +3,10 @@
     android:shape="rectangle" android:padding = "10dp">
     <solid android:color="@color/colorLoginBtn"></solid>
     <corners
-        android:bottomLeftRadius="8dp"
-        android:bottomRightRadius="8dp"
-        android:topLeftRadius="8dp"
-        android:topRightRadius="8dp"></corners>
+        android:bottomLeftRadius="4dp"
+        android:bottomRightRadius="4dp"
+        android:topLeftRadius="4dp"
+        android:topRightRadius="4dp"></corners>
     <stroke android:width="2dp"
         android:color="#BDBDBD"></stroke>
 </shape>

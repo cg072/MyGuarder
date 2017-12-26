@@ -1,12 +1,17 @@
 package home.safe.com.guarder;
 
+import android.content.ContentValues;
+
+import com.safe.home.pgchanger.PreTestVO;
+import com.safe.home.pgchanger.ProGuardianVO;
+
 import java.io.Serializable;
 
 /**
  * Created by hotki on 2017-11-28.
  */
 
-public class GuarderVO implements Serializable {
+public class GuarderVO extends ProGuardianVO implements Serializable {
 
     private int gseq;
     private String gmid;
@@ -60,5 +65,20 @@ public class GuarderVO implements Serializable {
 
     public void setGregday(long gregday) {
         this.gregday = gregday;
+    }
+
+    @Override
+    public ContentValues convertDataToContentValues() {
+        return null;
+    }
+
+    @Override
+    public void convertContentValuesToData(ContentValues contentValues) {
+
+    }
+
+    @Override
+    public String getDetails() {
+        return null;
     }
 }
