@@ -9,18 +9,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <Button
-            android:id="@+id/btnMain"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Main"/>
+
         <Button
             android:id="@+id/btnTest"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="PGChanger Test"/>
+        <Button
+            android:id="@+id/btnMainChanger"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="MainChanger Test"/>
+        <Button
+            android:id="@+id/btnMemberChanger"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="MemberChanger Test"/>
+        <Button
+            android:id="@+id/btnNoticeChanger"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="NoticeChanger Test"/>
+        <Button
+            android:id="@+id/btnGuarderChanger"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="GuarderChanger Test"/>
+        <Button
+            android:id="@+id/btnTransChanger"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="TransChanger Test"/>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

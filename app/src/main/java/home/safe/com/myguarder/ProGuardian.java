@@ -95,6 +95,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public final static int MY_END_CODE = 100;
     public final static int MAIN_REQUEST_MEMBER_CODE = 200;
     public final static int MY_LOGIN_SUCCESS_CODE = 201;
+    public final static int ROOT_LOGIN_SUCCESS_CODE = 202;
     public final static int MY_LOGOUT_CODE = 300;
     public final static int MY_MENU_CHANGE_CODE = 400;
     public final static int MY_CIVILIAN_CODE = 601;

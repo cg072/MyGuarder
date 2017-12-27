@@ -24,6 +24,28 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        //DB 생성
+//        sqLiteDatabase.execSQL("CREATE TABLE location(" +
+//                "lseq INTEGER PRIMARY KEY DEFAULT 0," +
+//                "llat CHAR(12) DEFAULT 000.0000000," +
+//                "llong CHAR(12) DEFAULT 000.0000000," +
+//                "lday DATE," +
+//                "ltime CHAR(6) DEFAULT 00000," +
+//                "lmid VARCHAR(15) NOT NULL)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        super.onUpgrade(sqLiteDatabase, oldVersion, newVersion);
+    }
+
+    @Override
     public int insert(ContentValues contentValues) {
         return 0;
     }
