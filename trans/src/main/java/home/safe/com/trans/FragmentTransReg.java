@@ -55,7 +55,7 @@ preferences.getString("TransMemo","기본값");
 */
 
 
-public class FragmentTransReg extends Fragment implements View.OnClickListener{
+public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
     ActivityTrans mainActivity;
     TextView tvtransstat;
@@ -63,14 +63,17 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
     EditText etTextTrans;
     Button btnRegTrans;
     InputMethodManager imm;
-    String num;
-    String kind;
-    String text;
 
+    String num = "a";
+    String kind = "b";
+    String text = "c";
 
     int fragmentStat;
+    String fragmentId;
 
-    TestListViewDTO dto;
+    public TestListViewDTO regDto = new TestListViewDTO();
+    ArrayList<TestListViewDTO> regArrDto = new ArrayList<TestListViewDTO>();
+    AdapterFragTabTrans tabTransAdapter;
 
 
 
@@ -100,18 +103,18 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
         btnRegTrans = (Button) rootView.findViewById(R.id.btnRegTrans);
 
 
-        if(fragmentStat == 0){
+        if (fragmentStat == 0) {
             tvtransstat.setText("피지킴이 입니다 : 자신의 이동수단을 등록하세요");
         }
 
         //상대방의 이동수단을 등록할 때는, 상대방의 아이디를 받아와서 화면에 표시해주어야 한다 한다!!
         //ex) 지킴이 입니다: ???님의 이동수단을 등록하세요
-        if(fragmentStat == 1){
-            tvtransstat.setText("지킴이 입니다: 상대방의 이동수단을 등록하세요");
+        if (fragmentStat == 1) {
+            tvtransstat.setText("지킴이 입니다: " + fragmentId + "님의 이동수단을 등록하세요");
         }
 
 
-        imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         tvtranskind.setOnClickListener(this);
         btnRegTrans.setOnClickListener(this);
@@ -120,13 +123,12 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
     }
 
 
-
     @Override
     public void onClick(View view) {
         //에디트텍스트 영역 이외의 곳을 클릭시 키보드 닫음
         hideKeyboard();
 
-        if(view == tvtranskind){
+        if (view == tvtranskind) {
 
             PopupMenu popupMenu = new PopupMenu(getContext().getApplicationContext(), view);
             MenuInflater menuInflater = popupMenu.getMenuInflater();
@@ -162,15 +164,15 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
         }
 
-        if(view == btnRegTrans){
+        if (view == btnRegTrans) {
 
-            if(tvtranskind.getText().equals("이동수단 종류 선택")){
+            if (tvtranskind.getText().equals("이동수단 종류 선택")) {
                 Toast.makeText(getContext().getApplicationContext(), "이동수단이 선택되지 않음", Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 kind = tvtranskind.getText().toString();
                 text = etTextTrans.getText().toString();
 
-                if(text.length() >= 20){
+                if (text.length() >= 20) {
                     text = text.substring(0, 20);
                 }
 
@@ -186,7 +188,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
                 //regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text.trim() + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
-                regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
+                regAlert.setMessage("이동수단: " + kind.trim() + "\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
@@ -222,7 +224,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
     }
 
     //키보드를 닫는 메소드
-    public void hideKeyboard(){
+    public void hideKeyboard() {
 
         imm.hideSoftInputFromWindow(etTextTrans.getWindowToken(), 0);
 
@@ -231,21 +233,12 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
     //이 메소드에서 서버에 인서트를 해야 함.
     //생각해 볼 것 : 가상으로 콘트롤러를 거쳐야 함
-    public void toServTransReg(){
+    public void toServTransReg() {
 
     }
-
-    //입력된 값을 탭 어댑터로 보내주는 메소드
-    public void toTabAdapt(String makeNum, String makeKind, String makeText){
-        dto = new TestListViewDTO();
-        dto.setNum(makeNum);
-        dto.setTranName(makeKind);
-        dto.setText(makeText);
-    }
-
 
     //toSharedPreference를 만드는 메소드
-    public void toShared(String sharedkind, String sharedtext){
+    public void toShared(String sharedkind, String sharedtext) {
 
         SharedPreferences preferences = getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -254,7 +247,12 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
         editor.commit();
     }
 
-    public void fragStat (int fragRecvStat){
+
+    //////////////////////서버없이 작동시켜 보기////////////////////////////////////
+
+
+    //지킴이 스탯을 받는 메소드
+    public void fragStat(int fragRecvStat) {
         this.fragmentStat = fragRecvStat;
 
         String a = Integer.toString(fragRecvStat);
@@ -262,4 +260,25 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener{
 
     }
 
+    //지킴이 아이디를 받는 메소드
+    public void fragId(String fragRecvId) {
+        this.fragmentId = fragRecvId;
+    }
+
+
+
+    //입력된 값을 탭 어댑터로 보내주는 메소드
+    public void toTabAdapt(String makeNum, String makeKind, String makeText) {
+        regDto.setNum(makeNum);
+        regDto.setTranName(makeKind);
+        regDto.setText(makeText);
+
+        regArrDto.add(regDto);
+
+    }
+
+    public void setRegRecvDTO(ArrayList<TestListViewDTO> arrRegRecvDto) {
+        regArrDto = arrRegRecvDto;
+
+    }
 }

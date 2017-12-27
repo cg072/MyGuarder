@@ -1,5 +1,6 @@
 package home.safe.com.trans;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,7 +33,7 @@ public class FragmentTransList extends Fragment {
 
     ExpandableListView lvtrans;
 
-    TestListViewDTO getDto;
+    ArrayList<TestListViewDTO> listArrDto = new ArrayList<>();
 
     @Nullable
     @Override
@@ -46,77 +47,68 @@ public class FragmentTransList extends Fragment {
 
         adapter = new AdapterListTrans();
 
-        adapter.addItem(new TestListViewDTO("1", "택시", "2017.05.1", "jdkd", "대중교통"));
+        /*adapter.addItem(new TestListViewDTO("1", "택시", "2017.05.1", "jdkd", "대중교통"));
         adapter.addItem(new TestListViewDTO("2", "택시", "2017.05.1", "jdkd", "대중교통"));
-        adapter.addItem(new TestListViewDTO("3", "택시", "2017.05.1", "jdkd", "대중교통"));
+        adapter.addItem(new TestListViewDTO("3", "택시", "2017.05.1", "jdkd", "대중교통"));*/
 
         lvtrans.setAdapter(adapter);
-
 
        return rootview;
 
     }
 
-
-
-
     //이 메소드에서 서버에서 셀렉트를 해 와야함
     //생각 해 볼 것 : 플래그먼트에서 이동수단내역으로 스와이프 했을 때, 셀렉트를 새로 해 와야함
     //AdapterFragTabTrans.java 와 충돌이 일어 나는지 생각해 봐야 함
     public void toServTransList(TestListViewDTO recvDto){
 
 
+    }
+
+    ////////////////서버 없이 동작 시켜 보기///////////////////////////
+
+    /*@Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(listArrDto != null) {
+            for (TestListViewDTO data : listArrDto) {
+                setAddAdapter(data);
+            }
+        }
+
+        Log.v("어태치", "어태치");
+    }*/
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if(listArrDto != null) {
+            for (TestListViewDTO data : listArrDto) {
+                setAddAdapter(data);
+            }
+        }
 
     }
 
-    public void getTabDto(){
 
+    public void setAddAdapter(TestListViewDTO recvDto){
+        if(adapter == null) {
+            return;
+        }
+        if(recvDto == null) {
+            return;
+        }
+        adapter.addItem(recvDto);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    public void setListRecvDTO(ArrayList<TestListViewDTO> arrListRecvDto) {
+        listArrDto = arrListRecvDto;
     }
 }
 
 
-/*public class FragmentTransList extends Fragment {
-
-    AdapterListTrans adapter;
-
-    ListView lvtrans;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
-        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment_translist, container, false);
-
-
-        lvtrans = (ListView)rootview.findViewById(R.id.lvtrans);
-
-        adapter = new AdapterListTrans();
-
-        adapter.addItem(new TestListViewDTO("1", "택시", "개인"));
-        adapter.addItem(new TestListViewDTO("2", "버스", "시외버스"));
-        adapter.addItem(new TestListViewDTO("3", "대리", "대리"));
-
-
-        lvtrans.setAdapter(adapter);
-
-        return rootview;
-
-    }
-
-    public void addAdapter(TestListViewDTO addadabt){
-
-
-
-    }
-
-
-
-    //이 메소드에서 서버에서 셀렉트를 해 와야함
-    //생각 해 볼 것 : 플래그먼트에서 이동수단내역으로 스와이프 했을 때, 셀렉트를 새로 해 와야함
-    //AdapterFragTabTrans.java 와 충돌이 일어 나는지 생각해 봐야 함
-    public void toServTransList(TestListViewDTO recvDto){
-
-
-    }
-}*/

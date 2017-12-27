@@ -2,25 +2,35 @@ package home.safe.com.trans;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * Created by plupin724 on 2017-12-03.
  */
 
-public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
-    FragmentTransReg fragmentTransReg;
-    FragmentTransList fragmentTransList;
+//어댑터 객체로 접근하여 값 가져오기!!!!
+
+
+public class AdapterFragTabTrans extends FragmentPagerAdapter {
+
+    FragmentTransReg fragmentTransReg = new FragmentTransReg();
+    FragmentTransList fragmentTransList = new FragmentTransList();
+
 
     int adapterTabStat;
-    TestListViewDTO recvDto;
+    String adapterId = null;
 
+    ArrayList<TestListViewDTO> adaptArrDto = new ArrayList<TestListViewDTO>();
 
     public AdapterFragTabTrans(FragmentManager fm) {
         super(fm);
@@ -32,33 +42,51 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
         /*switch (position){
 
             case 0 :
+
+                Log.v("case0", "확인1");
                 return new FragmentTransReg();
 
             case 1 :
+
+                Log.v("case1", "확인2");
                 return new FragmentTransList();
 
         }*/
 
+
+
+
         switch (position) {
+
             case 0 :
-                fragmentTransReg = new FragmentTransReg();
+
+                if(adaptArrDto != null){
+                    fragmentTransReg.setRegRecvDTO(adaptArrDto);
+                }
+
+
                 fragmentTransReg.fragStat(adapterTabStat);
+
+                if(adapterTabStat == 1){
+                    if(adapterId != null){
+                        fragmentTransReg.fragId(adapterId);
+                    }
+                }
+
                 return fragmentTransReg;
+
+
 
             case 1 :
 
-                return new FragmentTransList();
+                fragmentTransList.setListRecvDTO(adaptArrDto);
 
-
-                /*getDto();
-                fragmentTransList = new FragmentTransList();*/
-
+                return fragmentTransList;
         }
-
-
 
         return null;
     }
+
 
     @Override
     public int getCount() {
@@ -69,15 +97,15 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     public void adapterstat(int mainRecvStat){
         this.adapterTabStat = mainRecvStat;
 
+        //정보확인용
         String a = Integer.toString(adapterTabStat);
         Log.v("받은 스탯", a);
     }
 
-    //fragementreg에서 작성된 정보를 불러오는 메소드
-
-    public void getDto(){
-        this.recvDto = new TestListViewDTO();
-        this.recvDto = fragmentTransReg.dto;
+    //메인에서 받은 아이디를 얻어옴
+    public void adapterId(String mainRecvId){
+       this.adapterId = mainRecvId;
     }
+
 
 }

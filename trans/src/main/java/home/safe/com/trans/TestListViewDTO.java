@@ -9,15 +9,21 @@ import java.io.Serializable;
  */
 
 public class TestListViewDTO implements Serializable{
-    String num;
-    String tranName;
-    String time;
-    String author;
-    String text;
+    String num = "";
+    String tranName ="";
+    String time ="";
+    String author ="";
+    String text = "";
 
 
     public TestListViewDTO() {
 
+    }
+
+    public TestListViewDTO(String num, String tranName,  String text) {
+        this.num = num;
+        this.tranName = tranName;
+        this.text = text;
     }
 
     public TestListViewDTO(String num, String tranName, String time, String author, String text) {

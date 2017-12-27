@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,6 +60,8 @@ import java.util.ArrayList;
 *
 *
 *
+*
+*
 * */
 
 
@@ -71,11 +75,11 @@ public class ActivityTrans extends AppCompatActivity {
     ViewPager vpagerTrans;
 
 
-    //AdapterFragTabTrans fragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
     AdapterFragTabTrans adapterFragTabTrans;
 
     //지킴이 피지킴이를 구분하기 위한 플래그
-    int mainStat;
+    int mainStat = 1;
+    String mainId = null;
 
 
     @Override
@@ -88,22 +92,24 @@ public class ActivityTrans extends AppCompatActivity {
 
         adapterFragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
 
+
+
         //받은 지킴/피지킴이의 스탯의 정보를 기본으로 어댑터를 다르게 생성
         if(mainStat == 0){
             adapterFragTabTrans.adapterstat(0);
             vpagerTrans.setAdapter(adapterFragTabTrans);
         }
         if(mainStat == 1){
+            mainId = "김종하";
+            adapterFragTabTrans.adapterId(mainId);
             adapterFragTabTrans.adapterstat(1);
             vpagerTrans.setAdapter(adapterFragTabTrans);
         }
 
-
-
-       // vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
+        //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
 
         //플래그먼트를 미리 로딩 시켜놓음
-        //vpagerTrans.setOffscreenPageLimit(1);
+        vpagerTrans.setOffscreenPageLimit(1);
 
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단등록"), 0 , true);
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단내역"), 1);
@@ -113,10 +119,10 @@ public class ActivityTrans extends AppCompatActivity {
 
         vpagerTrans.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabbarTrans));
 
-
     }
 
     TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
+
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
 
@@ -141,24 +147,26 @@ public class ActivityTrans extends AppCompatActivity {
         }
     };
 
-    public void getShared(){
+
+
+    //쉐어드프리페어드 메소드
+
+    /*public void getShared(){
         SharedPreferences sharedPreferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
 
-        /*this.mainStat*/
+        *//*this.mainStat*//*
 
     }
 
-    /*
-    * public void toShared(String sharedkind, String sharedtext){
+    public void toShared(String sharedkind, String sharedtext){
 
         SharedPreferences preferences = getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("TransName", sharedkind);
         editor.putString("TransMemo", sharedtext);
         editor.commit();
-    }
-    *
-    * */
+    }*/
+
 
 
 }
