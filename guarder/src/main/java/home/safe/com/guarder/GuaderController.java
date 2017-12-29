@@ -12,6 +12,7 @@ import java.util.List;
  */
 
 public class GuaderController implements IProGuardianController {
+
     @Override
     public int insert(ContentValues contentValues) {
         return 0;

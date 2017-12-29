@@ -51,6 +51,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     private final static int MY_LOGIN_SUCCESS_CODE = 201;
     private final static int MY_END_CODE = 100;
+    private final static int ROOT_LOGIN_SUCCESS_CODE = 202;
+    private boolean loginFlag = false;
 
     private final static String LOGIN_ID = "loginID";
     private final static String LOGIN_PWD = "loginPWD";
@@ -226,7 +228,11 @@ public class ActivityMemberLogin extends AppCompatActivity {
         Log.v("로그인", "가즈아");
         // 회원일 경우이므로, 메인액티비티를 띄워준다.
         Intent intentData = new Intent();
-        setResult(MY_LOGIN_SUCCESS_CODE, intentData);
+        if(loginFlag == true) {
+            setResult(MY_LOGIN_SUCCESS_CODE, intentData);
+        } else {
+            setResult(ROOT_LOGIN_SUCCESS_CODE, intentData);
+        }
         finish();
         //Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
         //startActivity(intent);
@@ -234,9 +240,16 @@ public class ActivityMemberLogin extends AppCompatActivity {
     }
 
     private boolean setTestLogin() {
-        String testID = "root";
+        String rootID = "root";
+        String rootPWD = "11111";
+        String testID = "test";
         String testPWD = "11111";
-        if(etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD)) {
+
+        if((etID.getText().toString().equals(rootID) && etPWD.getText().toString().equals(rootPWD)) ||
+            (etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD))) {
+            if(etID.getText().toString().equals(rootID)) {
+                loginFlag = true;
+            }
             return true;
         }
         return false;
