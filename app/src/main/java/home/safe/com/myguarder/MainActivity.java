@@ -68,16 +68,10 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
                 Intent intent = new Intent(this, ActivityCivilian.class);
                 startActivityForResult(intent, MY_MENU_CHANGE_CODE);
             }
-
-//            2. 로그인시 MainActivity
-//            if(resultCode == MY_LOGIN_SUCCESS_CODE)
-//            {
-//            }
-
-//            3. root계정 로그인시 MainActivity로 이동
-//            if(resultCode == ROOT_LOGIN_SUCCESS_CODE)
-//            {
-//            }
+//            2. root계정 로그인시 MainActivity로 이동
+            if(resultCode == ROOT_LOGIN_SUCCESS_CODE)
+            {
+            }
         }
         if(requestCode == MY_MENU_CHANGE_CODE) {
 
