@@ -1,14 +1,23 @@
 package home.safe.com.guarder;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,6 +31,8 @@ public class ActivityGuarder extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    private boolean checkPermission = false;
 
     ListView lvGuarders;
     ListViewItemSearch lvItemSearch;
@@ -45,12 +56,13 @@ public class ActivityGuarder extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager()));
+        checkPermission();
+
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch));
         tabLayout.addTab(tabLayout.newTab().setText(TAB_FIRST), 0, true);
         tabLayout.addTab(tabLayout.newTab().setText(TAB_SECOND), 1);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
 
         lvGuarders = (ListView) findViewById(R.id.lvGuarders);
 
@@ -135,23 +147,118 @@ public class ActivityGuarder extends AppCompatActivity {
     *  title    : getList 메소드 생성
     *  comment  : 시험용 리스트
     * */
-    private void listSetting() {
-        /* 코딩될 내용들
-            1. 버튼 눌렀을 때, edittext에서 getText 후 스트링으로 바꾼 다음, 서버로 보내기
-            2. 리턴 값을 받아서 화면에 뿌려주기 <- 뿌려주는건 대충 구현됨
-            3. 지킴이 목록에 있는 회원은 보여주지 않는다.
-         */
-        // 예시용 목록 회원
-        //Collections.sort(alReturnList ,new ActivityGuarder.NameDescCompareSearch());
+    private void loadList() {
+        alSearch = new ArrayList<ListViewItemSearch>();
+        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
 
-        //alSearch = alReturnList;
-        //alSearchResult = alSearch;
+        while (c.moveToNext()) {
+            lvItemSearch = new ListViewItemSearch();
+            // 연락처 id 값
+            String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+            // 연락처 대표 이름
+            String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+            lvItemSearch.setTvName(name);
 
-        // 지킴이 어댑터 갱신
-        //guarderAdapterUpdate();
-        //searchAdapterUpdate(searchUpdate(alSearch, alGuarders));
-        //searchUpdate(alSearch, alGuarders);
+            // ID로 전화 정보 조회
+            Cursor phoneCursor = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                    null, null);
 
+            // 데이터가 있는 경우
+            if (phoneCursor.moveToFirst()) {
+                String phone = phoneCursor.getString(phoneCursor.getColumnIndex(
+                        ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                // hyphen을 제거하는 메소드를 추가하였다.
+                lvItemSearch.setTvPhone(hyphenRemove(phone));
+
+                // 여기 if문 아래서 추가를 해야 전화번호가 있는 사람만 담아간다.
+                alSearch.add(lvItemSearch);
+            }
+
+            phoneCursor.close();
+
+        }// end while
+
+        c.close();
+    }
+
+    /*
+      *  date     : 2017.11.12
+      *  author   : Kim Jong-ha
+      *  title    : checkPermission 메소드 생성
+      *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
+      *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
+      * */
+    private void checkPermission()
+    {
+        Log.v(TAG, "checkPermission들어옴");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            //퍼미션이 없는 경우
+            //최초로 퍼미션을 요청하는 것인지 사용자가 취소되었던것을 다시 요청하려는건지 체크
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
+                //퍼미션을 재요청 하는 경우 - 왜 이 퍼미션이 필요한지등을 대화창에 넣어서 사용자를 설득할 수 있다.
+                //대화상자에 '다시 묻지 않기' 체크박스가 자동으로 추가된다.
+                Log.v(TAG, "퍼미션을 재요청 합니다.");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+
+            } else {
+                //처음 퍼미션을 요청하는 경우
+                Log.v(TAG, "첫 퍼미션 요청입니다.");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+            }
+        } else {
+            //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
+            checkPermission = true;
+            loadList();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // 당겨서 새로고침
+                }
+            }, 2000);
+            //searchAdapterUpdate();
+            //guarderAdapterUpdate();
+            Log.v(TAG, "Permission is granted");
+            Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
+        }
+        Log.v(TAG, "checkPermission나감");
+    }
+
+    /*
+    *  date     : 2017.11.12
+    *  author   : Kim Jong-ha
+    *  title    : onRequestPermissionResult 메소드 불러옴
+    *  comment  : 권한 사용or거부 요청창을 띄워 사용자가 권한을 동의, 비동의 때의 Perform을 둠
+    * */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1: //
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //사용자가 동의했을때
+                    Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
+                    checkPermission = true;
+                    checkPermission();
+                    loadList();
+                } else {
+                    //사용자가 거부 했을때
+                    Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
+
+                    /*new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 2000);*/
+                }
+                return;
+        }
     }
 
 

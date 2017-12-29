@@ -1,10 +1,12 @@
 package home.safe.com.guarder;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,8 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     private String nowGuarderName;
     private String nowGuarderPhone;
     private int shareNumber = 0;
+    int a = 0;
+
 
     @Nullable
     @Override
@@ -37,12 +41,19 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         lvGuarders = (ListView) rootView.findViewById(R.id.lvGuarders);
         alGuarders = new ArrayList<ListViewItemGuarders>();
 
-        setAdd();
-
         lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, alGuarders, this);
         lvGuarders.setAdapter(lvAdapterGuarders);
 
+
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        a += 1;
+        Log.v("로그", String.valueOf(a));
+        lvAdapterGuarders.notifyDataSetChanged();
+        super.onResume();
     }
 
     @Override
@@ -103,7 +114,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     }
 
     // ArrayList에 지킴이를 추가함 [서버와 연결 후 부터는 서버로부터 받아와야한다.]
-    private void guarderAdd(String name, String phone) {
+    public void guarderAdd(String name, String phone) {
         lvItemGuarders = new ListViewItemGuarders();
         lvItemGuarders.setTvName(name);
         lvItemGuarders.setTvPhone(phone);
@@ -112,79 +123,14 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         alGuarders.add(lvItemGuarders);
 
         Collections.sort(alGuarders ,new NameDescCompareGuarders());
+
+        guarderAdapterUpdate();
         // 역방향 시 Collections.reverse 로 해주면 된다
     }
 
-    public void setAdd () {
-        // 예시용 목록 2 지킴이
-        ListViewItemGuarders listViewItemGuarders = new ListViewItemGuarders();
-
-        listViewItemGuarders.setTvName("스트라티스");
-        listViewItemGuarders.setTvPhone("01030000300");
-        listViewItemGuarders.setUse(true);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("가즈아");
-        listViewItemGuarders.setTvPhone("01011111111");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("김현중");
-        listViewItemGuarders.setTvPhone("01088888888");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("허이섭");
-        listViewItemGuarders.setTvPhone("01044444444");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("놔낭");
-        listViewItemGuarders.setTvPhone("01012389023");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("뻑");
-        listViewItemGuarders.setTvPhone("01098765678");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요형");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요동생");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요친구");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("지리구요");
-        listViewItemGuarders.setTvPhone("01083832562");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
-
-        listViewItemGuarders = new ListViewItemGuarders();
-        listViewItemGuarders.setTvName("오졌구요");
-        listViewItemGuarders.setTvPhone("01099991111");
-        listViewItemGuarders.setUse(false);
-        alGuarders.add(listViewItemGuarders);
+    public ArrayList<ListViewItemGuarders> getList() {
+        return alGuarders;
     }
-
 
     // 1. ArrayList에 있는 것을 저장.
     // 2. ArrayList을 받은 것을 셋팅.

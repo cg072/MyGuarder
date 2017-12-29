@@ -20,7 +20,9 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         super.onCreate(sqLiteDatabase);
 
-        String sqlCreate = "create table guarder(";
+        String sqlCreate = "create table if not exists guarder( " +
+                "gmcname TEXT" +
+                "gmcphone TEXT);";
     }
 
     @Override

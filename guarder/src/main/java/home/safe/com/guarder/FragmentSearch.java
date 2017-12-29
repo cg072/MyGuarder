@@ -28,29 +28,45 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     private ListViewAdapterSearch lvAdapterSearch;
     private ListView lvSearch;
     private ArrayList<ListViewItemSearch> alSearch;
+    private ArrayList<ListViewItemGuarders> alGuarders;
     private EditText etSearch;
     private Button btnSearch;
     ViewGroup rootView = null;
     private ArrayList<ListViewItemSearch> alSearchResult;
+    private FragmentGuarders fragmentGuarders;
+
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+    }
+
+    /*
+     *  date     : 2017.12.29
+     *  author   : Kim Jong-ha
+     *  title    : setInstance() 메소드 생성
+     *  comment  : FragmentAdapter에서 셋팅할 내용들
+     */
+    public void setInstance(ArrayList<ListViewItemSearch> list, FragmentGuarders fragmentGuarders) {
+
+        this.fragmentGuarders = fragmentGuarders;
+        alGuarders = this.fragmentGuarders.getList();
+
+        // 첫 로딩 때, 전화번호부에서 지킴이 리스트에 있는 사람들을 제외하고 띄운다.
+        alSearch = searchUpdate(list, alGuarders);
+    }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
 
         lvSearch = (ListView) rootView.findViewById(R.id.lvSearch);
-        alSearch = new ArrayList<ListViewItemSearch>();
-        //lvAdapterSearch = new ListViewAdapterSearch(rootView.getContext(), R.layout.listview_item_search, alSearch, this);
-
         etSearch = (EditText) rootView.findViewById(R.id.etSearch);
         btnSearch = (Button) rootView.findViewById(R.id.btnSearch);
 
         lvSearch = (ListView) rootView.findViewById(R.id.lvSearch);
         // EditText에서 키보드의 검색 버튼을 눌렀을 시, 취하는 행동
-
-        vertualServer();
-
 
         etSearch.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -76,7 +92,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
             }
         });
-
+        Log.v("내가", "2빠");
         return rootView;
     }
 
@@ -89,13 +105,13 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     }
 
     /*
- *  date     : 2017.11.27
- *  author   : Kim Jong-ha
- *  title    : alSearchResult() 메소드 생성
- *  comment  : 단어를 필터링해주고, 필터링된 ArrayList를 반환한다.
- *             본래는 서버로 String를 보내고, 필터링된 값들을 리스트에 담아야한다.
- *  return   : ArrayList<ListViewItemSearch>
- * */
+     *  date     : 2017.11.27
+     *  author   : Kim Jong-ha
+     *  title    : alSearchResult() 메소드 생성
+     *  comment  : 단어를 필터링해주고, 필터링된 ArrayList를 반환한다.
+     *             본래는 서버로 String를 보내고, 필터링된 값들을 리스트에 담아야한다.
+     *  return   : ArrayList<ListViewItemSearch>
+     * */
     private ArrayList<ListViewItemSearch> resultSearch() {
 
         // 결과 담는 ArrayList 초기화
@@ -120,7 +136,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     // 회원 목록의 어댑터 갱신
     private void searchAdapterUpdate(Context context, ArrayList<ListViewItemSearch> list) {
         // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
-        //lvAdapterSearch = new ListViewAdapterSearch(this, R.layout.listview_item_search, alSearch, this);
         lvAdapterSearch = new ListViewAdapterSearch(context, R.layout.listview_item_search, list, this);
         // 변경된 Adapter 적용
         lvAdapterSearch.notifyDataSetChanged();
@@ -130,7 +145,12 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
     @Override
     public void onSearchListBtnClick(int position) {
+
+        String name = alSearch.get(position).getTvName();
         String phone = alSearch.get(position).getTvPhone();
+
+        fragmentGuarders.guarderAdd(name, phone);
+        Log.v(name, phone);
 
         // 추가된 것을 회원 전체 목록에서 삭제한다.
         for(ListViewItemSearch a : alSearch) {
@@ -147,7 +167,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         // 회원 어댑터 갱신
         searchAdapterUpdate(rootView.getContext(), alSearch);
         etSearch.setText("");
-        Log.v("나누룸?", String.valueOf(position));
     }
 
 
@@ -164,76 +183,27 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         }
     }
 
-    public void vertualServer() {
-        //ArrayList<ListViewItemSearch> alSearch = new ArrayList<ListViewItemSearch>();
+    /*
+    *  date     : 2017.11.20
+    *  author   : Kim Jong-ha
+    *  title    : guarderSearchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders 메소드 생성
+    *  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
+    *  return   : ArrayList<ListViewItemSearch> 형태
+    * */
+    private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> searchs, ArrayList<ListViewItemGuarders> guarders) {
 
-        ListViewItemSearch listViewItemSearch = new ListViewItemSearch();
+        //Log.v("사이즈", String.valueOf(searchs.size()));
 
-        listViewItemSearch.setTvName("지립니다");
-        listViewItemSearch.setTvPhone("01034561234");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("오집니다");
-        listViewItemSearch.setTvPhone("01083835465");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("개년잌");
-        listViewItemSearch.setTvPhone("01085901234");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("우성이잘가");
-        listViewItemSearch.setTvPhone("01000901123");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("짜이찌엔우성띄");
-        listViewItemSearch.setTvPhone("01080450912");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("별들에게물어봐");
-        listViewItemSearch.setTvPhone("01034567123");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("좀가자스트라");
-        listViewItemSearch.setTvPhone("01046327401");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("뉴이코씨발");
-        listViewItemSearch.setTvPhone("01043441234");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("히히히");
-        listViewItemSearch.setTvPhone("01011112222");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("니나노");
-        listViewItemSearch.setTvPhone("01033334444");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("릴리리");
-        listViewItemSearch.setTvPhone("0168887777");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("지리구요");
-        listViewItemSearch.setTvPhone("01083832562");
-        alSearch.add(listViewItemSearch);
-
-        listViewItemSearch = new ListViewItemSearch();
-        listViewItemSearch.setTvName("오졌구요");
-        listViewItemSearch.setTvPhone("01099991111");
-        alSearch.add(listViewItemSearch);
-
-        // 정렬
-        Collections.sort(alSearch ,new FragmentSearch.NameDescCompareSearch());
+        if(guarders != null) {
+            for (int i = searchs.size() - 1; i >= 0; i--) {
+                for (int j = 0; j < guarders.size(); j++) {
+                    if (searchs.get(i).getTvPhone().equals(guarders.get(j).getTvPhone())) {
+                        searchs.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+        return searchs;
     }
 }

@@ -19,6 +19,25 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     private int gstate;
     private long gregday;
 
+    private String gmcname;
+    private String gmcphone;
+
+    public String getGmcname() {
+        return gmcname;
+    }
+
+    public void setGmcname(String gmcname) {
+        this.gmcname = gmcname;
+    }
+
+    public String getGmcphone() {
+        return gmcphone;
+    }
+
+    public void setGmcphone(String gmcphone) {
+        this.gmcphone = gmcphone;
+    }
+
     public GuarderVO() {
     }
 
