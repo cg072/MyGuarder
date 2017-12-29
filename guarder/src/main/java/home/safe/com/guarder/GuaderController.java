@@ -13,24 +13,26 @@ import java.util.List;
 
 public class GuaderController implements IProGuardianController {
 
+    private ProGuardianDBHelper proGuardianDBHelper;
+
     @Override
     public int insert(ContentValues contentValues) {
-        return 0;
+        return proGuardianDBHelper.insert(contentValues);
     }
 
     @Override
     public int update(ContentValues contentValues) {
-        return 0;
+        return proGuardianDBHelper.update(contentValues);
     }
 
     @Override
     public int remove(ContentValues contentValues) {
-        return 0;
+        return proGuardianDBHelper.remove(contentValues);
     }
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
-        return null;
+        return proGuardianDBHelper.search(contentValues);
     }
 
     @Override
@@ -55,11 +57,11 @@ public class GuaderController implements IProGuardianController {
 
     @Override
     public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper) {
-
+        this.proGuardianDBHelper = proGuardianDBHelper;
     }
 
     @Override
     public ProGuardianDBHelper getDBHelper() {
-        return null;
+        return this.proGuardianDBHelper;
     }
 }
