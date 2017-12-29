@@ -1,6 +1,7 @@
 package home.safe.com.myguarder;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import com.safe.home.pgchanger.IProGuardianController;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
@@ -54,7 +55,7 @@ public class MyGuarderController implements IProGuardianController{
 
     @Override
     public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper) {
-
+        Log.d("MyGuarderController","setDBHelper");
     }
 
     @Override

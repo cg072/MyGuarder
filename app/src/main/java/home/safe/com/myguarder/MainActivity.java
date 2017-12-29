@@ -134,7 +134,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         else if(view.getId() == btnMainChanger.getId())
         {
             CouplerMVC couplerMVC = new CouplerMVC(getApplicationContext());
-//            couplerMVC.setChanger();
+            couplerMVC.setChanger();
             Toast.makeText(this,""+btnMainChanger.getText(),Toast.LENGTH_SHORT).show();
         }
         else if(view.getId() == btnMemberChanger.getId())
