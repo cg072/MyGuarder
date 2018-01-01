@@ -2,12 +2,15 @@ package home.safe.com.myguarder;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +22,7 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
     final private String TABLE_NAME = getTableName();   //changer 생성시 테이블 관련 파라미터 참고
     private SQLiteDatabase db;
     private String myGuarderCol[] = {"lseq","llat","llong","lday","ltime","lid"};
+    private int result = 0;
 
     public MyGuarderDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
@@ -32,15 +36,17 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
+        Log.d("MyGuarderDBHelper", "onOpen");
+        this.db = db;
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d("MyGuarderDBHelper", "테이블 생성");
+        Log.d("MyGuarderDBHelper", "onCreate");
         //DB 생성
         String sql = "CREATE TABLE IF NOT EXISTS " +
                 TABLE_NAME + "(" +
-                myGuarderCol[0] +" INTEGER PRIMARY KEY DEFAULT 0," +
+                myGuarderCol[0] +" INTEGER DEFAULT 0," +
                 myGuarderCol[1] +" TEXT DEFAULT 000.0000000," +
                 myGuarderCol[2] +" TEXT DEFAULT 000.0000000," +
                 myGuarderCol[3] +" TEXT DEFAULT 000," +
@@ -48,31 +54,94 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
                 myGuarderCol[5] +" TEXT NOT NULL)";
         //datetime, now() 없음
 
+        db = sqLiteDatabase;
+
         sqLiteDatabase.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         super.onUpgrade(sqLiteDatabase, oldVersion, newVersion);
+        Log.d("MyGuarderDBHelper", "onUpgrade");
     }
 
     @Override
     public int insert(ContentValues contentValues) {
-        return 0;
+        Log.d("MyGuarderDBHelper", "insert");
+        Log.d("MyGuarderDBHelper",contentValues.getAsString(myGuarderCol[1]));
+
+        result = (int)db.insert(TABLE_NAME, plusColums(myGuarderCol[0],myGuarderCol[1],myGuarderCol[2],myGuarderCol[3],myGuarderCol[4],myGuarderCol[5]),contentValues);
+
+        return result;
     }
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
-        return null;
+        Log.d("MyGuarderDBHelper", "search");
+        List<ContentValues> list = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ TABLE_NAME, null);
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast())
+        {
+            Log.d("Cursor",""+cursor.getString(0));
+            Log.d("Cursor",""+cursor.getString(1));
+            Log.d("Cursor",""+cursor.getString(2));
+            Log.d("Cursor",""+cursor.getString(3));
+            Log.d("Cursor",""+cursor.getString(4));
+            Log.d("Cursor",""+cursor.getString(5));
+
+            DatabaseUtils.cursorRowToContentValues(cursor , contentValues);
+            list.add(contentValues);
+
+            cursor.moveToNext();
+        }
+
+        Log.d("Cursor",""+cursor.getCount());
+        cursor.close();
+
+        for(int a = 0; a < list.size();a++)
+        {
+            Log.d("list",""+list.get(a).getAsString(myGuarderCol[0]));
+            Log.d("list",""+list.get(a).getAsString(myGuarderCol[1]));
+            Log.d("list",""+list.get(a).getAsString(myGuarderCol[2]));
+            Log.d("list",""+list.get(a).getAsString(myGuarderCol[3]));
+            Log.d("list",""+list.get(a).getAsString(myGuarderCol[4]));
+            Log.d("list",""+list.get(a).getAsString(myGuarderCol[5]));
+
+        }
+        Log.d("list",""+list.size());
+
+        return list;
     }
 
     @Override
     public int update(ContentValues contentValues) {
-        return 0;
+        Log.d("MyGuarderDBHelper", "update");
+        result = db.update(TABLE_NAME,contentValues,myGuarderCol[0]+" = ?" ,new String[]{contentValues.getAsString(myGuarderCol[0])});
+        //db.update(TABLE_NAME,contentValues,"lseq = ?" ,new String[]{lseq의 지울 번호 -> ?에 들어감});
+        return result;
     }
 
     @Override
     public int remove(ContentValues contentValues) {
-        return 0;
+        Log.d("MyGuarderDBHelper", "remove");
+        result = db.delete(TABLE_NAME,myGuarderCol[0]+" = ? ",new String[]{contentValues.getAsString(myGuarderCol[0])});
+
+        return result;
+    }
+
+    public String plusColums(String... nameasd)
+    {
+        String list = "";
+        for(String a: nameasd)
+        {
+            list += a +",";
+        }
+
+        Log.d("MyGuarderDBHelper","plusColums - "+list);
+        return list;
     }
 }

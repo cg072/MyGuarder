@@ -3,12 +3,14 @@ package home.safe.com.myguarder;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import home.safe.com.member.ActivityMemberLogin;
 
@@ -134,7 +136,25 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         else if(view.getId() == btnMainChanger.getId())
         {
             CouplerMVC couplerMVC = new CouplerMVC(getApplicationContext());
-            couplerMVC.setChanger();
+            MyGuarderVO vo = new MyGuarderVO(12,"123","555","5555","123456","1234567");
+            //insert
+//            int res = couplerMVC.controller.insert(vo.convertDataToContentValues());
+//            Log.d("MainActivity", "controller.insert - "+res);
+
+            //update
+//            int res = couplerMVC.controller.update(vo.convertDataToContentValues());
+//            Log.d("MainActivity", "controller.update - "+res);
+
+            //delete
+            int res = couplerMVC.controller.remove(vo.convertDataToContentValues());
+            Log.d("MainActivity", "controller.remove - "+res);
+
+            //search
+            List<ContentValues> list;
+            list = couplerMVC.controller.search(vo.convertDataToContentValues());
+            Log.d("MainActivity", "controller.search - "+list.size());
+
+
             Toast.makeText(this,""+btnMainChanger.getText(),Toast.LENGTH_SHORT).show();
         }
         else if(view.getId() == btnMemberChanger.getId())
