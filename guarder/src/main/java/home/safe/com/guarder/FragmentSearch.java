@@ -35,11 +35,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     private ArrayList<ListViewItemSearch> alSearchResult;
     private FragmentGuarders fragmentGuarders;
 
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-    }
-
     /*
      *  date     : 2017.12.29
      *  author   : Kim Jong-ha
@@ -92,7 +87,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
             }
         });
-        Log.v("내가", "2빠");
         return rootView;
     }
 
@@ -191,8 +185,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     *  return   : ArrayList<ListViewItemSearch> 형태
     * */
     private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> searchs, ArrayList<ListViewItemGuarders> guarders) {
-
-        //Log.v("사이즈", String.valueOf(searchs.size()));
 
         if(guarders != null) {
             for (int i = searchs.size() - 1; i >= 0; i--) {

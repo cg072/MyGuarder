@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+
 //import home.safe.com.guarder.R;
 
 
@@ -36,11 +37,6 @@ public class ActivityGuarder extends AppCompatActivity {
 
     ListView lvGuarders;
     ListViewItemSearch lvItemSearch;
-    ListViewItemGuarders lvItemGuarders;
-    ListViewAdapterSearch lvAdapterSearch;
-    ListViewAdapterGuarders lvAdapterGuarders;
-    String nowGuarderName;
-    String nowGuarderPhone;
 
     ArrayList<ListViewItemSearch> alSearch = null;
     ArrayList<ListViewItemSearch> alSearchResult = null;
@@ -260,120 +256,4 @@ public class ActivityGuarder extends AppCompatActivity {
                 return;
         }
     }
-
-
-
-    /*
-    *  date     : 2017.11.20
-    *  author   : Kim Jong-ha
-    *  title    : guarderSearchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders 메소드 생성
-    *  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
-    *  return   : ArrayList<ListViewItemSearch> 형태
-    * */
-/*    private ArrayList<ListViewItemSearch> searchUpdate(ArrayList<ListViewItemSearch> searchs, ArrayList<ListViewItemGuarders> guarders) {
-
-        Log.v("사이즈", String.valueOf(searchs.size()));
-
-        for( int i = searchs.size() - 1 ;  i >= 0 ; i -- ) {
-            for( int j = 0 ; j < guarders.size() ; j++ ) {
-                if(  searchs.get(i).getTvPhone().equals(guarders.get(j).getTvPhone())){
-                    searchs.remove(i);
-                    break;
-                }
-            }
-        }
-        return searchs;
-    }*/
-/*
-
-    // 회원 리스트에서 등록 버튼을 눌렀을 시
-    *//*
-    *  date     : 2017.11.20
-    *  author   : Kim Jong-ha
-    *  title    : onSearchListBtnClick(int position, ListViewItemSearch lvItemSearch) 메소드 생성
-    *  comment  : 회원 목록에 있는 '등록' Button을 눌렀을 시의 작동 코딩.
-    * *//*
-    @Override
-    public void onSearchListBtnClick(int position) {
-
-        // 등록을 클릭한 해당 postion의 리스트의 아이템(name, phone)을 가져온다.
-        String name = alSearchResult.get(position).getTvName();
-        String phone = alSearchResult.get(position).getTvPhone();
-
-        // 지킴이 목록에 추가
-        guarderAdd(name, phone);
-
-        // 지킴이 어댑터 갱신
-        guarderAdapterUpdate();
-
-        // 추가된 것을 회원 전체 목록에서 삭제한다.
-        for(ListViewItemSearch a : alSearch) {
-            if(a.getTvPhone().equals(phone)){
-                alSearch.remove(a);
-                *//*alSearchResult.remove(position); <- 이게 왜 alSearch까지 지우는지 모르겠음
-                searchAdapterUpdate(alSearchResult);*//*
-                break;
-            }
-        }
-
-        // 회원 어댑터 갱신
-        searchAdapterUpdate(alSearch);
-        etSearch.setText("");
-    }
-
-
-    // 지킴이 리스트에서 슬라이딩 버튼을 눌렀을 시
-    *//*
-    *  date     : 2017.11.20
-    *  author   : Kim Jong-ha
-    *  title    : onGuardersListBtnClick(int position, int count) 메소드 생성
-    *  comment  : 지킴이 목록에 있는 SlidingButton을 눌렀을 경우의 작동 코딩
-    *             지킴이는 1명만 지정이 가능하기 때문에, 지킴이로 지정된 ListView의 item을 제외하고는 모두 Button 상태가 false가 되어야한다.
-    * *//*
-    @Override
-    public void onGuardersListBtnClick(int position, int count) {
-
-        // count는 지킴이 목록의 숫자를 의미
-        for( int i = 0 ; i < count ; i++ ) {
-
-            if( i != position) {
-                // 해당 position이 아니라면 button을 비활성화 시킨다
-                alGuarders.get(i).setUse(false);
-
-            } else {
-                // Button Off 상태
-                if(alGuarders.get(i).getUse() == false) {
-                    // 해당 position이라면 button을 활성화 시키고, name, phone을 가져온다.
-                    alGuarders.get(i).setUse(true);
-                    nowGuarderName = alGuarders.get(i).getTvName();
-                    nowGuarderPhone = alGuarders.get(i).getTvPhone();
-                    Toast.makeText(this, nowGuarderName + " 님이 지킴이로 설정되었습니다.", Toast.LENGTH_SHORT).show();
-
-                // Button On 상태
-                } else {
-                    // 해당 position이라면 button을 활성화 시키고, name, phone을 가져온다.
-                    alGuarders.get(i).setUse(false);
-                    nowGuarderName = null;
-                    nowGuarderPhone = null;
-                    Toast.makeText(this, "현재 지킴이가 없습니다.", Toast.LENGTH_SHORT).show();
-                }
-
-                //위의 nowGuarder부분을 다른 액티비티, 서버로 전송하여 준다.
-            }
-        }
-        // button을 누름으로써, 변경된 내역을 기반으로 지킴이 목록 갱신
-        guarderAdapterUpdate();
-    }
-
-
-
-    // 지킴이 목록의 어댑터 갱신
-    private void guarderAdapterUpdate() {
-        // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
-        lvAdapterGuarders = new ListViewAdapterGuarders(this, R.layout.listview_item_guarders, alGuarders, this);
-        // 변경된 Adapter 적용
-        lvAdapterGuarders.notifyDataSetChanged();
-        // 리스트뷰 참조 및 Adapter 달기
-        lvGuarders.setAdapter(lvAdapterGuarders);
-    }*/
 }

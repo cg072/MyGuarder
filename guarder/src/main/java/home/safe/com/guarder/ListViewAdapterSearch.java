@@ -1,6 +1,7 @@
 package home.safe.com.guarder;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,9 +45,8 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
 
     // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
     ListViewAdapterSearch(Context context, int resource, ArrayList<ListViewItemSearch> list, SearchListBtnClickListener clickListener) {
+        // 부모 클래스의 context와 resource, list를 받아와 실행한다.
         super(context, resource, list);
-
-        //this.alitemSearch = list;
 
         // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceID = resource;
@@ -80,11 +80,14 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
 
         name = tvName.getText().toString();
         phone = tvPhone.getText().toString();
-
+        Log.v("이름"+name, "전번"+phone);
+        Log.v("사이즈", String.valueOf(alitemSearch.size()));
         // btnSearchAdd 클릭 시 작업내용
         btnSearchAdd = (Button) convertView.findViewById(R.id.btnSearchAdd);
         btnSearchAdd.setTag(position);
         btnSearchAdd.setOnClickListener(this);
+
+        Log.v("여기","몇번?");
 
        return convertView;
     }

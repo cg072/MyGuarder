@@ -48,14 +48,15 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        a += 1;
-        Log.v("로그", String.valueOf(a));
-        lvAdapterGuarders.notifyDataSetChanged();
-        super.onResume();
-    }
 
+    // 지킴이 리스트에서 슬라이딩 버튼을 눌렀을 시
+    /*
+    *  date     : 2017.11.20
+    *  author   : Kim Jong-ha
+    *  title    : onGuardersListBtnClick(int position, int count) 메소드 생성
+    *  comment  : 지킴이 목록에 있는 SlidingButton을 눌렀을 경우의 작동 코딩
+    *             지킴이는 1명만 지정이 가능하기 때문에, 지킴이로 지정된 ListView의 item을 제외하고는 모두 Button 상태가 false가 되어야한다.
+    */
     @Override
     public void onGuardersListBtnClick(int position, int count) {
         // count는 지킴이 목록의 숫자를 의미
@@ -101,11 +102,11 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     }
 
     /*
-*  date     : 2017.11.22
-*  author   : Kim Jong-ha
-*  title    : NameDescCompareGuarders, NameDescCompareSearch 메소드 생성
-*  comment  : 이름순 정렬
-* */
+    *  date     : 2017.11.22
+    *  author   : Kim Jong-ha
+    *  title    : NameDescCompareGuarders, NameDescCompareSearch 메소드 생성
+    *  comment  : 이름순 정렬
+    * */
     private class NameDescCompareGuarders implements Comparator<ListViewItemGuarders> {
         @Override
         public int compare(ListViewItemGuarders arg0, ListViewItemGuarders arg1) {
