@@ -31,6 +31,8 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     private int shareNumber = 0;
     int a = 0;
 
+    GuaderController guaderController = new GuaderController();
+
 
     @Nullable
     @Override
@@ -116,17 +118,37 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
     // ArrayList에 지킴이를 추가함 [서버와 연결 후 부터는 서버로부터 받아와야한다.]
     public void guarderAdd(String name, String phone) {
+
+        int check = 0;
+
         lvItemGuarders = new ListViewItemGuarders();
         lvItemGuarders.setTvName(name);
         lvItemGuarders.setTvPhone(phone);
         lvItemGuarders.setUse(false);
 
-        alGuarders.add(lvItemGuarders);
 
-        Collections.sort(alGuarders ,new NameDescCompareGuarders());
+        ContentValues sendCV = new ContentValues();
+        sendCV.put("gmcname", name);
+        sendCV.put("gmcphone", phone);
+        sendCV.put("gstate", 0);
 
-        guarderAdapterUpdate();
+        check = guaderController.insert(sendCV);
+
+        if (check == 0) {
+            alGuarders.add(lvItemGuarders);
+
+            Collections.sort(alGuarders, new NameDescCompareGuarders());
+
+            guarderAdapterUpdate();
+        }
+
+        Log.v("지킴이 추가","체크값 : " + String.valueOf(check));
         // 역방향 시 Collections.reverse 로 해주면 된다
+    }
+
+    public void setList(ArrayList<ListViewItemGuarders> list) {
+        alGuarders = list;
+        guarderAdapterUpdate();
     }
 
     public ArrayList<ListViewItemGuarders> getList() {

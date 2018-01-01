@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import com.safe.home.pgchanger.IProGuardianController;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,10 @@ public class GuaderController implements IProGuardianController {
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
-        return proGuardianDBHelper.search(contentValues);
+        List<ContentValues> list = new ArrayList<>();
+
+        list = proGuardianDBHelper.search(contentValues);
+        return list;
     }
 
     @Override

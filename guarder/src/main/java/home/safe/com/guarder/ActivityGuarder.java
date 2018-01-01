@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursorDriver;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQuery;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -44,6 +47,13 @@ public class ActivityGuarder extends AppCompatActivity {
 
     final private String TAG = "가드";
 
+    SQLiteDatabase.CursorFactory c = new SQLiteDatabase.CursorFactory() {
+        @Override
+        public Cursor newCursor(SQLiteDatabase sqLiteDatabase, SQLiteCursorDriver sqLiteCursorDriver, String s, SQLiteQuery sqLiteQuery) {
+            return null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +63,7 @@ public class ActivityGuarder extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         checkPermission();
-
-        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch));
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, new GuarderDBHelper(this, "guarderlist", c, 1, 1 )));
         tabLayout.addTab(tabLayout.newTab().setText(TAB_FIRST), 0, true);
         tabLayout.addTab(tabLayout.newTab().setText(TAB_SECOND), 1);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
@@ -65,6 +74,7 @@ public class ActivityGuarder extends AppCompatActivity {
         alGuarders = new ArrayList<ListViewItemGuarders>();
     }
 
+    // 키보드 숨기기
     TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
@@ -89,33 +99,6 @@ public class ActivityGuarder extends AppCompatActivity {
     };
 
     /*
-     *  date     : 2017.11.27
-     *  author   : Kim Jong-ha
-     *  title    : alSearchResult() 메소드 생성
-     *  comment  : 단어를 필터링해주고, 필터링된 ArrayList를 반환한다.
-     *             본래는 서버로 String를 보내고, 필터링된 값들을 리스트에 담아야한다.
-     *  return   : ArrayList<ListViewItemSearch>
-     * */
-    private ArrayList<ListViewItemSearch> resultSearch() {
-
-        // 결과 담는 ArrayList 초기화
-        alSearchResult = new ArrayList<ListViewItemSearch>();
-
-        // EditText로부터 필터링할 값 가져옴
-        //String strSearch = etSearch.getText().toString();
-
-        // 필터링된 값들을 초기화된 alSearchResult에 담는다.
-/*        for(ListViewItemSearch a : alSearch) {
-            if(a.getTvPhone().contains(strSearch) == true || a.getTvName().contains(strSearch) == true) {
-                alSearchResult.add(a);
-            }
-        }*/
-
-        // 필터링된 결과값 반환
-        return alSearchResult;
-    }
-
-    /*
      *  date     : 2017.11.22
      *  author   : Kim Jong-ha
      *  title    : hyphenRemove() 메소드 생성
@@ -135,8 +118,8 @@ public class ActivityGuarder extends AppCompatActivity {
            return resultPhone;
     }
 
-    // ArrayList에 데이터를 로드하는 loadItemsFromDB() 함수를 추가
-    // 현재 내용은 직접 DB를 다루진 않고 리스트에 값을 저장해서 리턴시킴킴
+
+    // 이하의 코딩 내용은 주소록 불러오기 관련
    /*
     *  date     : 2017.11.19
     *  author   : Kim Jong-ha
