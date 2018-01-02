@@ -15,12 +15,36 @@ import java.util.List;
 
 public class TransDBHelper extends ProGuardianDBHelper{
 
+    final private String TABLE_NAME = getTableName();
+    private SQLiteDatabase db;
+    //private String transCol[] = {"a", "b", "c"};
+
+
     public TransDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
     }
 
     public TransDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler, int table) {
         super(context, name, factory, version, errorHandler, table);
+    }
+
+    /*@Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String sql =  "CREATE TABLE IF NOT EXISTS " +
+                TABLE_NAME + "(" +
+
+
+    }*/
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        super.onUpgrade(sqLiteDatabase, oldVersion, newVersion);
+    }
+
+
+    @Override
+    public String getTableName() {
+        return super.getTableName();
     }
 
     @Override

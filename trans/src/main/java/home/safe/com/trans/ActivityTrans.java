@@ -119,6 +119,8 @@ public class ActivityTrans extends AppCompatActivity {
 
     }
 
+
+
     TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
 
         @Override
@@ -132,6 +134,15 @@ public class ActivityTrans extends AppCompatActivity {
 
             vpagerTrans.setCurrentItem(tab.getPosition());
             Log.v("탭포지션", Integer.toString(tab.getPosition()));
+
+
+            // 리스트페이지로 갈때, 디비헬퍼로 리스트 가져와야 함!!
+            if(tab.getPosition() == 1){
+
+            }
+
+
+
 
         }
 

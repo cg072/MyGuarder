@@ -42,7 +42,7 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
         Log.v("포지션", Integer.toString(position));
 
-        /*switch (position){
+        switch (position){
 
             case 0 :
 
@@ -55,10 +55,9 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
                 return new FragmentTransList();
 
         }
-*/
 
 
-        switch (position) {
+        /*switch (position) {
 
             case 0 :
 
@@ -84,7 +83,7 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
                 fragmentTransList.setListRecvDTO(adaptArrDto);
 
                 return fragmentTransList;
-        }
+        }*/
 
         return null;
     }
