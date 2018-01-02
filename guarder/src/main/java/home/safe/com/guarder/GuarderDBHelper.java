@@ -35,7 +35,6 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
         this.sqLiteDB = sqLiteDatabase;
 
         String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
-                "gseq INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "gmcname TEXT," +
                 "gmcphone TEXT," +
                 "gstate INTEGER );";
@@ -65,17 +64,14 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
 
         sqLiteDB = getWritableDatabase();
 
-        try {
-            // DB에 입력한 값으로 행 추가
-            sqLiteDB.execSQL("INSERT INTO " + TABLE_NAME + " VALUES( null, '" +
-                    contentValues.get("gmcname").toString() + "', " +
-                    contentValues.get("gmcphone").toString() + ", '" +
-                    Integer.parseInt(contentValues.get("gstate").toString()) + "');");
-            sqLiteDB.close();
-
-        } catch (Exception e) {
-            check = 1;
-        }
+        // DB에 입력한 값으로 행 추가
+        check = (int)sqLiteDB.insert(TABLE_NAME, null, contentValues);
+        Log.v("체크값", String.valueOf(check));
+/*        sqLiteDB.execSQL("INSERT INTO " + TABLE_NAME + " VALUES( null, '" +
+                contentValues.get("gmcname").toString() + "', " +
+                contentValues.get("gmcphone").toString() + ", '" +
+                Integer.parseInt(contentValues.get("gstate").toString()) + "');");
+        sqLiteDB.close();*/
 
         return check;
     }
@@ -84,6 +80,7 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
     public List<ContentValues> search(ContentValues contentValues) {
         Log.v("DB","서치");
         sqLiteDB = getWritableDatabase();
+        Log.v("디비", sqLiteDB.getPath());
 
         List<ContentValues> list = new ArrayList<>();
 
@@ -95,27 +92,22 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
 
             case "all":
                 Log.v("DB", "ALL확인");
-                String sqlSearch = "SELECT * FROM " + TABLE_NAME + ";";
-                Cursor cursor = null;
-                try{
-                    cursor = sqLiteDB.rawQuery(sqlSearch, null);
-                    cursor.moveToFirst();
-                } catch (Exception e) {
-                    Log.v("오류", e.getMessage());
-                }
+                String sqlSearch = "SELECT * FROM " + TABLE_NAME ;
+                Cursor cursor = sqLiteDB.rawQuery(sqlSearch, null);
+                //cursor.moveToFirst();
                 //int count = cursor.getCount();
                 //Log.v("DB", String.valueOf(count));
                 try {
                     while (cursor.moveToNext()) {
                         cv = new ContentValues();
 
-                        cv.put("gseq", cursor.getInt(0));
-                        cv.put("gmcname", cursor.getString(1));
-                        cv.put("gmcphone", cursor.getString(2));
-                        cv.put("gstate", cursor.getInt(3));
+                        cv.put("gmcname", cursor.getString(0));
+                        cv.put("gmcphone", cursor.getString(1));
+                        cv.put("gstate", cursor.getInt(2));
 
                         list.add(cv);
                     }
+                    Log.v("와일문", "완료");
                 } catch (Exception e) {
                     Log.v("오류", e.getMessage());
                     list = null;

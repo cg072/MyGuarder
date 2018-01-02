@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class FragmentGuarders extends Fragment implements ListViewAdapterGuarders.GuardersListBtnClickListener {
 
@@ -42,10 +43,15 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
         lvGuarders = (ListView) rootView.findViewById(R.id.lvGuarders);
         alGuarders = new ArrayList<ListViewItemGuarders>();
+        Log.v("지킴이", "최초 어댑터1");
+        if(loadDB() != null) {
+            Log.v("셋리스트", "시작");
+            setList(loadDB());
+            Log.v("셋리스트", "끝");
+        }
 
         lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, alGuarders, this);
         lvGuarders.setAdapter(lvAdapterGuarders);
-
 
         return rootView;
     }
@@ -90,12 +96,23 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
             }
         }
         // button을 누름으로써, 변경된 내역을 기반으로 지킴이 목록 갱신
-        guarderAdapterUpdate();
+        Log.v("지킴이 크레이트뷰","진입");
+        String title = "크레이트 뷰";
+        guarderAdapterUpdate(title);
     }
 
     // 지킴이 목록의 어댑터 갱신
-    private void guarderAdapterUpdate() {
+    private void guarderAdapterUpdate(String title) {
+        Log.v("지킴이 어댑터 업뎃", title);
         // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
+        Log.v("지킴이", "어댑터 갱신 진입");
+        if(rootView == null) {
+            Log.v("지킴이 어댑터", "루트뷰 == null");
+        } else if(rootView.getContext() == null) {
+            Log.v("지킴이 어댑터", "겟콘 == null");
+        } else if (alGuarders == null){
+            Log.v("지킴이 어댑터", "리스트 == null");
+        }
         lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_guarders, alGuarders, this);
         // 변경된 Adapter 적용
         lvAdapterGuarders.notifyDataSetChanged();
@@ -118,7 +135,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
     // ArrayList에 지킴이를 추가함 [서버와 연결 후 부터는 서버로부터 받아와야한다.]
     public void guarderAdd(String name, String phone) {
-
+        Log.v("지킴이 추가","진입");
         int check = 0;
 
         lvItemGuarders = new ListViewItemGuarders();
@@ -134,25 +151,69 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
         check = guaderController.insert(sendCV);
 
-        if (check == 0) {
+        alGuarders.add(lvItemGuarders);
+
+        Collections.sort(alGuarders, new NameDescCompareGuarders());
+
+        String title = "지킴이 추가";
+        guarderAdapterUpdate(title);
+        /*if (check == 0) {
             alGuarders.add(lvItemGuarders);
 
             Collections.sort(alGuarders, new NameDescCompareGuarders());
 
             guarderAdapterUpdate();
-        }
+        }*/
 
         Log.v("지킴이 추가","체크값 : " + String.valueOf(check));
         // 역방향 시 Collections.reverse 로 해주면 된다
     }
 
     public void setList(ArrayList<ListViewItemGuarders> list) {
+        String title = "지킴이 셋";
+        Log.v("지킴이 셋","진입");
         alGuarders = list;
-        guarderAdapterUpdate();
+        if (list != null) {
+            Log.v("지킴이 셋", "널아님");
+            guarderAdapterUpdate(title);
+        } else {
+            Log.v("지킴이 셋", "널");
+        }
     }
 
     public ArrayList<ListViewItemGuarders> getList() {
         return alGuarders;
+    }
+
+    private ArrayList<ListViewItemGuarders> loadDB() {
+        ContentValues sendCV = new ContentValues();
+        sendCV.put("type", "all");
+
+        List<ContentValues> resultList = new ArrayList<>();
+        resultList = guaderController.search(sendCV);
+
+        ArrayList<ListViewItemGuarders> guaderlist = new ArrayList<ListViewItemGuarders>();
+        ListViewItemGuarders listViewItemGuarders = new ListViewItemGuarders();
+
+        if( resultList != null) {
+            for (ContentValues contentValues : resultList) {
+
+                listViewItemGuarders = new ListViewItemGuarders();
+
+                listViewItemGuarders.setTvName(contentValues.get("gmcname").toString());
+                listViewItemGuarders.setTvPhone(contentValues.get("gmcphone").toString());
+                if (contentValues.get("gstate").toString().equals("1")) {
+                    listViewItemGuarders.setUse(true);
+                } else {
+                    listViewItemGuarders.setUse(false);
+                }
+
+                guaderlist.add(listViewItemGuarders);
+            }
+        } else {
+            guaderlist = null;
+        }
+        return guaderlist;
     }
 
     // 1. ArrayList에 있는 것을 저장.

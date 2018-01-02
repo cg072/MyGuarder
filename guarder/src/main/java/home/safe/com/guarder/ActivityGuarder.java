@@ -15,6 +15,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -23,9 +24,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-
-
-//import home.safe.com.guarder.R;
 
 
 public class ActivityGuarder extends AppCompatActivity {
@@ -41,29 +39,29 @@ public class ActivityGuarder extends AppCompatActivity {
     ListView lvGuarders;
     ListViewItemSearch lvItemSearch;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
     ArrayList<ListViewItemSearch> alSearch = null;
     ArrayList<ListViewItemSearch> alSearchResult = null;
     ArrayList<ListViewItemGuarders> alGuarders = null;
 
-    final private String TAG = "가드";
+    FragmentSearch fragmentSearch = new FragmentSearch();
+    FragmentGuarders fragmentGuarders = new FragmentGuarders();
 
-    SQLiteDatabase.CursorFactory c = new SQLiteDatabase.CursorFactory() {
-        @Override
-        public Cursor newCursor(SQLiteDatabase sqLiteDatabase, SQLiteCursorDriver sqLiteCursorDriver, String s, SQLiteQuery sqLiteQuery) {
-            return null;
-        }
-    };
+    final private String TAG = "가드";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guarder);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         checkPermission();
-        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, new GuarderDBHelper(this, "guarderlist", c, 1, 1 )));
+
         tabLayout.addTab(tabLayout.newTab().setText(TAB_FIRST), 0, true);
         tabLayout.addTab(tabLayout.newTab().setText(TAB_SECOND), 1);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
@@ -71,7 +69,7 @@ public class ActivityGuarder extends AppCompatActivity {
 
         lvGuarders = (ListView) findViewById(R.id.lvGuarders);
 
-        alGuarders = new ArrayList<ListViewItemGuarders>();
+        //alGuarders = new ArrayList<ListViewItemGuarders>();
     }
 
     // 키보드 숨기기
@@ -107,17 +105,16 @@ public class ActivityGuarder extends AppCompatActivity {
      * */
     private String hyphenRemove(String phone) {
 
-            String[] basePhone = phone.split("-");
+        String[] basePhone = phone.split("-");
 
-            Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
-            String resultPhone = basePhone[0];
-            if(basePhone[0].length() < 10) {
-                resultPhone = resultPhone + basePhone[1] + basePhone[2];
-            }
+        Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
+        String resultPhone = basePhone[0];
+        if(basePhone[0].length() < 10) {
+            resultPhone = resultPhone + basePhone[1] + basePhone[2];
+        }
 
-           return resultPhone;
+        return resultPhone;
     }
-
 
     // 이하의 코딩 내용은 주소록 불러오기 관련
    /*
@@ -127,6 +124,7 @@ public class ActivityGuarder extends AppCompatActivity {
     *  comment  : 시험용 리스트
     * */
     private void loadList() {
+
         alSearch = new ArrayList<ListViewItemSearch>();
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
@@ -163,6 +161,7 @@ public class ActivityGuarder extends AppCompatActivity {
 
         }// end while
 
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, new GuarderDBHelper(this, "safehome", null,1, 201)));
         c.close();
     }
 
@@ -240,3 +239,6 @@ public class ActivityGuarder extends AppCompatActivity {
         }
     }
 }
+
+
+//import home.safe.com.guarder.R;

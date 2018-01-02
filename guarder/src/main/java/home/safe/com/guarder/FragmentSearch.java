@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,25 +36,11 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     private ArrayList<ListViewItemSearch> alSearchResult;
     private FragmentGuarders fragmentGuarders;
 
-    /*
-     *  date     : 2017.12.29
-     *  author   : Kim Jong-ha
-     *  title    : setInstance() 메소드 생성
-     *  comment  : FragmentAdapter에서 셋팅할 내용들
-     */
-    public void setInstance(ArrayList<ListViewItemSearch> list, FragmentGuarders fragmentGuarders) {
-
-        this.fragmentGuarders = fragmentGuarders;
-        alGuarders = this.fragmentGuarders.getList();
-
-        // 첫 로딩 때, 전화번호부에서 지킴이 리스트에 있는 사람들을 제외하고 띄운다.
-        alSearch = searchUpdate(list, alGuarders);
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Log.v("크레이트뷰", "시작");
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
 
         lvSearch = (ListView) rootView.findViewById(R.id.lvSearch);
@@ -87,6 +74,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
             }
         });
+        Log.v("크레이트뷰", "끝");
         return rootView;
     }
 
@@ -107,13 +95,18 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
      *  return   : ArrayList<ListViewItemSearch>
      * */
     private ArrayList<ListViewItemSearch> resultSearch() {
-
+        Log.v("필터링", "시작");
         // 결과 담는 ArrayList 초기화
         ArrayList<ListViewItemSearch> alSearchResult = new ArrayList<ListViewItemSearch>();
 
         // EditText로부터 필터링할 값 가져옴
         String strSearch = etSearch.getText().toString();
 
+        if(alSearch != null) {
+            Log.v("필터링", alSearch.get(0).getTvName());
+        } else {
+            Log.v("필터링", "alSearch가 널값");
+        }
         // 필터링된 값들을 초기화된 alSearchResult에 담는다.
         if(!strSearch.equals("")) {
             for(ListViewItemSearch a : alSearch) {
@@ -197,5 +190,24 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
             }
         }
         return searchs;
+    }
+
+    /*
+     *  date     : 2017.12.29
+     *  author   : Kim Jong-ha
+     *  title    : setInstance() 메소드 생성
+     *  comment  : FragmentAdapter에서 셋팅할 내용들
+     */
+    public void setInstance(ArrayList<ListViewItemSearch> list, FragmentGuarders fragmentGuarders) {
+
+        Log.v("셋인스턴스", "시작");
+
+        this.fragmentGuarders = fragmentGuarders;
+
+        alGuarders = this.fragmentGuarders.getList();
+        // 첫 로딩 때, 전화번호부에서 지킴이 리스트에 있는 사람들을 제외하고 띄운다.
+        alSearch = searchUpdate(list, alGuarders);
+
+        Log.v("셋인스턴스", "끝");
     }
 }

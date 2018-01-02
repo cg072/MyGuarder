@@ -240,6 +240,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     }
 
     private boolean setTestLogin() {
+        loginFlag = false;
         String rootID = "root";
         String rootPWD = "11111";
         String testID = "test";
