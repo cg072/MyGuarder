@@ -760,7 +760,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @author 경창현
      * @version 1.0.0
      * @text
-     * 1. 순번 오토인크리즈
+     * 1. 순번 오토인크리즈 ok
      * 2. 현재 핸드폰 DB에 저장
      * 3. 현재 이동 위치 DB에 저장 다른 날짜는 삭제, 2틀치 저장 후 다음날에는 전전날꺼 삭제
      * 4. 현재 이동 위치 서버에 전송
