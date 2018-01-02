@@ -747,11 +747,28 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @text
      * 1. 지킴이 모드일때 백 버튼 눌렀을때 피지킴이 화면으로 이동  ok
      * 2. 컨트롤러, DB헬퍼, VO 생성 ok
-     * 3. 개개인 컨트롤러,DB헬퍼, VO를 통해서 만들고, 나중에 PGchang로 연동
-     * 4. 컨트롤러 IProGuardianController로 구현, DB헬퍼 ProGuardianDBHelper상속받아서 구현
-     * VO는 ProGuardianVO상속받아서 구현
+     * 3. 개개인 컨트롤러,DB헬퍼, VO를 통해서 만들고, 나중에 PGchang로 연동 ok
+     * 4. 컨트롤러 IProGuardianController로 구현, DB헬퍼 ProGuardianDBHelper상속받아서 구현 ok
+     * VO는 ProGuardianVO상속받아서 구현 ok
      * 5. 피지킴이 화면에 현재위치 그리기
      * 6. 글씨체
      * @since 2017-12-26 오후 4:09
+    **/
+    
+    /**
+     * 
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. 순번 오토인크리즈
+     * 2. 현재 핸드폰 DB에 저장
+     * 3. 현재 이동 위치 DB에 저장 다른 날짜는 삭제, 2틀치 저장 후 다음날에는 전전날꺼 삭제
+     * 4. 현재 이동 위치 서버에 전송
+     * 5. 지난 위치 보기 - 최근 1~2일치는 핸드폰 DB에서 세부위치 출력
+     *                   - 3일치 부터는 서버에서 가져와서 대강적인 위치 출력
+     *                   - 위치는 날짜별로 표시
+     * 6. 순번이 0이면 제외하게 코드상 구현  ( 0이 기준)
+     * 7. 나머지 속성 기본값 0인것은 코드에 VO에 기본값 0
+     * @since 2018-01-02 오후 2:20
     **/
 }

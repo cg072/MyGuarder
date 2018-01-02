@@ -46,7 +46,7 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
         //DB 생성
         String sql = "CREATE TABLE IF NOT EXISTS " +
                 TABLE_NAME + "(" +
-                myGuarderCol[0] +" INTEGER DEFAULT 0," +
+                myGuarderCol[0] +" INTEGER PRIMARY KEY AUTOINCREMENT," +
                 myGuarderCol[1] +" TEXT DEFAULT 000.0000000," +
                 myGuarderCol[2] +" TEXT DEFAULT 000.0000000," +
                 myGuarderCol[3] +" TEXT DEFAULT 000," +
@@ -70,8 +70,11 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
         Log.d("MyGuarderDBHelper", "insert");
         Log.d("MyGuarderDBHelper",contentValues.getAsString(myGuarderCol[1]));
 
-        result = (int)db.insert(TABLE_NAME, plusColums(myGuarderCol[0],myGuarderCol[1],myGuarderCol[2],myGuarderCol[3],myGuarderCol[4],myGuarderCol[5]),contentValues);
-
+        result = (int)db.insert(TABLE_NAME,myGuarderCol[1]+","+myGuarderCol[2]+","+myGuarderCol[3]+","+myGuarderCol[4]+","+myGuarderCol[5],null);
+         //myGuarderCol[0]+"+"+myGuarderCol[1]+"+"+myGuarderCol[2]+"+"+myGuarderCol[3]+"+"+myGuarderCol[4]+"+"+myGuarderCol[5]
+        //plusColums(  myGuarderCol[0],myGuarderCol[1],myGuarderCol[2],myGuarderCol[3],myGuarderCol[4],myGuarderCol[5])
+        //http://jhb.kr/169
+        //
         return result;
     }
 
@@ -92,24 +95,28 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
             Log.d("Cursor",""+cursor.getString(3));
             Log.d("Cursor",""+cursor.getString(4));
             Log.d("Cursor",""+cursor.getString(5));
+            Log.d("list","-----------");
 
-            DatabaseUtils.cursorRowToContentValues(cursor , contentValues);
-            list.add(contentValues);
+            ContentValues values = new ContentValues();
+            DatabaseUtils.cursorRowToContentValues(cursor , values);
+            list.add(values);
 
             cursor.moveToNext();
         }
 
         Log.d("Cursor",""+cursor.getCount());
+        Log.d("list","-----------");
         cursor.close();
 
         for(int a = 0; a < list.size();a++)
         {
-            Log.d("list",""+list.get(a).getAsString(myGuarderCol[0]));
-            Log.d("list",""+list.get(a).getAsString(myGuarderCol[1]));
-            Log.d("list",""+list.get(a).getAsString(myGuarderCol[2]));
-            Log.d("list",""+list.get(a).getAsString(myGuarderCol[3]));
-            Log.d("list",""+list.get(a).getAsString(myGuarderCol[4]));
-            Log.d("list",""+list.get(a).getAsString(myGuarderCol[5]));
+            Log.d("list",myGuarderCol[0]+" - "+list.get(a).getAsString(myGuarderCol[0]));
+            Log.d("list",myGuarderCol[1]+" - "+list.get(a).getAsString(myGuarderCol[1]));
+            Log.d("list",myGuarderCol[2]+" - "+list.get(a).getAsString(myGuarderCol[2]));
+            Log.d("list",myGuarderCol[3]+" - "+list.get(a).getAsString(myGuarderCol[3]));
+            Log.d("list",myGuarderCol[4]+" - "+list.get(a).getAsString(myGuarderCol[4]));
+            Log.d("list",myGuarderCol[5]+" - "+list.get(a).getAsString(myGuarderCol[5]));
+            Log.d("list","-----------");
 
         }
         Log.d("list",""+list.size());
@@ -139,6 +146,7 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
         for(String a: nameasd)
         {
             list += a +",";
+            a.length();
         }
 
         Log.d("MyGuarderDBHelper","plusColums - "+list);
