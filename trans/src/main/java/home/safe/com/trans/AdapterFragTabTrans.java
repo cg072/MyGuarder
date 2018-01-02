@@ -21,7 +21,7 @@ import java.util.ArrayList;
 //어댑터 객체로 접근하여 값 가져오기!!!!
 
 
-public class AdapterFragTabTrans extends FragmentPagerAdapter {
+public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
     FragmentTransReg fragmentTransReg = new FragmentTransReg();
     FragmentTransList fragmentTransList = new FragmentTransList();
@@ -36,8 +36,11 @@ public class AdapterFragTabTrans extends FragmentPagerAdapter {
         super(fm);
     }
 
+
     @Override
     public Fragment getItem(int position) {
+
+        Log.v("포지션", Integer.toString(position));
 
         /*switch (position){
 
@@ -51,9 +54,8 @@ public class AdapterFragTabTrans extends FragmentPagerAdapter {
                 Log.v("case1", "확인2");
                 return new FragmentTransList();
 
-        }*/
-
-
+        }
+*/
 
 
         switch (position) {
@@ -101,6 +103,8 @@ public class AdapterFragTabTrans extends FragmentPagerAdapter {
         String a = Integer.toString(adapterTabStat);
         Log.v("받은 스탯", a);
     }
+
+
 
     //메인에서 받은 아이디를 얻어옴
     public void adapterId(String mainRecvId){

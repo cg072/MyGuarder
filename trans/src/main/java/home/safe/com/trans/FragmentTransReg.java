@@ -91,6 +91,15 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         mainActivity = null;
     }*/
 
+    public FragmentTransReg(){
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -172,8 +181,8 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                 kind = tvtranskind.getText().toString();
                 text = etTextTrans.getText().toString();
 
-                if (text.length() >= 20) {
-                    text = text.substring(0, 20);
+                if (text.length() >= 10) {
+                    text = text.substring(0, 10);
                 }
 
                 text = text.trim();
@@ -183,9 +192,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                 AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());
                 regAlert.setTitle("이동수단 등록");
 
-                //에디트텍스트 필드에서 엔터키를 눌렀을 때, 빈 내용까지 추가되는 이슈 해결해야 함!!!!!
                 //엔터키 후 숫자가 먼저 들어갈 경우 에러 발생 해결해야 함!!!!!
-
                 //regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text.trim() + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
                 regAlert.setMessage("이동수단: " + kind.trim() + "\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
@@ -203,6 +210,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                         Toast.makeText(getContext().getApplicationContext(), "등록되었습니다", Toast.LENGTH_LONG).show();
                         tvtranskind.setText("이동수단 종류 선택");
                         etTextTrans.setText(null);
+
 
                     }
                 });
@@ -237,6 +245,16 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
     }
 
+
+
+   ///생명주기 체크 메소드////
+
+
+
+
+    //////////////////////서버없이 작동시켜 보기////////////////////////////////////
+
+
     //toSharedPreference를 만드는 메소드
     public void toShared(String sharedkind, String sharedtext) {
 
@@ -246,10 +264,6 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         editor.putString("TransMemo", sharedtext);
         editor.commit();
     }
-
-
-    //////////////////////서버없이 작동시켜 보기////////////////////////////////////
-
 
     //지킴이 스탯을 받는 메소드
     public void fragStat(int fragRecvStat) {

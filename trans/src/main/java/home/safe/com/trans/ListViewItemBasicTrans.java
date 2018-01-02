@@ -16,7 +16,6 @@ public class ListViewItemBasicTrans extends LinearLayout {
     TextView transitemseq;
     TextView transitemtype;
     TextView transitemtime;
-    TextView transitemuser;
 
     public ListViewItemBasicTrans(Context context) {
         super(context);
@@ -36,7 +35,6 @@ public class ListViewItemBasicTrans extends LinearLayout {
         transitemseq = (TextView)findViewById(R.id.transitemseq);
         transitemtype = (TextView)findViewById(R.id.transitemtype);
         transitemtime = (TextView)findViewById(R.id.transitemtime);
-        transitemuser = (TextView)findViewById(R.id.transitemuser);
 
     }
 
@@ -44,7 +42,6 @@ public class ListViewItemBasicTrans extends LinearLayout {
         transitemseq.setText(seq);
         transitemtype.setText(type);
         transitemtime.setText(time);
-        transitemuser.setText(user);
 
     }
 

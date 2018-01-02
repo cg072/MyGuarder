@@ -92,8 +92,6 @@ public class ActivityTrans extends AppCompatActivity {
 
         adapterFragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
 
-
-
         //받은 지킴/피지킴이의 스탯의 정보를 기본으로 어댑터를 다르게 생성
         if(mainStat == 0){
             adapterFragTabTrans.adapterstat(0);
@@ -133,6 +131,7 @@ public class ActivityTrans extends AppCompatActivity {
 
 
             vpagerTrans.setCurrentItem(tab.getPosition());
+            Log.v("탭포지션", Integer.toString(tab.getPosition()));
 
         }
 
