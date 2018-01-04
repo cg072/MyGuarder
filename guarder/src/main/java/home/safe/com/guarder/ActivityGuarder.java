@@ -39,8 +39,6 @@ public class ActivityGuarder extends AppCompatActivity {
     ListView lvGuarders;
     ListViewItemSearch lvItemSearch;
 
-    SwipeRefreshLayout swipeRefreshLayout;
-
     ArrayList<ListViewItemSearch> alSearch = null;
     ArrayList<ListViewItemSearch> alSearchResult = null;
     ArrayList<ListViewItemGuarders> alGuarders = null;
@@ -55,8 +53,6 @@ public class ActivityGuarder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guarder);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
@@ -69,7 +65,6 @@ public class ActivityGuarder extends AppCompatActivity {
 
         lvGuarders = (ListView) findViewById(R.id.lvGuarders);
 
-        //alGuarders = new ArrayList<ListViewItemGuarders>();
     }
 
     // 키보드 숨기기

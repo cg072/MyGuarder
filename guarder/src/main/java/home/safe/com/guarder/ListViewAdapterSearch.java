@@ -87,8 +87,6 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
         btnSearchAdd.setTag(position);
         btnSearchAdd.setOnClickListener(this);
 
-        Log.v("여기","몇번?");
-
        return convertView;
     }
 

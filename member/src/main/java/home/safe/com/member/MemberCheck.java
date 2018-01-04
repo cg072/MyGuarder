@@ -59,9 +59,6 @@ public class MemberCheck {
                     Toast.makeText(context, "Password가 서로 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.v("체크", String.valueOf(checkChar));
-                Log.v("체크", String.valueOf(checkNum));
-                Log.v("체크", String.valueOf(pwd.length()));
                 Toast.makeText(context, "Password는 영숫자 혼합이어야 합니다.", Toast.LENGTH_SHORT).show();
             }
         } else {

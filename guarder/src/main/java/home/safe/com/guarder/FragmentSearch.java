@@ -1,5 +1,6 @@
 package home.safe.com.guarder;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -56,7 +57,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
                 if(i == EditorInfo.IME_ACTION_SEARCH) {
                     // 검색 버튼을 눌렀을 시 해야할 행동
 
-                    sendToServerText(etSearch.getText().toString());
                     searchAdapterUpdate(rootView.getContext(), resultSearch());
                 }
                 return false;
@@ -69,7 +69,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
             public void onClick(View view) {
                 // 검색 버튼을 눌렀을 시 해야할 행동
 
-                sendToServerText(etSearch.getText().toString());
                 searchAdapterUpdate(rootView.getContext(), resultSearch());
 
             }
@@ -78,12 +77,24 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         return rootView;
     }
 
-    private void sendToServerText(String phone) {
+    private boolean sendToServerText(String name, String phone) {
         // 해당 텍스트를 서버로 보내서, 현재 피지킴이의 지킴이가 아닌 상태의 회원 중, 텍스트를 포함한 회원들을 보내준다.
         // 해당 회원의 전화번호or아이디와 텍스트를 보낸다.
-    }
-    private void sendToServerVO() {
+        boolean check = false;
 
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", "member"); // 회원중 검색이라 member에서 검색해야한다고 생각함
+        contentValues.put("type", "search");
+        contentValues.put("gmcname", name);
+        contentValues.put("gmcphone", phone);
+
+        // 서버로부터 값을 받고나서 회원일 경우 check값에 true를 넣는다.
+        /*
+            미구현 영역
+        */
+        check = true;
+
+        return check;
     }
 
     /*
@@ -102,11 +113,6 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         // EditText로부터 필터링할 값 가져옴
         String strSearch = etSearch.getText().toString();
 
-        if(alSearch != null) {
-            Log.v("필터링", alSearch.get(0).getTvName());
-        } else {
-            Log.v("필터링", "alSearch가 널값");
-        }
         // 필터링된 값들을 초기화된 alSearchResult에 담는다.
         if(!strSearch.equals("")) {
             for(ListViewItemSearch a : alSearch) {
@@ -136,24 +142,22 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         String name = alSearch.get(position).getTvName();
         String phone = alSearch.get(position).getTvPhone();
 
-        fragmentGuarders.guarderAdd(name, phone);
-        Log.v(name, phone);
+        if(sendToServerText(name, phone) == true) {
+            // 서버로 전화번호를 보내서, 지킴이 목록에 추가한다.
+            fragmentGuarders.guarderAdd(name, phone);
 
-        // 추가된 것을 회원 전체 목록에서 삭제한다.
-        for(ListViewItemSearch a : alSearch) {
-            if(a.getTvPhone().equals(phone)){
-                alSearch.remove(a);
-                /*alSearchResult.remove(position); <- 이게 왜 alSearch까지 지우는지 모르겠음
-                searchAdapterUpdate(alSearchResult);*/
-                break;
+            // 추가된 것을 회원 전체 목록에서 삭제한다.
+            for(ListViewItemSearch a : alSearch) {
+                if(a.getTvPhone().equals(phone)){
+                    alSearch.remove(a);
+                    break;
+                }
             }
+
+            // 회원 어댑터 갱신
+            searchAdapterUpdate(rootView.getContext(), alSearch);
+            etSearch.setText("");
         }
-
-        // 서버로 전화번호를 보내서, 지킴이 목록에 추가한다.
-
-        // 회원 어댑터 갱신
-        searchAdapterUpdate(rootView.getContext(), alSearch);
-        etSearch.setText("");
     }
 
 

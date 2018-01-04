@@ -139,19 +139,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
             Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
         }
 
-
-
-/*
-        // Google 로그인
-        btnGoogle.setOnClickListener( new View.OnClickListener( ) {
-            @Override public void onClick( View view ) {
-                // 구글 로그인 화면을 출력합니다. 화면이 닫힌 후 onActivityResult가 실행됩니다.
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent( mGoogleApiClient );
-                startActivityForResult( signInIntent, REQUEST_CODE_GOOGLE );
-            }
-        } );
-*/
-
         googleLogin.setOnClickListener(new LinearLayout.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,16 +147,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 startActivityForResult( signInIntent, REQUEST_CODE_GOOGLE );
             }
         });
-
-/*        // 네아로 로그인
-        btnNaver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 클릭시 OAuthLogin의 생성자를 담은 것에서 네로아 액티비티를 시작한다. (인자 : 액티비티, 핸들러)
-                mOAuthLoginModule.startOauthLoginActivity(ActivityMemberLogin.this,
-                        mOAuthLoginHandler);
-            }
-        });*/
 
         naverLogin.setOnClickListener(new LinearLayout.OnClickListener() {
             @Override
@@ -233,9 +210,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
         } else {
             setResult(ROOT_LOGIN_SUCCESS_CODE, intentData);
         }
-        finish();
-        //Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
-        //startActivity(intent);
         finish();
     }
 
@@ -349,21 +323,12 @@ public class ActivityMemberLogin extends AppCompatActivity {
         Typeface type = Typeface.createFromAsset(this.getAssets(), "NanumBarunGothic_Bold(subset).otf"); // asset 폴더에 넣은 폰트 파일 명
         tvNaver.setTypeface(type);
 
-
-         /*
-         Context : 어떤 액티비티(또는 어플리케이션)를 구분하는 정보 (신분증 같은 개념 = 액티비티 자신의 존재 자체로 증명이 아니라, 쓰여진 정보에 의해 구분되어짐)
-         getApplicationContext() : Service의 Context 어플리케이션의 종료 이후에도 활동 가능한 글로벌한 Application의 Context
-         Activity.getApplicationContext() : 어플리케이션의 Context가 return된다. 현재 activiy의 context 뿐만 아니라 application의 lifeCycle에 해당하는 Context가 사용된다
-         View.getContext() :  현재 실행되고 있는 view의 context를 return하는데 보통은 현재 활성화된 액티비티의 context가 된다
-         */
         // 현재 어플리케이션의 life사이클에 해당하는 Context를 mContext에 담는다.
         mContext = getApplicationContext();
 
-        // OAuthLogin 에 들어갈 수 가 없어서 어떻게 되어있는지는 모름
         // OAuthLogin를 getInstance()를 사용해서 m0AuthLoginModule에 넣는다. [싱글톤패턴]
         mOAuthLoginModule = OAuthLogin.getInstance();
 
-        //https://developers.naver.com/docs/login/android/
         mOAuthLoginModule.init(mContext,                 // 어플리케이션 정보
                 OAUTH_CLIENT_ID,            // 네아로에 등록된 접근 아이디
                 OAUTH_CLIENT_SECRET,        // 네아로에 등록된 접근 비번
@@ -374,57 +339,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
         //btnNaver.setOAuthLoginHandler(mOAuthLoginHandler);
         btnNaver.setBgResourceId(R.drawable.naver_login);
     }
-
-
-    /*
-
-        1. 네아로 연동 결과 Callback 정보 <요청 변수 정보>
-        code(String)    네아로 인증에 성공하면 반환받는 인증코드, 접근 토큰(access token) 발급에 사용
-        state(String)   사이트 간 요청 위조 겅격을 방지하기 위해 애플리케이션에서 생성한 상태 토큰으로 URL 인코딩을 적용한 값
-        error(String)   네아로 인증에 실패하면 반환받는 에러 코드
-        error_description(String)   네아로 인증에 실패하면 반환받는 에러 메시지
-
-        2. 접근 토큰 발급 요청 <요청 변수 정보>
-                                     필수값 여부  기본값
-        grant_type	        string	    Y	        -	    인증 과정에 대한 구분값
-                                                                        1) 발급:'authorization_code'
-                                                                        2) 갱신:'refresh_token'
-                                                                        3) 삭제: 'delete'
-        client_id	        string	    Y	        -	    애플리케이션 등록 시 발급받은 Client ID 값
-        client_secret	    string	    Y	        -	    애플리케이션 등록 시 발급받은 Client secret 값
-        code	            string	발급 때 필수	-	    로그인 인증 요청 API 호출에 성공하고 리턴받은 인증코드값 (authorization code)
-        state	            string	발급 때 필수	-	    사이트 간 요청 위조(cross-site request forgery) 공격을 방지하기 위해 애플리케이션에서 생성한 상태 토큰값으로 URL 인코딩을 적용한 값을 사용
-        refresh_token	    string	갱신 때 필수	-	    네이버 사용자 인증에 성공하고 발급받은 갱신 토큰(refresh token)
-        access_token	    string	삭제 때 필수	-	    기 발급받은 접근 토큰으로 URL 인코딩을 적용한 값을 사용
-        sercive_provider	string	삭제 때 필수  'NAVER'	인증 제공자 이름으로 'NAVER'로 세팅해 전송
-
-        2. 접근 토큰 발급 요청 <응답 변수>
-        access_token	    string	접근 토큰, 발급 후 expires_in 파라미터에 설정된 시간(초)이 지나면 만료됨
-        refresh_token	    string	갱신 토큰, 접근 토큰이 만료될 경우 접근 토큰을 다시 발급받을 때 사용
-        token_type	        string	접근 토큰의 타입으로 Bearer와 MAC의 두 가지를 지원
-        expires_in	        integer	접근 토큰의 유효 기간(초 단위)
-        error	            string	에러 코드
-        error_description	string	에러 메시지
-
-        3. 접근 토큰을 이용하여 프로필 API 호출하기
-        resultcode	            String	Y	API 호출 결과 코드
-        message	                String	Y	호출 결과 메시지
-        response/id	            String	Y	동일인 식별 정보, 동일인 식별 정보는 네이버 아이디마다 고유하게 발급되는 값입니다.
-        response/nickname	    String	Y	사용자 별명
-        response/name	        String	Y	사용자 이름
-        response/email	        String	Y	사용자 메일 주소
-        response/gender	        String	Y	성별
-                                            - F: 여성
-                                            - M: 남성
-                                            - U: 확인불가
-        response/age	        String	Y	사용자 연령대
-        response/birthday	    String	Y	사용자 생일(MM-DD 형식)
-        response/profile_image	String	Y	사용자 프로필 사진 URL
-
-        AT accessToken 접근
-        RT refreshToken 갱신
-        expires 만료
-     */
 
     /*
     *  date     : 2017.11.29
@@ -510,17 +424,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
     // API 요청 작업
     private class RequestApiTask extends AsyncTask<Void, Void, Void> {
 
-/*
-        <AsyncTaskd의 동작 순서>
-        1.execute( ) 명령어를 통해 AsyncTask을 실행합니다.
-        2.AsyncTask로 백그라운드 작업을 실행하기 전에 onPreExcuted( )실행됩니다. 이 부분에는 이미지 로딩 작업이라면 로딩 중 이미지를 띄워 놓기 등, 스레드 작업 이전에 수행할 동작을 구현합니다.
-        3.새로 만든 스레드에서 백그라운드 작업을 수행합니다. execute( ) 메소드를 호출할 때 사용된 파라미터를  전달 받습니다.
-        4.doInBackground( ) 에서 중간 중간 진행 상태를 UI에 업데이트 하도록 하려면 publishProgress( ) 메소드를 호출 합니다.
-        5.onProgressUpdate( ) 메소드는 publishProgress( )가 호출 될 때  마다 자동으로 호출됩니다.
-        6.doInBackground( ) 메소드에서 작업이 끝나면 onPostExcuted( ) 로 결과 파라미터를 리턴하면서 그 리턴값을 통해 스레드 작업이 끝났을 때의 동작을 구현합니다.*/
-
-
-
         // 메인 쓰레드에서 onPreExecute가 작동되고 -> dolnBackground등 의 작업 후에 onPostExecute로 결과값을 반환한다
         @Override
         protected void onPreExecute() {
@@ -584,45 +487,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
                 int colIdx = 0;
 
-                /*
-                12-03 16:21:34.777 6433-6468/home.safe.com.member V/태그0: data
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: result
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: resultcode
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: resultcode
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: message
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: message
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: result
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: response
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그0: nickname
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그1: nickname
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그1: enc_id
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그2: enc_id
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그2: profile_image
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그3: profile_image
-                12-03 16:21:34.779 6433-6468/home.safe.com.member V/태그3: age
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그4: age
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그4: gender
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그5: gender
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그5: id
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그6: id
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그6: name
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그7: name
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그7: email
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그8: email
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그8: birthday
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그9: birthday
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그9: response
-                12-03 16:21:34.780 6433-6468/home.safe.com.member V/태그9: data
-            0    nickname        김종하
-            1    enc_id          4c0a86c2f7625752f1cbd5e06e35d144fa2e995cd0487fb8cde44803569425ec
-            2    profile_image   https://phinf.pstatic.net/contact/20171119_163/15110898173819ukSA_JPEG/KakaoTalk_20171119_200437818.jpg
-            3    age             30-39
-            4    gender          M
-            5    id              104919756
-            6    birth           11-20
-
-                */
-
                 // 파싱 처리를 위한 반복 시작(태그의 끝이 아닌 문서의 끝)
                 while (parserEvent != XmlPullParser.END_DOCUMENT) {
                     // 읽은 태그의 이름
@@ -646,7 +510,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
                         // TEXT 이벤트에서 임시변수에 저장된 문자열을 확인하여 적절한 객체에 저장
                         // TEXT 이벤트에서는 getName()을 쓰지말고(null을 반환) getText를 써야한다.
                         case XmlPullParser.TEXT:
-
                             if (inText) {
                                 if (parser.getText() == null) {
                                     f_array[colIdx] = "";
@@ -655,7 +518,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
                                     colIdx++;
                                 }
                             }
-
                             inText = false;
                             break;
 

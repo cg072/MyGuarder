@@ -22,10 +22,12 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
 
     SQLiteDatabase sqLiteDB;
     final static private String TABLE_NAME = "guarderlist";
+    final static private String NAME = "gmcname";
+    final static private String PHONE = "gmcphone";
+    final static private String USE = "gstate";
 
     public GuarderDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
-        Log.v("DB", "슈퍼");
     }
 
     @Override
@@ -35,15 +37,11 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
         this.sqLiteDB = sqLiteDatabase;
 
         String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
-                "gmcname TEXT," +
-                "gmcphone TEXT," +
-                "gstate INTEGER );";
+                NAME + " TEXT," +
+                PHONE + " TEXT," +
+                USE + " INTEGER );";
 
-        try {
-            sqLiteDB.execSQL(sqlCreate);
-        } catch (Exception e){
-            Log.v("DB", "생성완료");
-        }
+        sqLiteDB.execSQL(sqlCreate);
 
     }
 
@@ -60,58 +58,45 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
     @Override
     public int insert(ContentValues contentValues) {
 
-        int check = 0;
-
         sqLiteDB = getWritableDatabase();
 
         // DB에 입력한 값으로 행 추가
-        check = (int)sqLiteDB.insert(TABLE_NAME, null, contentValues);
-        Log.v("체크값", String.valueOf(check));
-/*        sqLiteDB.execSQL("INSERT INTO " + TABLE_NAME + " VALUES( null, '" +
-                contentValues.get("gmcname").toString() + "', " +
-                contentValues.get("gmcphone").toString() + ", '" +
-                Integer.parseInt(contentValues.get("gstate").toString()) + "');");
-        sqLiteDB.close();*/
+        int check = (int)sqLiteDB.insert(TABLE_NAME, null, contentValues);
 
         return check;
     }
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
-        Log.v("DB","서치");
+        Log.v("DB","Search 진입");
         sqLiteDB = getWritableDatabase();
-        Log.v("디비", sqLiteDB.getPath());
 
         List<ContentValues> list = new ArrayList<>();
-
         ContentValues cv;
 
-        Log.v("DB","진입");
+        String sqlSearch = "SELECT * FROM " + TABLE_NAME ;
 
         switch (contentValues.get("type").toString()) {
 
             case "all":
-                Log.v("DB", "ALL확인");
-                String sqlSearch = "SELECT * FROM " + TABLE_NAME ;
-                Cursor cursor = sqLiteDB.rawQuery(sqlSearch, null);
-                //cursor.moveToFirst();
-                //int count = cursor.getCount();
-                //Log.v("DB", String.valueOf(count));
-                try {
-                    while (cursor.moveToNext()) {
-                        cv = new ContentValues();
+                Log.v("DB", "Search all 진입");
+                break;
+            case "part":
+                Log.v("DB", "Search part 진입");
+                // 아직 미구현 내용(부분 검색)
+                sqlSearch = "SELECT * FROM " + TABLE_NAME + "WHERE I AM?";
+                break;
+        }
 
-                        cv.put("gmcname", cursor.getString(0));
-                        cv.put("gmcphone", cursor.getString(1));
-                        cv.put("gstate", cursor.getInt(2));
+        Cursor cursor = sqLiteDB.rawQuery(sqlSearch, null);
+        while (cursor.moveToNext()) {
+            cv = new ContentValues();
 
-                        list.add(cv);
-                    }
-                    Log.v("와일문", "완료");
-                } catch (Exception e) {
-                    Log.v("오류", e.getMessage());
-                    list = null;
-                }
+            cv.put(NAME, cursor.getString(0));
+            cv.put(PHONE, cursor.getString(1));
+            cv.put(USE, cursor.getInt(2));
+
+            list.add(cv);
         }
 
         return list;
@@ -119,11 +104,27 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
 
     @Override
     public int update(ContentValues contentValues) {
-        return 0;
+        Log.v("DB","Update 진입");
+        sqLiteDB = getWritableDatabase();
+
+        String name = String.valueOf(contentValues.get(NAME));
+        String phone = String.valueOf(contentValues.get(PHONE));
+
+        int check = sqLiteDB.update(TABLE_NAME, contentValues, "gmcname = ? && gmcphone = ?", new String[]{name, phone});
+
+        return check;
     }
 
     @Override
     public int remove(ContentValues contentValues) {
-        return 0;
+        Log.v("DB","Update 진입");
+        sqLiteDB = getWritableDatabase();
+
+        String name = String.valueOf(contentValues.get(NAME));
+        String phone = String.valueOf(contentValues.get(PHONE));
+
+        int check = sqLiteDB.delete(TABLE_NAME, "gmcname = ? && gmcphone = ?", new String[]{name, phone});
+
+        return check;
     }
 }

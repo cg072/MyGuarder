@@ -20,6 +20,8 @@ import java.util.List;
 
 public class FragmentGuarders extends Fragment implements ListViewAdapterGuarders.GuardersListBtnClickListener {
 
+    // 지킴이로 설정되어있다면 use = 1
+    // 지킴이로 설정되어있지 않다면 use = 0
     final static String TAG = "MEMBER";
 
     private ListViewAdapterGuarders lvAdapterGuarders;
@@ -27,9 +29,10 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     private ArrayList<ListViewItemGuarders> alGuarders;
     private ViewGroup rootView;
     private ListViewItemGuarders lvItemGuarders;
-    private String nowGuarderName;
-    private String nowGuarderPhone;
     private int shareNumber = 0;
+    final static String COL_NAME = "gmcname";
+    final static String COL_PHONE = "gmcphine";
+    final static String COL_USE = "update";
     int a = 0;
 
     GuaderController guaderController = new GuaderController();
@@ -67,52 +70,92 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     */
     @Override
     public void onGuardersListBtnClick(int position, int count) {
+
+        String preGuarderName = "";
+        String preGuarderPhone = "";
+        boolean preGuarderUse = false;
+        int preGuarderNumber;
+
+        String postGuarderName = alGuarders.get(position).getTvName();
+        String postGuarderPhone = alGuarders.get(position).getTvPhone();
+        boolean postGuarderUse = alGuarders.get(position).getUse();
+
+        int preCheck = 0;
+        int postCheck = 0;
+
         // count는 지킴이 목록의 숫자를 의미
         for( int i = 0 ; i < count ; i++ ) {
 
-            if( i != position) {
-                // 해당 position이 아니라면 button을 비활성화 시킨다
+            if ((i != position) && (alGuarders.get(i).getUse() == true)) {
+                // 해당 position이 아닌데 true라면 button을 비활성화 시킨다
                 alGuarders.get(i).setUse(false);
 
-            } else {
-                // Button Off 상태
-                if(alGuarders.get(i).getUse() == false) {
-                    // 해당 position이라면 button을 활성화 시키고, name, phone을 가져온다.
+                preGuarderName = alGuarders.get(i).getTvName();
+                preGuarderPhone = alGuarders.get(i).getTvPhone();
+                preGuarderUse = alGuarders.get(i).getUse();
+
+                preCheck = sendToDB(preGuarderName, preGuarderPhone, preGuarderUse);
+
+                // update가 제대로 안되었다면
+                if (preCheck == 0) {
                     alGuarders.get(i).setUse(true);
-                    nowGuarderName = alGuarders.get(i).getTvName();
-                    nowGuarderPhone = alGuarders.get(i).getTvPhone();
-                    Toast.makeText(rootView.getContext(), nowGuarderName + " 님이 지킴이로 설정되었습니다.", Toast.LENGTH_SHORT).show();
-
-                    // Button On 상태
-                } else {
-                    // 해당 position이라면 button을 활성화 시키고, name, phone을 가져온다.
-                    alGuarders.get(i).setUse(false);
-                    nowGuarderName = null;
-                    nowGuarderPhone = null;
-                    Toast.makeText(rootView.getContext(), "현재 지킴이가 없습니다.", Toast.LENGTH_SHORT).show();
                 }
-
-                //위의 nowGuarder부분을 다른 액티비티, 서버로 전송하여 준다.
+                break;
             }
         }
+
+        if(preCheck != 0) {
+            // Button Off 상태 -> On
+            if (postGuarderUse == false) {
+                // 해당 position이라면 button을 활성화 시키고, name, phone을 가져온다.
+                alGuarders.get(position).setUse(true);
+                Toast.makeText(rootView.getContext(), postGuarderName + " 님이 지킴이로 설정되었습니다.", Toast.LENGTH_SHORT).show();
+
+            // Button On 상태 -> Off
+            } else {
+                alGuarders.get(position).setUse(false);
+                Toast.makeText(rootView.getContext(), "현재 지킴이가 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+            postCheck = sendToDB(postGuarderName, postGuarderPhone, postGuarderUse);
+        }
+
+        if ( postCheck == 0 ){
+            // 이전 지킴이 설정에 오류가 있거나, 이후 지킴이 설정에 오류가 있을때~
+            alGuarders.get(position).setUse(postGuarderUse);
+            Toast.makeText(rootView.getContext(), "지킴이 설정에 오류가 있습니다. Error: " + String.valueOf(preCheck) + " Code : " + String.valueOf(postCheck), Toast.LENGTH_SHORT).show();
+        }
+
         // button을 누름으로써, 변경된 내역을 기반으로 지킴이 목록 갱신
-        Log.v("지킴이 크레이트뷰","진입");
-        String title = "크레이트 뷰";
-        guarderAdapterUpdate(title);
+        guarderAdapterUpdate();
+    }
+
+    private boolean sendToServer(String name, String phone) {
+        boolean check = true;
+
+        return check;
+    }
+
+    private int sendToDB(String name, String phone, boolean use) {
+
+        int useInteger = 0;
+
+        if(use == true) {
+            useInteger = 1;
+        }
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COL_NAME, name);
+        contentValues.put(COL_PHONE, phone);
+        contentValues.put(COL_USE, useInteger);
+
+        return guaderController.update(contentValues);
     }
 
     // 지킴이 목록의 어댑터 갱신
-    private void guarderAdapterUpdate(String title) {
-        Log.v("지킴이 어댑터 업뎃", title);
-        // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
+    private void guarderAdapterUpdate() {
         Log.v("지킴이", "어댑터 갱신 진입");
-        if(rootView == null) {
-            Log.v("지킴이 어댑터", "루트뷰 == null");
-        } else if(rootView.getContext() == null) {
-            Log.v("지킴이 어댑터", "겟콘 == null");
-        } else if (alGuarders == null){
-            Log.v("지킴이 어댑터", "리스트 == null");
-        }
+        // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
         lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_guarders, alGuarders, this);
         // 변경된 Adapter 적용
         lvAdapterGuarders.notifyDataSetChanged();
@@ -145,28 +188,18 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
 
         ContentValues sendCV = new ContentValues();
-        sendCV.put("gmcname", name);
-        sendCV.put("gmcphone", phone);
-        sendCV.put("gstate", 0);
+        sendCV.put(COL_NAME, name);
+        sendCV.put(COL_PHONE, phone);
+        sendCV.put(COL_USE, 0);
 
         check = guaderController.insert(sendCV);
 
-        alGuarders.add(lvItemGuarders);
-
-        Collections.sort(alGuarders, new NameDescCompareGuarders());
-
-        String title = "지킴이 추가";
-        guarderAdapterUpdate(title);
-        /*if (check == 0) {
+        if(check == 1) {
             alGuarders.add(lvItemGuarders);
-
             Collections.sort(alGuarders, new NameDescCompareGuarders());
-
+            String title = "지킴이 추가";
             guarderAdapterUpdate();
-        }*/
-
-        Log.v("지킴이 추가","체크값 : " + String.valueOf(check));
-        // 역방향 시 Collections.reverse 로 해주면 된다
+        }
     }
 
     public void setList(ArrayList<ListViewItemGuarders> list) {
@@ -175,7 +208,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         alGuarders = list;
         if (list != null) {
             Log.v("지킴이 셋", "널아님");
-            guarderAdapterUpdate(title);
+            guarderAdapterUpdate();
         } else {
             Log.v("지킴이 셋", "널");
         }
@@ -200,9 +233,9 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
                 listViewItemGuarders = new ListViewItemGuarders();
 
-                listViewItemGuarders.setTvName(contentValues.get("gmcname").toString());
-                listViewItemGuarders.setTvPhone(contentValues.get("gmcphone").toString());
-                if (contentValues.get("gstate").toString().equals("1")) {
+                listViewItemGuarders.setTvName(contentValues.get(COL_NAME).toString());
+                listViewItemGuarders.setTvPhone(contentValues.get(COL_PHONE).toString());
+                if (contentValues.get(COL_USE).toString().equals("1")) {
                     listViewItemGuarders.setUse(true);
                 } else {
                     listViewItemGuarders.setUse(false);
