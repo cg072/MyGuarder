@@ -136,10 +136,10 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         else if(view.getId() == btnMainChanger.getId())
         {
             CouplerMVC couplerMVC = new CouplerMVC(getApplicationContext());
-            MyGuarderVO vo = new MyGuarderVO(999,"123","555","5555","123456","1234567");
+            MyGuarderVO vo = new MyGuarderVO(0,"37.2316841","127.0548355","2018-01-01","07:39:23","civilianID");
 
             //insert
-            int res = couplerMVC.controller.insert(vo.convertTest());
+            int res = couplerMVC.controller.insert(vo.locationDataToContentValues());
             Log.d("MainActivity", "controller.insert - "+res);
 
             //update
@@ -152,7 +152,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
 
             //search
             List<ContentValues> list;
-            list = couplerMVC.controller.search(vo.convertDataToContentValues());
+            list = couplerMVC.controller.search(new ContentValues());
             Log.d("MainActivity", "controller.search - "+list.size());
 
 

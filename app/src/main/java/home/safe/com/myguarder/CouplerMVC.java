@@ -3,7 +3,6 @@ package home.safe.com.myguarder;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.safe.home.pgchanger.ProGuardianChanger;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
 /**
@@ -20,7 +19,7 @@ public class CouplerMVC extends ProGuardian{
     public CouplerMVC(Context context) {
         this.context = context;
 
-        createCB();
+        createDB();
         createController();
     }
 
@@ -31,12 +30,17 @@ public class CouplerMVC extends ProGuardian{
 
     }
 
-    public void createCB()
+    public void createDB()
     {
         dbHelper =
                 new MyGuarderDBHelper(context, ProGuardianDBHelper.DB_NAME,null,ProGuardianDBHelper.DB_VERSION,MyGuarderDBHelper.PG_LOCATION);
         db = dbHelper.getWritableDatabase();
 
+    }
+
+    public void closeDB()
+    {
+        dbHelper.close();
     }
 
 

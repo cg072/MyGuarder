@@ -40,6 +40,14 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
         this.lid = lid;
     }
 
+    public MyGuarderVO( String llat, String llong, String lday, String ltime, String lid) {
+        this.llat = llat;
+        this.llong = llong;
+        this.lday = lday;
+        this.ltime = ltime;
+        this.lid = lid;
+    }
+
 
     public int getLseq() {
         return lseq;
@@ -89,6 +97,27 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
         this.lid = lid;
     }
 
+    public ContentValues resetDataToContentValues()
+    {
+        ContentValues values = new ContentValues();
+        values.put("llat",getLlat());
+        values.put("lday",getLday());
+
+        return values;
+    }
+
+    public ContentValues locationDataToContentValues()
+    {
+        ContentValues values = new ContentValues();
+        values.put("llat",getLlat());
+        values.put("llong",getLlong());
+        values.put("lday",getLday());
+        values.put("ltime",getLtime());
+        values.put("lid",getLid());
+
+        return values;
+    }
+
     @Override
     public ContentValues convertDataToContentValues() {
 
@@ -103,17 +132,7 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
         return values;
     }
 
-    public ContentValues convertTest()
-    {
-        ContentValues values = new ContentValues();
-        values.put("llat",getLlat());
-        values.put("llong",getLlong());
-        values.put("lday",getLday());
-        values.put("ltime",getLtime());
-        values.put("lid",getLid());
 
-        return values;
-    }
 
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {

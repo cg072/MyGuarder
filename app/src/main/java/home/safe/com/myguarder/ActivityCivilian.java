@@ -2,6 +2,7 @@ package home.safe.com.myguarder;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
 
@@ -28,7 +34,12 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     TextView tvTransNameThisCivilian;
     TextView tvMemoThisCivilian;
 
+    private String myGuarderCol[] = {"lseq","llat","llong","lday","ltime","lid"};
 
+    //SELECT ALL
+    List<ContentValues> list;
+    //Location LL
+    ArrayList<LatLng> LastLocationList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,20 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         setContentView(R.layout.activity_civilian);
 
         first = System.currentTimeMillis();
+
+        //로그인시 DB생성 및 연결
+        couplerMVC = new CouplerMVC(getApplicationContext());
+
+        //어플 시작시 2일전 DB 데이터 삭제
+//        Date date = new Date(first - 172800000);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        String asd = dateFormat.format(date);
+//
+//        vo = new MyGuarderVO(0,String.valueOf(date));
+//
+//        int res = couplerMVC.controller.remove(vo.resetDataToContentValues());
+//        Log.d("ActivityCivilian", "controller.remove - "+res);
+        ///
 
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
         btnEmergency = (Button)findViewById(R.id.btnEmergency);
@@ -124,7 +149,30 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         //지난위치보기 팝업
         if(view.getId() == btnCivilianLog.getId())
         {
+            //지난 위치 보기 목록 가져오기
+//            vo = new MyGuarderVO();
+
+            list = couplerMVC.controller.search(new ContentValues());
+            Log.d("MainActivity", "controller.search - "+list.size());
+
+            ArrayList<CharSequence> dateList = new ArrayList<>();
+
+            String compactBox = "";
+
+            for(ContentValues fList : list)
+            {
+                if(!compactBox.equals(fList.getAsString(myGuarderCol[3])))
+                {
+                    dateList.add(fList.getAsString(myGuarderCol[3]));
+
+                    compactBox = fList.getAsString(myGuarderCol[3]);
+                }
+
+            }
+
+            //지난 위치 보기 띄우기
             Intent intent = new Intent(this,ActivityPopup.class);
+            intent.putCharSequenceArrayListExtra("dataList",dateList);
             startActivityForResult(intent, MYGUARDER_REQUEST_POPUP_CODE);
         }
         else if(view.getId() == btnEmergency.getId())
@@ -188,12 +236,6 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     **/
     private void selectPopupList(String date)
     {
-        //sql로 해당 날짜의 리스트 가져오기
-
-        //리스트에 있는 위도 경도로 폴리라인 그리기
-        // onMapReady()안거친다.
-        //리스트를 drawPolyline()으로 그려주기만 하면 된다.
-
         //기존의 지난 위치보기 polyline 삭제
         for(Polyline line : polylinesLastLocation)
         {
@@ -201,26 +243,23 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         }
         polylinesLastLocation.clear();
 
-        //선택한 목록의 polyline 그리기
-        if("2017.12.05".equals(date))
-        {
-            Toast.makeText(this,"2017.12.05",Toast.LENGTH_SHORT).show();
-            drawPolyline(new LatLng(37.2352916 ,127.0626087), new LatLng(37.2350000,127.0620000), polylinesLastLocation);
-            drawPolyline(new LatLng(37.2350000 ,127.0620000), new LatLng(37.2320000,127.0610000), polylinesLastLocation);
-            drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.2320000,127.0550000), polylinesLastLocation);
-        }
-        else if("2017.12.04".equals(date))
-        {
-            Toast.makeText(this,"2017.12.04",Toast.LENGTH_SHORT).show();
-            drawPolyline(new LatLng(37.2350000 ,127.0626087), new LatLng(37.2350000,127.0620000), polylinesLastLocation);
-        }
-        else if("2017.12.03".equals(date))
-        {
+        //지난 위치 가져와서 그리기
+        Toast.makeText(this,""+date,Toast.LENGTH_SHORT).show();
+        LastLocationList = new ArrayList<>();
 
-            Toast.makeText(this,"2017.12.03",Toast.LENGTH_SHORT).show();
-            drawPolyline(new LatLng(37.2320000 ,127.0610000), new LatLng(37.0000000,127.0000000), polylinesLastLocation);
+        for(ContentValues fList : list)
+        {
+            if(date.equals(fList.getAsString(myGuarderCol[3])))
+            {
+                Log.d("asd",""+fList.getAsDouble(myGuarderCol[1]));
+                LastLocationList.add(new LatLng(fList.getAsDouble(myGuarderCol[1]) ,fList.getAsDouble(myGuarderCol[2])));
+            }
         }
 
+        for(int i=1; i <list.size();i++)
+        {
+            drawPolyline(LastLocationList.get(i-1), LastLocationList.get(i), polylinesLastLocation);
+        }
 
     }
 

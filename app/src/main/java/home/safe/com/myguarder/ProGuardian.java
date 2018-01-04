@@ -39,7 +39,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -113,6 +115,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     long now;
 
     ArrayList locationList = new ArrayList<Location>();
+
+    //MVC
+    CouplerMVC couplerMVC;
+    MyGuarderVO vo;
 
     //db
     private SQLiteOpenHelper sqLiteOpenHelper;
@@ -508,11 +514,28 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
 
+        now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+        Log.d("TimeMillisNow",String.valueOf(now));
+
         if(null != googleMap) {
             //위치 저장
             locationList.add(mCurrentLocation); // 1. 위치를 저장해서 폴리라인을 추가하는 방법
             //polylinesLocation 치환 가능   ->  2. polylinesLocation을 보내서 폴리라인을 그려주는 방법(위치정보까지 들어있음 getPoint())
 
+
+            vo = new MyGuarderVO(
+                    String.valueOf(mCurrentLocation.getLatitude()),
+                    String.valueOf(mCurrentLocation.getLongitude()),
+                    dateFormat.format(date),
+                    timeFormat.format(date),
+                    "civilianID");
+
+            //insert
+            int res = couplerMVC.controller.insert(vo.locationDataToContentValues());
+            Log.d("ProGuardian", "controller.insert - "+res);
 
 
             printThisLocation();
@@ -529,10 +552,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void printThisLocation()
     {
         Log.d("printThisLocation",""+mCurrentLocation.getLatitude()+" , "+mCurrentLocation.getLongitude());
-
-        now = System.currentTimeMillis();
-
-        Log.d("TimeMillisNow",String.valueOf(now));
 
         if(now - first > cycleCivilian )
         {
@@ -761,12 +780,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @version 1.0.0
      * @text
      * 1. 순번 오토인크리즈 ok
-     * 2. 현재 핸드폰 DB에 저장
-     * 3. 현재 이동 위치 DB에 저장 다른 날짜는 삭제, 2틀치 저장 후 다음날에는 전전날꺼 삭제
+     * 2. 현재 핸드폰 DB에 저장 ok
+     * 3. 현재 이동 위치 DB에 저장 다른 날짜는 삭제, 2틀치 저장 후 다음날에는 전전날꺼 삭제 -> 보류
      * 4. 현재 이동 위치 서버에 전송
-     * 5. 지난 위치 보기 - 최근 1~2일치는 핸드폰 DB에서 세부위치 출력
+     * 5. 지난 위치 보기 - 최근 1~2일치는 핸드폰 DB에서 세부위치 출력 ok
      *                   - 3일치 부터는 서버에서 가져와서 대강적인 위치 출력
-     *                   - 위치는 날짜별로 표시
+     *                   - 위치는 날짜별로 표시 ok
      * 6. 순번이 0이면 제외하게 코드상 구현  ( 0이 기준)
      * 7. 나머지 속성 기본값 0인것은 코드에 VO에 기본값 0
      * @since 2018-01-02 오후 2:20

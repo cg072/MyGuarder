@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.Polyline;
 
 public class ActivityMyGuarder extends ProGuardian implements View.OnClickListener{
 
-    Button btnGuarderLog;
+//    Button btnGuarderLog;
     Button btnCivilianList;
     Button btnLocation;
 
@@ -31,14 +31,14 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
 
         first = System.currentTimeMillis();
 
-        btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
+//        btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
         btnCivilianList = (Button)findViewById(R.id.btnCivilianList);
         btnLocation = (Button)findViewById(R.id.btnLocation);
 
         buildGoogleApiClient();
         mGoogleApiClient.connect();
 
-        btnGuarderLog.setOnClickListener(this);
+//        btnGuarderLog.setOnClickListener(this);
         btnCivilianList.setOnClickListener(this);
         btnLocation.setOnClickListener(this);
     }
@@ -95,12 +95,12 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
     @Override
     public void onClick(View view) {
         //지난위치보기 팝업
-        if(view.getId() == btnGuarderLog.getId())
-        {
-            Intent intent = new Intent(this,ActivityPopup.class);
-            startActivityForResult(intent, MYGUARDER_REQUEST_POPUP_CODE);
-        }
-        else if(view.getId() == btnCivilianList.getId())
+//        if(view.getId() == btnGuarderLog.getId())
+//        {
+//            Intent intent = new Intent(this,ActivityPopup.class);
+//            startActivityForResult(intent, MYGUARDER_REQUEST_POPUP_CODE);
+//        }
+        if(view.getId() == btnCivilianList.getId())
         {
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);
             startActivityForResult(intent, MYGUARDER_REQUEST_CIVILIAN_LIST_CODE);

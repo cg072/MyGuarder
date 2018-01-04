@@ -70,7 +70,7 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
         Log.d("MyGuarderDBHelper", "insert");
         Log.d("MyGuarderDBHelper",contentValues.getAsString(myGuarderCol[1]));
 
-        result = (int)db.insert(TABLE_NAME,myGuarderCol[1]+","+myGuarderCol[2]+","+myGuarderCol[3]+","+myGuarderCol[4]+","+myGuarderCol[5],null);
+        result = (int)db.insert(TABLE_NAME,myGuarderCol[1]+","+myGuarderCol[2]+","+myGuarderCol[3]+","+myGuarderCol[4]+","+myGuarderCol[5],contentValues);
          //myGuarderCol[0]+"+"+myGuarderCol[1]+"+"+myGuarderCol[2]+"+"+myGuarderCol[3]+"+"+myGuarderCol[4]+"+"+myGuarderCol[5]
         //plusColums(  myGuarderCol[0],myGuarderCol[1],myGuarderCol[2],myGuarderCol[3],myGuarderCol[4],myGuarderCol[5])
         //http://jhb.kr/169
@@ -82,7 +82,8 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
     public List<ContentValues> search(ContentValues contentValues) {
         Log.d("MyGuarderDBHelper", "search");
         List<ContentValues> list = new ArrayList<>();
-
+        Log.d("MyGuarderDBHelper", "contentValues.size - "+contentValues.size());
+        //contentValues.size() 로 SELECT문 WHERE 갯수 판단
         Cursor cursor = db.rawQuery("SELECT * FROM "+ TABLE_NAME, null);
 
         cursor.moveToFirst();
@@ -132,10 +133,17 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
         return result;
     }
 
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text DB DELETE 중에서 지난 위치 삭제가 유일한것으로 판단됨
+     * @since 2018-01-04 오후 8:09
+    **/
     @Override
     public int remove(ContentValues contentValues) {
         Log.d("MyGuarderDBHelper", "remove");
-        result = db.delete(TABLE_NAME,myGuarderCol[0]+" = ? ",new String[]{contentValues.getAsString(myGuarderCol[0])});
+        result = db.delete(TABLE_NAME,myGuarderCol[3]+" = ? ",new String[]{contentValues.getAsString(myGuarderCol[3])});
 
         return result;
     }

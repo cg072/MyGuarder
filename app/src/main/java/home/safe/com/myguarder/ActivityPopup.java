@@ -26,6 +26,9 @@ public class ActivityPopup extends Activity implements View.OnClickListener, Ada
     ArrayList<MyGuarderVO> alData;
     AdapterPopupList adapterPopupList;
 
+    Intent intent;
+    ArrayList<CharSequence> dateList;
+
     Button btnPopupOk;
 
     private final static String DATA_NAME_POPUP = "dateList";
@@ -36,7 +39,7 @@ public class ActivityPopup extends Activity implements View.OnClickListener, Ada
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
 
-        selectPopupDate("2017.12");
+        selectPopupDateList();
 
         adapterPopupList = new AdapterPopupList(alData);
 
@@ -76,12 +79,18 @@ public class ActivityPopup extends Activity implements View.OnClickListener, Ada
      * reference : String date
     * @since 2017-12-08 오후 1:24
     **/
-    public void selectPopupDate(String date)
+    public void selectPopupDateList()
     {
+        Intent intent = getIntent();
+        dateList = intent.getCharSequenceArrayListExtra("dataList");
+
         alData = new ArrayList<MyGuarderVO>();
-        alData.add(new MyGuarderVO(1,"2017.12.05"));
-        alData.add(new MyGuarderVO(2,"2017.12.04"));
-        alData.add(new MyGuarderVO(3,"2017.12.03"));
+        int num = 1;
+
+        for(CharSequence dl : dateList)
+        {
+            alData.add(new MyGuarderVO(num++,String.valueOf(dl)));
+        }
     }
 
     /**
