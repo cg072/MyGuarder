@@ -1,6 +1,8 @@
 package home.safe.com.guarder;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,11 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     GuarderManager guarderManager;
     TextView tvGuarderName;
     TextView tvGuarderPhone;
+    int getPostion;
+    GuarderVO guarderVO;
+    final static String dialogRegText = "지킴이로 등록하시겠습니까?";
+    final static String dialogDisText = "지킴이에서 해제하시겠습니까?";
+
 
     @Nullable
     @Override
@@ -67,49 +74,59 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     */
     @Override
     public void onGuardersListBtnClick(int position, int count) {
+
         int preCheck = 0;
         int postCheck = 0;
 
         ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
 
-        GuarderVO guarderVO = new GuarderVO();
+        guarderVO = new GuarderVO();
         guarderVO.setGstate(1);
         resultList = guarderManager.select("part", guarderVO);
 
         Log.v("지킴이 리셋", "체크");
 
-        guarderVO = null;
+        GuarderVO saveGuarderVO = null;
 
         for(GuarderVO gv: resultList) {
-            guarderVO = resultList.get(0);
-            guarderVO.setGstate(0);
-            Toast.makeText(rootView.getContext(), "버튼 눌림 :" + guarderVO.getGmcname(), Toast.LENGTH_SHORT).show();
+            saveGuarderVO = gv;
+            saveGuarderVO.setGstate(0);
         }
 
-        if(guarderVO != null) {
-            Log.v("지킴이 리셋", "스텝원");
-            preCheck = guarderManager.update(guarderVO);
+        getPostion = position;
+
+
+
+
+
+
+
+
+
+
+        if(saveGuarderVO != null) {
+            preCheck = guarderManager.update(saveGuarderVO);
         }
 
         guarderVO = new GuarderVO();
-        guarderVO.setGmcname(alGuarders.get(position).getGmcname());
-        guarderVO.setGmcphone(alGuarders.get(position).getGmcphone());
-        if(alGuarders.get(position).getGstate() == 1) {
+        guarderVO.setGmcname(alGuarders.get(getPostion).getGmcname());
+        guarderVO.setGmcphone(alGuarders.get(getPostion).getGmcphone());
+        if(alGuarders.get(getPostion).getGstate() == 1) {
             guarderVO.setGstate(0);
-            postCheck = guarderManager.update(guarderVO);
             nowGuarderName = "";
             nowGuarderPhone = "";
         } else {
             nowGuarderName = guarderVO.getGmcname();
             nowGuarderPhone = guarderVO.getGmcphone();
             guarderVO.setGstate(1);
-            postCheck = guarderManager.update(guarderVO);
-        }
-        setNowGuarder(nowGuarderName, nowGuarderPhone);
 
+        }
+
+        postCheck = guarderManager.update(guarderVO);
+        setNowGuarder(nowGuarderName, nowGuarderPhone);
         alGuarders = guarderManager.select("all", guarderVO);
-        Log.v("지킴이 리셋", "완료");
         guarderAdapterUpdate();
+
     }
 
     private boolean sendToServer(String name, String phone) {
@@ -120,15 +137,12 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
     // 지킴이 목록의 어댑터 갱신
     private void guarderAdapterUpdate() {
-        Log.v("지킴이", "어댑터 갱신 진입");
         // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
         lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_guarders, alGuarders, this);
         // 변경된 Adapter 적용
         lvAdapterGuarders.notifyDataSetChanged();
         // 리스트뷰 참조 및 Adapter 달기
         lvGuarders.setAdapter(lvAdapterGuarders);
-        Log.v("현재 지킴이 후기", nowGuarderName);
-        Log.v("현재 지킴이 후기", nowGuarderPhone);
     }
 
     /*
@@ -177,8 +191,6 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                 nowGuarderName = gv.getGmcname();
                 nowGuarderPhone = gv.getGmcphone();
                 setNowGuarder(nowGuarderName, nowGuarderPhone);
-                Log.v("현재 지킴이 초기", nowGuarderName);
-                Log.v("현재 지킴이 초기", nowGuarderPhone);
             }
         }
 
