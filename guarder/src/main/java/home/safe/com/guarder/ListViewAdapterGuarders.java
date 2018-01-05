@@ -22,8 +22,7 @@ import java.util.ArrayList;
 
 public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClickListener {
 
-    ToggleButton btnGuardResist;
-    TextView tvGuarder;
+    TextView btnGuardReg;
 
 
     // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의
@@ -69,20 +68,16 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         final TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
 
         // Data Set(ListViewItemList)에서 position에 위치한 데이터 참조 획득
-        final GuarderVO lvItemGuarders = (GuarderVO) getItem(position);
+        final GuarderVO guarderVO = (GuarderVO) getItem(position);
 
-        tvName.setText(lvItemGuarders.getGmcname());
-        tvPhone.setText(hyphenAdd(lvItemGuarders.getGmcphone()));
+        tvName.setText(guarderVO.getGmcname());
+        tvPhone.setText(hyphenAdd(guarderVO.getGmcphone()));
 
         // btnGuardersAdd 클릭 시 작업내용
-        btnGuardResist = (ToggleButton) convertView.findViewById(R.id.btnGuardResist);
-        btnGuardResist.setTag(position);
-        if(lvItemGuarders.getGstate() == 1) {
-            btnGuardResist.setChecked(true);
-        } else {
-            btnGuardResist.setChecked(false);
-        }
-        btnGuardResist.setOnClickListener(this);
+        btnGuardReg = (TextView) convertView.findViewById(R.id.btnGuardReg);
+        btnGuardReg.setTag(position);
+        setRegBtn(guarderVO.getGstate());
+        btnGuardReg.setOnClickListener(this);
 
        return convertView;
     }
@@ -128,5 +123,18 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
                 resultString = "Error";
         }
         return resultString;
+    }
+
+    public void setRegBtn(int sig) {
+        switch (sig) {
+            case 0 :
+                btnGuardReg.setText("꺼짐");
+                btnGuardReg.setBackgroundColor(getContext().getResources().getColor(R.color.colorGuarderOff));
+                break;
+            case 1 :
+                btnGuardReg.setText("켜짐");
+                btnGuardReg.setBackgroundColor(getContext().getResources().getColor(R.color.colorGuarderOn));
+                break;
+        }
     }
 }

@@ -11,4 +11,7 @@
     <color name="colorBackground">#dddddd</color>
     <color name="colorState">#cbf66015</color>
     <color name="colorStateTextView">#f66015</color>
+    <color name="colorGuarderOn">#f66015</color>
+    <color name="colorGuarderOff">#1598f6</color>
+
 </resources>
