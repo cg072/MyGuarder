@@ -1,13 +1,11 @@
 package home.safe.com.guarder;
 
-import android.content.ContentValues;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by hotki on 2017-12-18.
@@ -15,22 +13,19 @@ import java.util.List;
 
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
-    ArrayList<ListViewItemSearch> alSearch;
-    ArrayList<ListViewItemSearch> alGuarder;
-    GuaderController guaderController = new GuaderController();
-    GuarderDBHelper guarderDBHelper;
+    ArrayList<GuarderVO> alSearch;
+    ArrayList<GuarderVO> alGuarder;
     FragmentSearch fragmentSearch = new FragmentSearch();
     FragmentGuarders fragmentGuarders = new FragmentGuarders();
+    GuarderManager guarderManager;
 
-    public FragmentAdapter(FragmentManager fm, ArrayList<ListViewItemSearch> list, GuarderDBHelper guarderDBHelper) {
+    public FragmentAdapter(FragmentManager fm, ArrayList<GuarderVO> list, Context context) {
         super(fm);
         this.alSearch = list;
-        this.guarderDBHelper = guarderDBHelper;
-        guaderController.setDBHelper(this.guarderDBHelper);
-/*        Log.v("프레그먼트", "생성시작");
-        fragmentSearch = new FragmentSearch();
-        fragmentGuarders = new FragmentGuarders();
-        Log.v("프레그먼트", "생성완료");*/
+        this.guarderManager = new GuarderManager(context);
+        fragmentSearch.setGuarderManager(guarderManager);
+        fragmentGuarders.setGuarderManager(guarderManager);
+        fragmentSearch.setInstance(alSearch, fragmentGuarders);
     }
 
     @Override
@@ -38,13 +33,9 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
 
         switch (position){
             case 0 :
-                //fragmentSearch = new FragmentSearch();
-                fragmentSearch.setInstance(alSearch, fragmentGuarders);
                 return fragmentSearch;
 
             case 1 :
-                //fragmentGuarders = new FragmentGuarders();
-                fragmentGuarders.guaderController.setDBHelper(guarderDBHelper);
                 return fragmentGuarders;
         }
 

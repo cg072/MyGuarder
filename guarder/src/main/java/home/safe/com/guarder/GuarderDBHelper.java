@@ -28,6 +28,7 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
 
     public GuarderDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
+        Log.v("디비", "생성");
     }
 
     @Override
@@ -35,24 +36,42 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
         super.onCreate(sqLiteDatabase);
 
         this.sqLiteDB = sqLiteDatabase;
-
+        Log.v("디비", "크레이트");
         String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
                 NAME + " TEXT," +
                 PHONE + " TEXT," +
                 USE + " INTEGER );";
-
-        sqLiteDB.execSQL(sqlCreate);
+        try {
+            sqLiteDB.execSQL(sqlCreate);
+        } catch (Exception e) {
+            Log.v("디비", "크레이트 Error");
+            Log.v("디비", e.getMessage());
+        }
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         super.onUpgrade(sqLiteDatabase, oldVersion, newVersion);
+        Log.v("디비", "업그레이드");
     }
 
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
+        this.sqLiteDB = db;
+        Log.v("디비", "오픈");
+        String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
+                NAME + " TEXT," +
+                PHONE + " TEXT," +
+                USE + " INTEGER );";
+
+        try {
+            sqLiteDB.execSQL(sqlCreate);
+        } catch (Exception e) {
+            Log.v("디비", "오픈 Error");
+            Log.v("디비", e.getMessage());
+        }
     }
 
     @Override
@@ -84,7 +103,7 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
             case "part":
                 Log.v("DB", "Search part 진입");
                 // 아직 미구현 내용(부분 검색)
-                sqlSearch = "SELECT * FROM " + TABLE_NAME + "WHERE I AM?";
+                sqlSearch = "SELECT * FROM " + TABLE_NAME + " WHERE " + USE + " = " + (int)(contentValues.get(USE));
                 break;
         }
 
@@ -106,11 +125,11 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
     public int update(ContentValues contentValues) {
         Log.v("DB","Update 진입");
         sqLiteDB = getWritableDatabase();
-
+        Log.v("DB","Update 진입");
         String name = String.valueOf(contentValues.get(NAME));
         String phone = String.valueOf(contentValues.get(PHONE));
 
-        int check = sqLiteDB.update(TABLE_NAME, contentValues, "gmcname = ? && gmcphone = ?", new String[]{name, phone});
+        int check = sqLiteDB.update(TABLE_NAME, contentValues, "gmcname = ?" , new String[]{name});
 
         return check;
     }

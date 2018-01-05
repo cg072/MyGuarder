@@ -23,14 +23,14 @@ import java.util.ArrayList;
 
 public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickListener, Filterable{
 
-    ListViewItemSearch saveItem = new ListViewItemSearch();
+    GuarderVO saveItem = new GuarderVO();
     Button btnSearchAdd ;
     String name;
     String phone;
 
     Filter listFilter;
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<ListViewItemSearch> alitemSearch = new ArrayList<ListViewItemSearch>();
+    private ArrayList<GuarderVO> alitemSearch = new ArrayList<GuarderVO>();
 
     // 버튼 클릭 이벤트를 위한 Listrner 인터페이스 정의
     public interface SearchListBtnClickListener {
@@ -44,7 +44,7 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
     private SearchListBtnClickListener listBtnClickListener;
 
     // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
-    ListViewAdapterSearch(Context context, int resource, ArrayList<ListViewItemSearch> list, SearchListBtnClickListener clickListener) {
+    ListViewAdapterSearch(Context context, int resource, ArrayList<GuarderVO> list, SearchListBtnClickListener clickListener) {
         // 부모 클래스의 context와 resource, list를 받아와 실행한다.
         super(context, resource, list);
 
@@ -71,10 +71,10 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
         final TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
 
         // Data Set(ListViewItemList)에서 position에 위치한 데이터 참조 획득
-        final ListViewItemSearch lvItemSearch = (ListViewItemSearch) getItem(position);
+        final GuarderVO lvItemSearch = (GuarderVO) getItem(position);
 
-        tvName.setText(lvItemSearch.getTvName());
-        tvPhone.setText(hyphenAdd(lvItemSearch.getTvPhone()));
+        tvName.setText(lvItemSearch.getGmcname());
+        tvPhone.setText(hyphenAdd(lvItemSearch.getGmcphone()));
 
         alitemSearch.add(lvItemSearch);
 

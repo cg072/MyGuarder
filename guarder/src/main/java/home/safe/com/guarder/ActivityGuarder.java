@@ -37,14 +37,11 @@ public class ActivityGuarder extends AppCompatActivity {
     private boolean checkPermission = false;
 
     ListView lvGuarders;
-    ListViewItemSearch lvItemSearch;
+    GuarderVO guarderVO;
 
-    ArrayList<ListViewItemSearch> alSearch = null;
-    ArrayList<ListViewItemSearch> alSearchResult = null;
-    ArrayList<ListViewItemGuarders> alGuarders = null;
-
-    FragmentSearch fragmentSearch = new FragmentSearch();
-    FragmentGuarders fragmentGuarders = new FragmentGuarders();
+    ArrayList<GuarderVO> alSearch = null;
+    ArrayList<GuarderVO> alSearchResult = null;
+    ArrayList<GuarderVO> alGuarders = null;
 
     final private String TAG = "가드";
 
@@ -120,18 +117,18 @@ public class ActivityGuarder extends AppCompatActivity {
     * */
     private void loadList() {
 
-        alSearch = new ArrayList<ListViewItemSearch>();
+        alSearch = new ArrayList<GuarderVO>();
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
 
         while (c.moveToNext()) {
-            lvItemSearch = new ListViewItemSearch();
+            guarderVO = new GuarderVO();
             // 연락처 id 값
             String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
             // 연락처 대표 이름
             String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-            lvItemSearch.setTvName(name);
+            guarderVO.setGmcname(name);
 
             // ID로 전화 정보 조회
             Cursor phoneCursor = getContentResolver().query(
@@ -146,17 +143,17 @@ public class ActivityGuarder extends AppCompatActivity {
                         ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                 // hyphen을 제거하는 메소드를 추가하였다.
-                lvItemSearch.setTvPhone(hyphenRemove(phone));
+                guarderVO.setGmcphone(hyphenRemove(phone));
 
                 // 여기 if문 아래서 추가를 해야 전화번호가 있는 사람만 담아간다.
-                alSearch.add(lvItemSearch);
+                alSearch.add(guarderVO);
             }
 
             phoneCursor.close();
 
         }// end while
 
-        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, new GuarderDBHelper(this, "safehome", null,1, 201)));
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, this));
         c.close();
     }
 

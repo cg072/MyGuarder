@@ -12,11 +12,47 @@
         android:orientation="vertical"
         android:background="@color/colorBackground" >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorState" >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="[현재 지킴이] "
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_weight="1"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="2">
+                <TextView
+                    android:id="@+id/tvGuarderName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="20dp"/>
+                <TextView
+                    android:id="@+id/tvGuarderPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="20dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
         <ListView
             android:id="@+id/lvGuarders"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite">
+            android:background="@color/colorWhite"
+            android:layout_marginTop="3dp">
         </ListView>
     </LinearLayout>
 </LinearLayout>

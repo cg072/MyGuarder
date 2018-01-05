@@ -9,4 +9,6 @@
     <color name="colorLoginBtn">#231e52</color>
     <color name="colorSignupTv">#a2a29e</color>
     <color name="colorBackground">#dddddd</color>
+    <color name="colorState">#cbf66015</color>
+    <color name="colorStateTextView">#f66015</color>
 </resources>

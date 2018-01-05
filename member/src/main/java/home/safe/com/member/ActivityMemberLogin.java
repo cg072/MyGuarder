@@ -280,8 +280,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private void loadData()
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        etID.setText(preferences.getString("MemberID","없어"));
-        etPWD.setText(preferences.getString("MemberPWD","없다고"));
+        etID.setText(preferences.getString("MemberID","root"));
+        etPWD.setText(preferences.getString("MemberPWD","11111"));
         autoLoginCheck = preferences.getBoolean("MemberAuto", false);
         cboxCheck.setChecked(autoLoginCheck);
     }

@@ -22,6 +22,14 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     private String gmcname;
     private String gmcphone;
 
+    public GuarderVO() {
+    }
+
+    public GuarderVO(String gmcid, int gstate) {
+        this.gmcid = gmcid;
+        this.gstate = gstate;
+    }
+
     public String getGmcname() {
         return gmcname;
     }
@@ -36,14 +44,6 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
 
     public void setGmcphone(String gmcphone) {
         this.gmcphone = gmcphone;
-    }
-
-    public GuarderVO() {
-    }
-
-    public GuarderVO(String gmcid, int gstate) {
-        this.gmcid = gmcid;
-        this.gstate = gstate;
     }
 
     public int getGseq() {

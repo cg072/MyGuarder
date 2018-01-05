@@ -1,6 +1,7 @@
 package home.safe.com.guarder;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClickListener {
 
     ToggleButton btnGuardResist;
+    TextView tvGuarder;
+
 
     // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의
     public interface GuardersListBtnClickListener {
@@ -34,7 +37,7 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
     private GuardersListBtnClickListener listBtnClickListener;
 
     // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
-    ListViewAdapterGuarders(Context context, int resource, ArrayList<ListViewItemGuarders> list, GuardersListBtnClickListener clickListener) {
+    ListViewAdapterGuarders(Context context, int resource, ArrayList<GuarderVO> list, GuardersListBtnClickListener clickListener) {
         super(context, resource, list);
 
         // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
@@ -45,7 +48,7 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
     }
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<ListViewItemGuarders> lvitemGuarders = new ArrayList<ListViewItemGuarders>();
+    private ArrayList<GuarderVO> saveGuarders = new ArrayList<GuarderVO>();
 
     // position에 위치한 데이터를 화면에 출력하는데 사용될 view를 리턴 : 필수구현
     @Override
@@ -65,15 +68,15 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         final TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
 
         // Data Set(ListViewItemList)에서 position에 위치한 데이터 참조 획득
-        final ListViewItemGuarders lvItemGuarders = (ListViewItemGuarders) getItem(position);
+        final GuarderVO lvItemGuarders = (GuarderVO) getItem(position);
 
-        tvName.setText(lvItemGuarders.getTvName());
-        tvPhone.setText(hyphenAdd(lvItemGuarders.getTvPhone()));
+        tvName.setText(lvItemGuarders.getGmcname());
+        tvPhone.setText(hyphenAdd(lvItemGuarders.getGmcphone()));
 
         // btnGuardersAdd 클릭 시 작업내용
         btnGuardResist = (ToggleButton) convertView.findViewById(R.id.btnGuardResist);
         btnGuardResist.setTag(position);
-        if(lvItemGuarders.getUse() == true) {
+        if(lvItemGuarders.getGstate() == 1) {
             btnGuardResist.setChecked(true);
         } else {
             btnGuardResist.setChecked(false);

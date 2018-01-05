@@ -12,7 +12,7 @@ import java.util.List;
  * Created by hotki on 2017-12-26.
  */
 
-public class GuaderController implements IProGuardianController {
+public class GuarderController implements IProGuardianController {
 
     private ProGuardianDBHelper proGuardianDBHelper;
 
