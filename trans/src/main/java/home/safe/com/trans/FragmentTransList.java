@@ -29,9 +29,11 @@ import java.util.ArrayList;
 
 public class FragmentTransList extends Fragment {
 
-    AdapterListTrans adapter;
+    AdapterListTrans adapter = new AdapterListTrans();
 
     ExpandableListView lvtrans;
+
+    TestListViewDTO listDto = new TestListViewDTO();
 
     ArrayList<TestListViewDTO> listArrDto = new ArrayList<>();
 
@@ -54,13 +56,14 @@ public class FragmentTransList extends Fragment {
 
         lvtrans = (ExpandableListView) rootview.findViewById(R.id.lvtrans);
 
-        adapter = new AdapterListTrans();
+        //dapter = new AdapterListTrans();
 
         /*adapter.addItem(new TestListViewDTO("1", "택시", "2017.05.1", "jdkd", "대중교통"));
-        adapter.addItem(new TestListViewDTO("2", "택시", "2017.05.1", "jdkd", "대중교통"));
         adapter.addItem(new TestListViewDTO("3", "택시", "2017.05.1", "jdkd", "대중교통"));*/
 
         lvtrans.setAdapter(adapter);
+
+
 
        return rootview;
 
@@ -90,7 +93,7 @@ public class FragmentTransList extends Fragment {
 
 
 
-    @Override
+ /*   @Override
     public void onStart() {
         super.onStart();
 
@@ -100,8 +103,42 @@ public class FragmentTransList extends Fragment {
             }
         }
 
+    }*/
+
+
+    //리스트 애드시에 숫자 불어나는 문제
+    //코드 정리하기
+
+    /*public void setFragList(TestListViewDTO dto){
+        this.listDto = dto;
+
+    }*/
+
+    public void setArryDtoFragList(ArrayList<TestListViewDTO> recvArrDto){
+
+        this.listArrDto = recvArrDto;
+        Log.v("regArrDto" , "확인7");
+        for(TestListViewDTO data : listArrDto){
+            setAddAdapter(data);
+        }
+
+        listArrDto.clear();
+
     }
 
+    /*public void setDtoFragList(TestListViewDTO test){
+
+        listDto = test;
+
+        this.listArrDto.add(listDto);
+
+        for(TestListViewDTO data : listArrDto){
+            setAddAdapter(data);
+        }
+
+        listArrDto.clear();
+
+    }*/
 
     public void setAddAdapter(TestListViewDTO recvDto){
         if(adapter == null) {
@@ -112,11 +149,6 @@ public class FragmentTransList extends Fragment {
         }
         adapter.addItem(recvDto);
         adapter.notifyDataSetChanged();
-
-    }
-
-    public void setListRecvDTO(ArrayList<TestListViewDTO> arrListRecvDto) {
-        listArrDto = arrListRecvDto;
     }
 }
 

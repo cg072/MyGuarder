@@ -68,12 +68,9 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     String kind = "b";
     String text = "c";
 
-    int fragmentStat;
-    String fragmentId;
-
-    public TestListViewDTO regDto = new TestListViewDTO();
+    public TestListViewDTO regDto;
     ArrayList<TestListViewDTO> regArrDto = new ArrayList<TestListViewDTO>();
-    AdapterFragTabTrans tabTransAdapter;
+    FragmentTransList fragmentTransList;
 
 
 
@@ -91,9 +88,11 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         mainActivity = null;
     }*/
 
+    //빈생성자
     public FragmentTransReg(){
 
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,16 +111,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         btnRegTrans = (Button) rootView.findViewById(R.id.btnRegTrans);
 
 
-        if (fragmentStat == 0) {
-            tvtransstat.setText("피지킴이 입니다 : 자신의 이동수단을 등록하세요");
-        }
-
-        //상대방의 이동수단을 등록할 때는, 상대방의 아이디를 받아와서 화면에 표시해주어야 한다 한다!!
-        //ex) 지킴이 입니다: ???님의 이동수단을 등록하세요
-        if (fragmentStat == 1) {
-            tvtransstat.setText("지킴이 입니다: " + fragmentId + "님의 이동수단을 등록하세요");
-        }
-
+        tvtransstat.setText("피지킴이 입니다 : 자신의 이동수단을 등록하세요");
 
         imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -202,7 +192,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         //서버디비에 인서트
-                        toTabAdapt(num, kind, text);
+                        setDto(num, kind, text);
 
                         //sharedpreference를 호출
                         //toShared(kind, text);
@@ -210,7 +200,6 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                         Toast.makeText(getContext().getApplicationContext(), "등록되었습니다", Toast.LENGTH_LONG).show();
                         tvtranskind.setText("이동수단 종류 선택");
                         etTextTrans.setText(null);
-
 
                     }
                 });
@@ -233,7 +222,6 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
     //키보드를 닫는 메소드
     public void hideKeyboard() {
-
         imm.hideSoftInputFromWindow(etTextTrans.getWindowToken(), 0);
 
     }
@@ -246,53 +234,32 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     }
 
 
-
-   ///생명주기 체크 메소드////
-
-
-
-
     //////////////////////서버없이 작동시켜 보기////////////////////////////////////
 
 
-    //toSharedPreference를 만드는 메소드
-    public void toShared(String sharedkind, String sharedtext) {
+    public void setDto(String makeNum, String makeKind, String makeText) {
 
-        SharedPreferences preferences = getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("TransName", sharedkind);
-        editor.putString("TransMemo", sharedtext);
-        editor.commit();
-    }
+        regDto = new TestListViewDTO();
 
-    //지킴이 스탯을 받는 메소드
-    public void fragStat(int fragRecvStat) {
-        this.fragmentStat = fragRecvStat;
-
-        String a = Integer.toString(fragRecvStat);
-        Log.v("받은 스탯2", a);
-
-    }
-
-    //지킴이 아이디를 받는 메소드
-    public void fragId(String fragRecvId) {
-        this.fragmentId = fragRecvId;
-    }
-
-
-
-    //입력된 값을 탭 어댑터로 보내주는 메소드
-    public void toTabAdapt(String makeNum, String makeKind, String makeText) {
         regDto.setNum(makeNum);
         regDto.setTranName(makeKind);
         regDto.setText(makeText);
 
+        Log.v("regDtoName" , "확인5");
+
+        Log.v("regArrDto" , "확인6");
+
         regArrDto.add(regDto);
+        fragmentTransList.setArryDtoFragList(regArrDto);
+        //fragmentTransList.setDtoFragList(regDto);
+
+        Log.v("regArrDto" , "확인8");
+    }
+
+    public void setFragReg(FragmentTransList fraglist) {
+        this.fragmentTransList = fraglist;
+        Log.v("regArrDto" , "확인1");
 
     }
 
-    public void setRegRecvDTO(ArrayList<TestListViewDTO> arrRegRecvDto) {
-        regArrDto = arrRegRecvDto;
-
-    }
 }

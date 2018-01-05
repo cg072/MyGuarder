@@ -5,6 +5,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteCursorDriver;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQuery;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
@@ -67,7 +71,6 @@ import java.util.ArrayList;
 
 public class ActivityTrans extends AppCompatActivity {
 
-
     FragmentTransReg fragmentTransReg;
     FragmentTransList fragmentTransList;
     android.support.v7.widget.Toolbar toolbarTrans;
@@ -75,11 +78,14 @@ public class ActivityTrans extends AppCompatActivity {
     ViewPager vpagerTrans;
 
 
-    AdapterFragTabTrans adapterFragTabTrans;
+    final private String tag = "이동수단";
 
-    //지킴이 피지킴이를 구분하기 위한 플래그
-    int mainStat = 1;
-    String mainId = null;
+    SQLiteDatabase.CursorFactory cf = new SQLiteDatabase.CursorFactory() {
+        @Override
+        public Cursor newCursor(SQLiteDatabase sqLiteDatabase, SQLiteCursorDriver sqLiteCursorDriver, String s, SQLiteQuery sqLiteQuery) {
+            return null;
+        }
+    };
 
 
     @Override
@@ -90,21 +96,9 @@ public class ActivityTrans extends AppCompatActivity {
         tabbarTrans = (TabLayout)findViewById(R.id.tabbarTrans);
         vpagerTrans = (ViewPager)findViewById(R.id.vpagerTrans);
 
-        adapterFragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
-
-        //받은 지킴/피지킴이의 스탯의 정보를 기본으로 어댑터를 다르게 생성
-        if(mainStat == 0){
-            adapterFragTabTrans.adapterstat(0);
-            vpagerTrans.setAdapter(adapterFragTabTrans);
-        }
-        if(mainStat == 1){
-            mainId = "김종하";
-            adapterFragTabTrans.adapterId(mainId);
-            adapterFragTabTrans.adapterstat(1);
-            vpagerTrans.setAdapter(adapterFragTabTrans);
-        }
-
+        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), new TransDBHelper(this, "transportation", cf, 1, 1)));
         //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
+
 
         //플래그먼트를 미리 로딩 시켜놓음
         vpagerTrans.setOffscreenPageLimit(1);
@@ -137,12 +131,9 @@ public class ActivityTrans extends AppCompatActivity {
 
 
             // 리스트페이지로 갈때, 디비헬퍼로 리스트 가져와야 함!!
-            if(tab.getPosition() == 1){
+            /*if(tab.getPosition() == 1){
 
-            }
-
-
-
+            }*/
 
         }
 
@@ -156,27 +147,5 @@ public class ActivityTrans extends AppCompatActivity {
 
         }
     };
-
-
-
-    //쉐어드프리페어드 메소드
-
-    /*public void getShared(){
-        SharedPreferences sharedPreferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-
-        *//*this.mainStat*//*
-
-    }
-
-    public void toShared(String sharedkind, String sharedtext){
-
-        SharedPreferences preferences = getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("TransName", sharedkind);
-        editor.putString("TransMemo", sharedtext);
-        editor.commit();
-    }*/
-
-
 
 }

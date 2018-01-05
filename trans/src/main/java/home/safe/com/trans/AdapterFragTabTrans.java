@@ -26,14 +26,14 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     FragmentTransReg fragmentTransReg = new FragmentTransReg();
     FragmentTransList fragmentTransList = new FragmentTransList();
 
+    TransController transController = new TransController();
+    TransDBHelper transDBHelper;
 
-    int adapterTabStat;
-    String adapterId = null;
 
-    ArrayList<TestListViewDTO> adaptArrDto = new ArrayList<TestListViewDTO>();
 
-    public AdapterFragTabTrans(FragmentManager fm) {
+    public AdapterFragTabTrans(FragmentManager fm, TransDBHelper dbHelper) {
         super(fm);
+        this.transDBHelper = dbHelper;
     }
 
 
@@ -42,48 +42,19 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
         Log.v("포지션", Integer.toString(position));
 
-        switch (position){
+
+        switch (position) {
 
             case 0 :
-
-                Log.v("case0", "확인1");
-                return new FragmentTransReg();
-
-            case 1 :
-
-                Log.v("case1", "확인2");
-                return new FragmentTransList();
-
-        }
-
-
-        /*switch (position) {
-
-            case 0 :
-
-                if(adaptArrDto != null){
-                    fragmentTransReg.setRegRecvDTO(adaptArrDto);
-                }
-
-
-                fragmentTransReg.fragStat(adapterTabStat);
-
-                if(adapterTabStat == 1){
-                    if(adapterId != null){
-                        fragmentTransReg.fragId(adapterId);
-                    }
-                }
-
+                fragmentTransReg.setFragReg(fragmentTransList);
+                Log.v("regArrDto" , "확인2");
                 return fragmentTransReg;
 
-
-
             case 1 :
-
-                fragmentTransList.setListRecvDTO(adaptArrDto);
-
+               // fragmentTransList.setFragList(adaptDto);
+                Log.v("regArrDto" , "확인3");
                 return fragmentTransList;
-        }*/
+        }
 
         return null;
     }
@@ -94,21 +65,6 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
         return 2;
     }
 
-    //메인액티비티에서 받은 스탯의 정보로 현재 어댑터의 스탯 정보를 변경
-    public void adapterstat(int mainRecvStat){
-        this.adapterTabStat = mainRecvStat;
-
-        //정보확인용
-        String a = Integer.toString(adapterTabStat);
-        Log.v("받은 스탯", a);
-    }
-
-
-
-    //메인에서 받은 아이디를 얻어옴
-    public void adapterId(String mainRecvId){
-       this.adapterId = mainRecvId;
-    }
 
 
 }

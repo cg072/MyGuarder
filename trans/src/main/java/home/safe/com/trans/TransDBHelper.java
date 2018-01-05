@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
@@ -15,10 +16,9 @@ import java.util.List;
 
 public class TransDBHelper extends ProGuardianDBHelper{
 
-    final private String TABLE_NAME = getTableName();
     private SQLiteDatabase db;
-    //private String transCol[] = {"a", "b", "c"};
-
+    final static private String TABLE_NAME = "transportation";
+    private String transCol[] = {"rtseq", "rlseq", "rmemo", "rday", "rmid"};
 
     public TransDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
@@ -28,13 +28,29 @@ public class TransDBHelper extends ProGuardianDBHelper{
         super(context, name, factory, version, errorHandler, table);
     }
 
-    /*@Override
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        Log.d("transDBHelper", "onOpen");
+        this.db = db;
+    }
+
+
+    @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql =  "CREATE TABLE IF NOT EXISTS " +
+        Log.d("DBhelper", "oncreat");
+        db = sqLiteDatabase;
+        String sql = "CREATE TABLE IF NOT EXISTS" +
                 TABLE_NAME + "(" +
+                transCol[0] + "INTEGER DEFAULT 0," +
+                transCol[1] + "INTEGET DEFAULT 0," +
+                transCol[2] + "TEXT DEFAULT 20," +
+                transCol[3] + "DATE DEFAULT 20," +
+                transCol[4] + "TEXT DEFAULT 20)";
 
+        db.execSQL(sql);
 
-    }*/
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
