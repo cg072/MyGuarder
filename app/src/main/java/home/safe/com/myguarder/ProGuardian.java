@@ -803,9 +803,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @version 1.0.0
      * @text
      * 1. 지난위치 볼때 현재위치 그리지 않기  -> 구조 변경 고려 573라인
-     * 2. 위치요청 다이얼로그 (신호줬을때 다이얼로그가 뜨는지)
-     * 3. 피지킴이 목록
-     * 4. 긴급버튼
+     * 2. CouplerMVC에다가 insert,select등 수정
+     * 3. 위치요청 다이얼로그 (신호줬을때 다이얼로그가 뜨는지)
+     * 4. 피지킴이 목록
+     * 5. 긴급버튼
      * @since 2018-01-05 오후 4:29
     **/
 }

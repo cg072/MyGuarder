@@ -10,7 +10,7 @@ import com.safe.home.pgchanger.ProGuardianDBHelper;
  */
 
 public class CouplerMVC extends ProGuardian{
-
+//모듈명매니져 LocationMa~~
     Context context;
     MyGuarderDBHelper dbHelper;
     SQLiteDatabase db;
