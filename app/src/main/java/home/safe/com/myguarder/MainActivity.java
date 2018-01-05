@@ -136,7 +136,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         else if(view.getId() == btnMainChanger.getId())
         {
             CouplerMVC couplerMVC = new CouplerMVC(getApplicationContext());
-            MyGuarderVO vo = new MyGuarderVO(0,"37.2316841","127.0548355","2018-01-01","07:39:23","civilianID");
+            MyGuarderVO vo = new MyGuarderVO(0,"37.2316841","127.0548355","2018-01-04","07:39:23","civilianID");
 
             //insert
             int res = couplerMVC.controller.insert(vo.locationDataToContentValues());

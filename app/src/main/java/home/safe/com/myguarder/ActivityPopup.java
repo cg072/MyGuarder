@@ -86,10 +86,12 @@ public class ActivityPopup extends Activity implements View.OnClickListener, Ada
 
         alData = new ArrayList<MyGuarderVO>();
         int num = 1;
+        CharSequence dl;
 
-        for(CharSequence dl : dateList)
+        for(num = 0;num < dateList.size();num++)
         {
-            alData.add(new MyGuarderVO(num++,String.valueOf(dl)));
+            dl = dateList.get(dateList.size() - num -1);
+            alData.add( new MyGuarderVO(num+1, String.valueOf(dl)));
         }
     }
 

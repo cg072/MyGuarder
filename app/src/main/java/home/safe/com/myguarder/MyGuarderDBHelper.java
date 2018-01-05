@@ -10,7 +10,12 @@ import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -143,7 +148,26 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
     @Override
     public int remove(ContentValues contentValues) {
         Log.d("MyGuarderDBHelper", "remove");
-        result = db.delete(TABLE_NAME,myGuarderCol[3]+" = ? ",new String[]{contentValues.getAsString(myGuarderCol[3])});
+
+        Log.d("remove", contentValues.getAsString(myGuarderCol[3]));
+        String thisDate = contentValues.getAsString(myGuarderCol[3]);
+        String lastDate = "";
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse(contentValues.getAsString(myGuarderCol[3]));
+
+            Calendar calendar = new GregorianCalendar();
+
+            calendar.add(Calendar.DATE, -1);
+            lastDate = dateFormat.format(calendar.getTime());
+            Log.d("remove", lastDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        result = db.delete(TABLE_NAME,myGuarderCol[3]+" <> ? "+" and "+myGuarderCol[3]+" <> ? ",new String[]{thisDate,lastDate});
 
         return result;
     }

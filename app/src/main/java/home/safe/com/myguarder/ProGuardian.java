@@ -444,6 +444,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                         line.remove();
                     }
                     polylinesRequestLocation.clear();
+
+                    reDrawPolyline();
+
                     return false;
                 }
             });
@@ -567,6 +570,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
                 drawPolyline(startPL, endPL, polylinesLocation);
                 drawMarker(startPL, markersLocation);
+
+                //구조 변경 고려  현재위치 이동경로 그리기 1. 위치를 저장해서 폴리라인그리기 2. 폴리라인으로 관리
+                // -> 둘중하나 고려
 
                 startPL = endPL;
             }
@@ -781,7 +787,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @text
      * 1. 순번 오토인크리즈 ok
      * 2. 현재 핸드폰 DB에 저장 ok
-     * 3. 현재 이동 위치 DB에 저장 다른 날짜는 삭제, 2틀치 저장 후 다음날에는 전전날꺼 삭제 -> 보류
+     * 3. 현재 이동 위치 DB에 저장 다른 날짜는 삭제, 2틀치 저장 후 다음날에는 전전날꺼 삭제 -> ok
      * 4. 현재 이동 위치 서버에 전송
      * 5. 지난 위치 보기 - 최근 1~2일치는 핸드폰 DB에서 세부위치 출력 ok
      *                   - 3일치 부터는 서버에서 가져와서 대강적인 위치 출력
@@ -789,5 +795,17 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 6. 순번이 0이면 제외하게 코드상 구현  ( 0이 기준)
      * 7. 나머지 속성 기본값 0인것은 코드에 VO에 기본값 0
      * @since 2018-01-02 오후 2:20
+    **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. 지난위치 볼때 현재위치 그리지 않기  -> 구조 변경 고려 573라인
+     * 2. 위치요청 다이얼로그 (신호줬을때 다이얼로그가 뜨는지)
+     * 3. 피지킴이 목록
+     * 4. 긴급버튼
+     * @since 2018-01-05 오후 4:29
     **/
 }

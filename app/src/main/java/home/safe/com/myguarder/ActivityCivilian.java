@@ -60,15 +60,15 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         couplerMVC = new CouplerMVC(getApplicationContext());
 
         //어플 시작시 2일전 DB 데이터 삭제
-//        Date date = new Date(first - 172800000);
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        String asd = dateFormat.format(date);
-//
-//        vo = new MyGuarderVO(0,String.valueOf(date));
-//
-//        int res = couplerMVC.controller.remove(vo.resetDataToContentValues());
-//        Log.d("ActivityCivilian", "controller.remove - "+res);
-        ///
+        Date date = new Date(first);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String asd = dateFormat.format(date);
+
+        vo = new MyGuarderVO(0,asd);
+
+        int res = couplerMVC.controller.remove(vo.resetDataToContentValues());
+        Log.d("ActivityCivilian", "controller.remove - "+res);
+
 
         btnCivilianLog = (Button)findViewById(R.id.btnCivilianLog);
         btnEmergency = (Button)findViewById(R.id.btnEmergency);
@@ -256,7 +256,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
             }
         }
 
-        for(int i=1; i <list.size();i++)
+
+        for(int i=1; i <LastLocationList.size();i++)
         {
             drawPolyline(LastLocationList.get(i-1), LastLocationList.get(i), polylinesLastLocation);
         }
