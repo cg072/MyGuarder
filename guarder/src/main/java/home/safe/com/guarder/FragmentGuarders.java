@@ -28,7 +28,6 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     private ListViewAdapterGuarders lvAdapterGuarders;
     private ListView lvGuarders;
     private ArrayList<GuarderVO> alGuarders;
-    private ViewGroup rootView;
     String nowGuarderName = "";
     String nowGuarderPhone = "";
     GuarderManager guarderManager;
@@ -46,20 +45,17 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_guarders, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_guarders, container, false);
         tvGuarderName = rootView.findViewById(R.id.tvGuarderName);
         tvGuarderPhone = rootView.findViewById(R.id.tvGuarderPhone);
 
         lvGuarders = (ListView) rootView.findViewById(R.id.lvGuarders);
         alGuarders = new ArrayList<GuarderVO>();
 
-        if(loadDB() != null) {
-            setList(loadDB());
-        } else {
-            lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, alGuarders, this);
-            //lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, this);
-            lvGuarders.setAdapter(lvAdapterGuarders);
-        }
+        lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, alGuarders, this);
+        lvGuarders.setAdapter(lvAdapterGuarders);
+
+        setList(loadDB());
 
         return rootView;
     }
@@ -114,17 +110,6 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         return check;
     }
 
-    // 지킴이 목록의 어댑터 갱신
-    private void guarderAdapterUpdate() {
-        // Adapter 생성 (implements ListViewAdapterSearch.ListBtnClickListener를 하였기때문에, 마지막에 this해도 오류 안남)
-        lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_guarders, alGuarders, this);
-        //lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, this);
-        // 변경된 Adapter 적용
-        lvAdapterGuarders.notifyDataSetChanged();
-        // 리스트뷰 참조 및 Adapter 달기
-        lvGuarders.setAdapter(lvAdapterGuarders);
-    }
-
     /*
     *  date     : 2017.11.22
     *  author   : Kim Jong-ha
@@ -153,13 +138,13 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         if(check != 0) {                                                                    // 결과값이 성공적이라면 ( 0 이 아니라면)
             alGuarders.add(guarderVO);                                                     // 지킴이 리스트에 추가
             Collections.sort(alGuarders, new FragmentGuarders.NameDescCompareGuarders());  // 지킴이 리스트 이름순 정렬
-            guarderAdapterUpdate();                                                         // 어댑터 갱신
+            lvAdapterGuarders.notifyDataSetChanged();                                      // 어댑터 갱신
         }
     }
 
     public void setList(ArrayList<GuarderVO> list) {    // 지킴이 목록을 보여주는 현재 화면에 외부에서 리스트를 전송하여 어댑터 갱신(외부전용)
-        alGuarders = list;
-        guarderAdapterUpdate();
+        inputAlGuarders(list);
+        lvAdapterGuarders.notifyDataSetChanged();
     }
 
     private ArrayList<GuarderVO> loadDB() {         // DB로 부터 초기 목록화면을 가져온다.
@@ -189,6 +174,11 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         tvGuarderPhone.setText(phone);
     }
 
+    private void inputAlGuarders(ArrayList<GuarderVO> list) {
+        alGuarders.clear();
+        alGuarders.addAll(list);
+    }
+
     private void setDialog(int check, AlertDialog.Builder regAlert) {
 
         regAlert.setTitle("지킴이 등록");
@@ -212,8 +202,8 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                         dialogGuarderVO.setGstate(0);
                         postCheck = guarderManager.update(dialogGuarderVO);                   // 해당 포지션 업데이트
 
-                        alGuarders = guarderManager.select("all", dialogGuarderVO);     // 지킴이 목록 업데이트
-                        guarderAdapterUpdate();                                                   // 지킴이 목록을 화면에 갱신
+                        inputAlGuarders(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        lvAdapterGuarders.notifyDataSetChanged();                                // 지킴이 목록을 화면에 갱신
                     }
                 });
                 break;
@@ -233,8 +223,8 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                         dialogGuarderVO.setGstate(1);
                         postCheck = guarderManager.update(dialogGuarderVO);                 // 해당 포지션 업데이트
 
-                        alGuarders = guarderManager.select("all", dialogGuarderVO);  // 지킴이 목록 업데이트
-                        guarderAdapterUpdate();                                                 // 지킴이 목록을 화면에 갱신
+                        inputAlGuarders(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        lvAdapterGuarders.notifyDataSetChanged();                             // 지킴이 목록을 화면에 갱신
                         Toast.makeText(getContext(), nowGuarderName + " " + nowGuarderPhone, Toast.LENGTH_SHORT).show();
                     }
                 });

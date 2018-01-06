@@ -24,66 +24,38 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
 
     TextView btnGuardReg;
 
-    // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의
     public interface GuardersListBtnClickListener {
         void onGuardersListBtnClick(int position, int count) ;
     }
 
-    // 생성자로부터 전달된 resource id 값을 저장
     int resourceID;
-
-    // 생성자로부터 전달된 ListBtnClickListener 저장
     private GuardersListBtnClickListener listBtnClickListener;
 
-    // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
     ListViewAdapterGuarders(Context context, int resource, ArrayList<GuarderVO> list, GuardersListBtnClickListener clickListener) {
         super(context, resource, list);
 
-        // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceID = resource;
-
-        // 생성자에 리스너 추가
         this.listBtnClickListener = clickListener;
     }
 
-/*    // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
-    ListViewAdapterGuarders(Context context, int resource, GuardersListBtnClickListener clickListener) {
-        super(context, resource);
-
-        // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
-        this.resourceID = resource;
-
-        // 생성자에 리스너 추가
-        this.listBtnClickListener = clickListener;
-    }*/
-
-    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<GuarderVO> saveGuarders = new ArrayList<GuarderVO>();
-
-    // position에 위치한 데이터를 화면에 출력하는데 사용될 view를 리턴 : 필수구현
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
 
-        // 생성자로부터 저장된 resourceID(listview_item_guarders)에 해당하는 Layout을 inflate하여 convertView 참조 획득
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            //convertView = inflater.inflate(this.resourceID/*R.Layout.listview_item_guarders*/, parent, false);
             convertView = inflater.inflate(R.layout.listview_item_guarders, parent, false);
         }
 
-        // 화면에 표시될 View(Layout이 inflate된) 로부터 위젯에 대한 참조 획득
         final TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
         final TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
 
-        // Data Set(ListViewItemList)에서 position에 위치한 데이터 참조 획득
         final GuarderVO guarderVO = (GuarderVO) getItem(position);
 
         tvName.setText(guarderVO.getGmcname());
         tvPhone.setText(hyphenAdd(guarderVO.getGmcphone()));
 
-        // btnGuardersAdd 클릭 시 작업내용
         btnGuardReg = (TextView) convertView.findViewById(R.id.btnGuardReg);
         btnGuardReg.setTag(position);
         setRegBtn(guarderVO.getGstate());

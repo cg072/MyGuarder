@@ -23,44 +23,25 @@ import java.util.ArrayList;
 
 public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickListener, Filterable{
 
+    public interface SearchListBtnClickListener {void onSearchListBtnClick(int position) ;}
+
     GuarderVO saveItem = new GuarderVO();
     Button btnSearchAdd ;
-    String name;
-    String phone;
 
-    Filter listFilter;
-    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<GuarderVO> alitemSearch = new ArrayList<GuarderVO>();
-
-    // 버튼 클릭 이벤트를 위한 Listrner 인터페이스 정의
-    public interface SearchListBtnClickListener {
-        void onSearchListBtnClick(int position) ;
-    }
-
-    // 생성자로부터 전달된 resource id 값을 저장
     int resourceID;
-
-    // 생성자로부터 전달된 ListBtnClickListener 저장
     private SearchListBtnClickListener listBtnClickListener;
 
-    // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
     ListViewAdapterSearch(Context context, int resource, ArrayList<GuarderVO> list, SearchListBtnClickListener clickListener) {
-        // 부모 클래스의 context와 resource, list를 받아와 실행한다.
         super(context, resource, list);
 
-        // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
         this.resourceID = resource;
-
-        // 생성자에 리스너 추가
         this.listBtnClickListener = clickListener;
     }
 
-    // position에 위치한 데이터를 화면에 출력하는데 사용될 view를 리턴 : 필수구현
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
-        // 생성자로부터 저장된 resourceID(listview_item_search)에 해당하는 Layout을 inflate하여 convertView 참조 획득
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(this.resourceID/*R.Layout.listview_item_search*/, parent, false);
@@ -71,17 +52,11 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
         final TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
 
         // Data Set(ListViewItemList)에서 position에 위치한 데이터 참조 획득
-        final GuarderVO lvItemSearch = (GuarderVO) getItem(position);
+        final GuarderVO guarderVO = (GuarderVO) getItem(position);
 
-        tvName.setText(lvItemSearch.getGmcname());
-        tvPhone.setText(hyphenAdd(lvItemSearch.getGmcphone()));
+        tvName.setText(guarderVO.getGmcname());
+        tvPhone.setText(hyphenAdd(guarderVO.getGmcphone()));
 
-        alitemSearch.add(lvItemSearch);
-
-        name = tvName.getText().toString();
-        phone = tvPhone.getText().toString();
-        Log.v("이름"+name, "전번"+phone);
-        Log.v("사이즈", String.valueOf(alitemSearch.size()));
         // btnSearchAdd 클릭 시 작업내용
         btnSearchAdd = (Button) convertView.findViewById(R.id.btnSearchAdd);
         btnSearchAdd.setTag(position);
