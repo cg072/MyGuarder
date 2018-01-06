@@ -24,7 +24,6 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
 
     TextView btnGuardReg;
 
-
     // 버튼 클릭 이벤트를 위한 Listener 인터페이스 정의
     public interface GuardersListBtnClickListener {
         void onGuardersListBtnClick(int position, int count) ;
@@ -46,6 +45,17 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         // 생성자에 리스너 추가
         this.listBtnClickListener = clickListener;
     }
+
+/*    // ListViewBtnAdapter 생성자, 마지막에 ListBtnClickListener 추가
+    ListViewAdapterGuarders(Context context, int resource, GuardersListBtnClickListener clickListener) {
+        super(context, resource);
+
+        // resource id 값 복사, (super로 전달된 resource를 참조할 방법이 없음.)
+        this.resourceID = resource;
+
+        // 생성자에 리스너 추가
+        this.listBtnClickListener = clickListener;
+    }*/
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     private ArrayList<GuarderVO> saveGuarders = new ArrayList<GuarderVO>();

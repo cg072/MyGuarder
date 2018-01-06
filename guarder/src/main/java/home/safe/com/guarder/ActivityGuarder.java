@@ -98,10 +98,10 @@ public class ActivityGuarder extends AppCompatActivity {
     private String hyphenRemove(String phone) {
 
         String[] basePhone = phone.split("-");
-
+        Log.v(TAG, "나누기 시작");
         Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
         String resultPhone = basePhone[0];
-        if(basePhone[0].length() < 10) {
+        if(basePhone[0].length() < 4) {
             resultPhone = resultPhone + basePhone[1] + basePhone[2];
         }
 
@@ -116,7 +116,7 @@ public class ActivityGuarder extends AppCompatActivity {
     *  comment  : 시험용 리스트
     * */
     private void loadList() {
-
+        Log.v(TAG, "loadList들어옴");
         alSearch = new ArrayList<GuarderVO>();
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
@@ -208,6 +208,7 @@ public class ActivityGuarder extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.v(TAG, "리퀘스트들어옴");
         switch (requestCode) {
             case 1: //
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -215,7 +216,7 @@ public class ActivityGuarder extends AppCompatActivity {
                     Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
                     checkPermission = true;
                     checkPermission();
-                    loadList();
+                    //loadList();
                 } else {
                     //사용자가 거부 했을때
                     Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
