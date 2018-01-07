@@ -63,8 +63,25 @@ import java.util.ArrayList;
 * 디비매니저에 pgchager - > pretest에 있는 것들 만들어야 함
 *
 *
+* 새로 만들어야 할것
+* 1. fragmentTransReg 확인 버튼 클릭시, 디비에 인서트 되어야 한다
+* 2. fragmentTransList 변경버튼 추가
+* 3. 변경버튼 클릭시 업데이트 되어야 함
 *
 *
+* !!!contentvalue => 맵처럼 키, 벨류로
+*
+*
+* ///////////////////중요사항!!!!!!!!!!!!!!!///////////////////////////
+*
+*
+* 데이터에 대한 정보는 새로운 클래스를 만들어서 처리하기!!!
+* 뷰에 관련된것은 기존의것
+* 데이터에 관련된 것은 새로운 클래스로!!
+* 새로운 클래스 - > 컨트롤러 - > 디비
+* 클래스명 : TransManager, NoticeManager
+*
+* 액티비티클래스 안에서 데이터 가공을 하지 말것!!
 *
 * */
 
@@ -80,13 +97,6 @@ public class ActivityTrans extends AppCompatActivity {
 
     final private String tag = "이동수단";
 
-    SQLiteDatabase.CursorFactory cf = new SQLiteDatabase.CursorFactory() {
-        @Override
-        public Cursor newCursor(SQLiteDatabase sqLiteDatabase, SQLiteCursorDriver sqLiteCursorDriver, String s, SQLiteQuery sqLiteQuery) {
-            return null;
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +106,8 @@ public class ActivityTrans extends AppCompatActivity {
         tabbarTrans = (TabLayout)findViewById(R.id.tabbarTrans);
         vpagerTrans = (ViewPager)findViewById(R.id.vpagerTrans);
 
-        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), new TransDBHelper(this, "transportation", cf, 1, 1)));
+        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), new TransDBHelper(this, "safehome", null, 1, 501)));
+
         //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
 
 
@@ -105,7 +116,6 @@ public class ActivityTrans extends AppCompatActivity {
 
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단등록"), 0 , true);
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단내역"), 1);
-
 
         tabbarTrans.addOnTabSelectedListener(tabSelectedListener);
 
@@ -134,7 +144,6 @@ public class ActivityTrans extends AppCompatActivity {
             /*if(tab.getPosition() == 1){
 
             }*/
-
         }
 
         @Override

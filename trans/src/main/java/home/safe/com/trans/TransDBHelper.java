@@ -38,7 +38,7 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d("DBhelper", "oncreat");
+        Log.d("DBhelper", "oncreate");
         db = sqLiteDatabase;
         String sql = "CREATE TABLE IF NOT EXISTS" +
                 TABLE_NAME + "(" +

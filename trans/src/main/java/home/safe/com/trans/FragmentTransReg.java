@@ -3,6 +3,7 @@ package home.safe.com.trans;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -71,6 +72,9 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     public TestListViewDTO regDto;
     ArrayList<TestListViewDTO> regArrDto = new ArrayList<TestListViewDTO>();
     FragmentTransList fragmentTransList;
+
+    TransController transController;
+    TransDBHelper transDBHelper;
 
 
 
@@ -194,6 +198,8 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                         //서버디비에 인서트
                         setDto(num, kind, text);
 
+                        insertToServer(num, kind, text);
+
                         //sharedpreference를 호출
                         //toShared(kind, text);
 
@@ -207,7 +213,6 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                 regAlert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
 
                     }
                 });
@@ -229,12 +234,11 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
     //이 메소드에서 서버에 인서트를 해야 함.
     //생각해 볼 것 : 가상으로 콘트롤러를 거쳐야 함
-    public void toServTransReg() {
+    public void insertToServer(String n, String k, String t) {
+
+        ContentValues contentValues = new ContentValues();
 
     }
-
-
-    //////////////////////서버없이 작동시켜 보기////////////////////////////////////
 
 
     public void setDto(String makeNum, String makeKind, String makeText) {
@@ -251,7 +255,6 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
         regArrDto.add(regDto);
         fragmentTransList.setArryDtoFragList(regArrDto);
-        //fragmentTransList.setDtoFragList(regDto);
 
         Log.v("regArrDto" , "확인8");
     }

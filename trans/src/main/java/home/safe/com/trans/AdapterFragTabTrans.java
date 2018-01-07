@@ -66,5 +66,4 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     }
 
 
-
 }
