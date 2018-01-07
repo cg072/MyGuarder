@@ -102,9 +102,10 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
         while (cursor.moveToNext()) {
             cv = new ContentValues();
 
-            cv.put(NAME, cursor.getString(0));
-            cv.put(PHONE, cursor.getString(1));
-            cv.put(USE, cursor.getInt(2));
+            cv.put(SEQ, cursor.getInt(0));
+            cv.put(NAME, cursor.getString(1));
+            cv.put(PHONE, cursor.getString(2));
+            cv.put(USE, cursor.getInt(3));
 
             list.add(cv);
         }

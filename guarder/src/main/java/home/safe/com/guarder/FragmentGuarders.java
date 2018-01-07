@@ -78,8 +78,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
         ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
 
-        GuarderVO guarderVO = new GuarderVO();
-        guarderVO.setGstate(1);
+        GuarderVO guarderVO = new GuarderVO(1);
         resultList = guarderManager.select("part", guarderVO);      // 현재 모든 지킴이들을 "해제" 시키기위한 셋팅
 
         GuarderVO saveGuarderVO = null;
@@ -91,9 +90,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
         AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());  // 다이얼로그 생성
 
-        guarderVO = new GuarderVO();
-        guarderVO.setGmcname(alGuarders.get(position).getGmcname());
-        guarderVO.setGmcphone(alGuarders.get(position).getGmcphone());      // 클릭된 지킴이의 값을 저장
+        guarderVO = new GuarderVO(alGuarders.get(position).getGmcname(), alGuarders.get(position).getGmcphone());   // 클릭된 지킴이의 값을 저장
         dialogGuarderVO = guarderVO;
         dialogSaveGuarderVO = saveGuarderVO;                              // 먼저 등록된 지킴이의 정보값을 해제상태로 둔채 저장
         getPostion = position;                                             // 현재 클릭된 곳의 위치값을 저장 (전역변수로)
@@ -128,14 +125,11 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     }
 
     // ArrayList에 지킴이를 추가함 [서버와 연결 후 부터는 서버로부터 받아와야한다.]
-    public void guarderAdd(String name, String phone) {
+    public void guarderAdd(GuarderVO recieveVO) {
         Log.v("지킴이 추가","진입");
         int check = 0;
 
-        GuarderVO guarderVO = new GuarderVO();
-        guarderVO.setGmcname(name);
-        guarderVO.setGmcphone(phone);
-        guarderVO.setGstate(0);                     // 지킴이 포장( 형태 GuarderVO)
+        GuarderVO guarderVO = new GuarderVO(recieveVO.getGmcname(), recieveVO.getGmcphone(), 0);    // 지킴이 포장( 형태 GuarderVO)
 
         check = guarderManager.insert(guarderVO); // guarderManager로 전송
 

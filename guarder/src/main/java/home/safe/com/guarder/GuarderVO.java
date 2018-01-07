@@ -13,18 +13,35 @@ import java.io.Serializable;
 
 public class GuarderVO extends ProGuardianVO implements Serializable {
 
-    private int gseq;
-    private String gmid;
-    private String gmcid;
-    private int gstate;
-    private long gregday;
+    final static private String SEQ = "gseq";
+    final static private String NAME = "gmcname";
+    final static private String PHONE = "gmcphone";
+    final static private String USE = "gstate";
+    final static private String MID = "gmid";
+    final static private String MCID = "gmcid";
+    final static private String REGDAY = "gregday";
 
+    private int gseq;
+    private int gstate;
     private String gmcname;
     private String gmcphone;
+    private String gmid;
+    private String gmcid;
+    private String gregday;
 
-    public GuarderVO() {
+    public GuarderVO() {}
+    public GuarderVO(String name, String phone, int use) {
+        this.gmcname = name;
+        this.gmcphone = phone;
+        this.gstate = use;
     }
-
+    public GuarderVO(String name, String phone) {
+        this.gmcname = name;
+        this.gmcphone = phone;
+    }
+    public GuarderVO(int use) {
+        this.gstate = use;
+    }
     public GuarderVO(String gmcid, int gstate) {
         this.gmcid = gmcid;
         this.gstate = gstate;
@@ -78,24 +95,40 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
         this.gstate = gstate;
     }
 
-    public long getGregday() {
+    public String getGregday() {
         return gregday;
     }
 
-    public void setGregday(long gregday) {
+    public void setGregday(String gregday) {
         this.gregday = gregday;
     }
 
     //
     @Override
     public ContentValues convertDataToContentValues() {
-        return null;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SEQ, getGseq());
+        contentValues.put(NAME, getGmcname());
+        contentValues.put(PHONE, getGmcphone());
+        contentValues.put(USE, getGstate());
+        contentValues.put(MID, getGmid());
+        contentValues.put(MCID, getGmcid());
+        contentValues.put(REGDAY, getGregday());
+
+        return contentValues;
     }
 
 
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {
-
+        setGseq(contentValues.getAsInteger(SEQ));
+        setGmcname(contentValues.getAsString(NAME));
+        setGmcphone(contentValues.getAsString(PHONE));
+        setGstate(contentValues.getAsInteger(USE));
+        setGmid(contentValues.getAsString(MID));
+        setGmcid(contentValues.getAsString(MCID));
+        setGregday(contentValues.getAsString(REGDAY));
     }
 
     @Override

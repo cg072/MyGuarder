@@ -101,13 +101,8 @@ public class GuarderManager {
         ArrayList<GuarderVO> guaderlist = new ArrayList<GuarderVO>();
 
         for (ContentValues cv : resultList) {
-
             guarderVO = new GuarderVO();
-
-            guarderVO.setGmcname(cv.get(COL_NAME).toString());
-            guarderVO.setGmcphone(cv.get(COL_PHONE).toString());
-            guarderVO.setGstate((int)(cv.get(COL_USE)));
-
+            guarderVO.convertContentValuesToData(cv);
             guaderlist.add(guarderVO);
         }
 

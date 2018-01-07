@@ -62,12 +62,10 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         String name = alSearchResult.get(position).getGmcname();       // 삭제 전, 보낼 내용 저장
         String phone = alSearchResult.get(position).getGmcphone();
 
-        GuarderVO guarderVO = new GuarderVO();
-        guarderVO.setGmcname(name);
-        guarderVO.setGmcphone(phone);
+        GuarderVO guarderVO = new GuarderVO(name, phone);
 
         // 서버로 전화번호를 보내서, 지킴이 목록에 추가한다.
-        fragmentGuarders.guarderAdd(name, phone);           // 지킴이 리스트에 전달
+        fragmentGuarders.guarderAdd(guarderVO);           // 지킴이 리스트에 전달
 
         alSearchResult.remove(position);                    // 결과 관리 리스트에서 삭제
 
