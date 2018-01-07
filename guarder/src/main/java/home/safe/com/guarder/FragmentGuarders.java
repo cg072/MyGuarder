@@ -1,7 +1,6 @@
 package home.safe.com.guarder;
 
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.GregorianCalendar;
 
 public class FragmentGuarders extends Fragment implements ListViewAdapterGuarders.GuardersListBtnClickListener {
 
@@ -36,9 +35,14 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     int getPostion;
     GuarderVO dialogSaveGuarderVO;
     GuarderVO dialogGuarderVO;
-    final static String dialogText[] = {"지킴이에서 해제하시겠습니까?", "지킴이로 등록하시겠습니까?"} ;
+    final static String DIALOG_TEXT[] = {"지킴이에서 해제하시겠습니까?", "지킴이로 등록하시겠습니까?"} ;
     int preCheck = 0;
     int postCheck = 0;
+    final static int TYPE_INSERT = 1;
+    final static int TYPE_DELETE = 2;
+    final static int TYPE_UPDATE = 3;
+    final static int TYPE_SELECT_ALL = 4;
+    final static int TYPE_SELECT_PART = 5;
 
 
     @Nullable
@@ -183,7 +187,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
         regAlert.setTitle("지킴이 등록");
         regAlert.setMessage("이름: " + alGuarders.get(getPostion).getGmcname().trim() + "\n" +
-                "전화번호: " + alGuarders.get(getPostion).getGmcphone() + "\n" + "\n" + dialogText[check]);
+                "전화번호: " + alGuarders.get(getPostion).getGmcphone() + "\n" + "\n" + DIALOG_TEXT[check]);
 
         switch (check) {
             case 0 :
@@ -237,6 +241,32 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                 Toast.makeText(getContext(), "취소할거면 왜눌러 띱때야", Toast.LENGTH_SHORT).show();// 취소는 없다.
             }
         });
+    }
+
+    private Object sendDB(int type, GuarderVO guarderVO, String selectType) {
+
+        int resultCheck = 0;
+        ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
+
+        switch(type){
+            case TYPE_INSERT :
+                resultCheck = guarderManager.insert(guarderVO);
+                return resultCheck;
+            case TYPE_DELETE :
+                resultCheck = guarderManager.delete(guarderVO);
+                return resultCheck;
+            case TYPE_UPDATE :
+                resultCheck = guarderManager.update(guarderVO);
+                return resultCheck;
+            case TYPE_SELECT_ALL :
+                resultList = guarderManager.select(selectType, guarderVO);
+                return resultList;
+            case TYPE_SELECT_PART :
+                resultList = guarderManager.select(selectType, guarderVO);
+                return resultList;
+        }
+
+        return null;
     }
 
     // 1. ArrayList에 있는 것을 저장.
