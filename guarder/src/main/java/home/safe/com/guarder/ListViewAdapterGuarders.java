@@ -110,12 +110,10 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
     public void setRegBtn(int sig) {
         switch (sig) {
             case 0 :
-                btnGuardReg.setText("꺼짐");
-                btnGuardReg.setBackgroundColor(getContext().getResources().getColor(R.color.colorGuarderOff));
+                btnGuardReg.setBackground(getContext().getResources().getDrawable(R.drawable.toggle_off));
                 break;
             case 1 :
-                btnGuardReg.setText("켜짐");
-                btnGuardReg.setBackgroundColor(getContext().getResources().getColor(R.color.colorGuarderOn));
+                btnGuardReg.setBackground(getContext().getResources().getDrawable(R.drawable.toggle_on));
                 break;
         }
     }

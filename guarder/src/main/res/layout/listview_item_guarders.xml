@@ -25,12 +25,10 @@
 
     <TextView
         android:id="@+id/btnGuardReg"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:layout_height="35dp"
         android:gravity="center"
         android:textSize="@dimen/listItemText"
-        android:text="꺼짐"
-        android:background="@color/colorGuarderOff"
         android:padding="5dp"
         android:layout_margin="10dp" />
 
