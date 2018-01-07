@@ -3,11 +3,9 @@ package home.safe.com.myguarder;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,16 +55,16 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         first = System.currentTimeMillis();
 
         //로그인시 DB생성 및 연결
-        couplerMVC = new CouplerMVC(getApplicationContext());
+        locationManage = new LocationManage(getApplicationContext());
 
         //어플 시작시 2일전 DB 데이터 삭제
         Date date = new Date(first);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String asd = dateFormat.format(date);
+        String strFormat = dateFormat.format(date);
 
-        vo = new MyGuarderVO(0,asd);
+        vo = new MyGuarderVO(0,strFormat);
 
-        int res = couplerMVC.controller.remove(vo.resetDataToContentValues());
+        int res = locationManage.controller.remove(vo.resetDataToContentValues());
         Log.d("ActivityCivilian", "controller.remove - "+res);
 
 
@@ -152,7 +150,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
             //지난 위치 보기 목록 가져오기
 //            vo = new MyGuarderVO();
 
-            list = couplerMVC.controller.search(new ContentValues());
+            //LocationManage ( ContentValues를 사용형태로 바꿔야하는가)
+            list = locationManage.search(new ContentValues());
             Log.d("MainActivity", "controller.search - "+list.size());
 
             ArrayList<CharSequence> dateList = new ArrayList<>();
@@ -236,6 +235,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     **/
     private void selectPopupList(String date)
     {
+        mapVisibleFalse();
+
         //기존의 지난 위치보기 polyline 삭제
         for(Polyline line : polylinesLastLocation)
         {
@@ -261,6 +262,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         {
             drawPolyline(LastLocationList.get(i-1), LastLocationList.get(i), polylinesLastLocation);
         }
+
+        printLocationFrag = true;
 
     }
 

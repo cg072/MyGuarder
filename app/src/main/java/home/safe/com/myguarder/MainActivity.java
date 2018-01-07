@@ -135,24 +135,24 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         }
         else if(view.getId() == btnMainChanger.getId())
         {
-            CouplerMVC couplerMVC = new CouplerMVC(getApplicationContext());
+            LocationManage locationManage = new LocationManage(getApplicationContext());
             MyGuarderVO vo = new MyGuarderVO(0,"37.2316841","127.0548355","2018-01-04","07:39:23","civilianID");
 
             //insert
-            int res = couplerMVC.controller.insert(vo.locationDataToContentValues());
+            int res = locationManage.controller.insert(vo.locationDataToContentValues());
             Log.d("MainActivity", "controller.insert - "+res);
 
             //update
-//            int res = couplerMVC.controller.update(vo.convertDataToContentValues());
+//            int res = locationManage.controller.update(vo.convertDataToContentValues());
 //            Log.d("MainActivity", "controller.update - "+res);
 
             //delete
-//            int res = couplerMVC.controller.remove(vo.convertDataToContentValues());
+//            int res = locationManage.controller.remove(vo.convertDataToContentValues());
 //            Log.d("MainActivity", "controller.remove - "+res);
 
             //search
             List<ContentValues> list;
-            list = couplerMVC.controller.search(new ContentValues());
+            list = locationManage.controller.search(new ContentValues());
             Log.d("MainActivity", "controller.search - "+list.size());
 
 

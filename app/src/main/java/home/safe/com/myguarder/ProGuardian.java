@@ -70,6 +70,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public static final String CAMERA_POSITION = "camera_position";
     public static final String LOCATION = "location";
 
+    //지난 위치보기 현재위치 출력 막는 frag
+    boolean printLocationFrag = false;
+
     //polyline
 
     //polyline 지난위치보기
@@ -89,6 +92,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     List<Marker> markersLocation = new ArrayList<>();
     //marker 요청위치마커
     List<Marker> markersRequestLocation = new ArrayList<>();
+
+    //Location
+    // Location 현재위치
+    ArrayList locationList = new ArrayList<Location>();
 
     //intent key code
     public final static int MAIN_REQUEST_SETTING_CODE = 1111;
@@ -114,10 +121,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     long first;
     long now;
 
-    ArrayList locationList = new ArrayList<Location>();
+
 
     //MVC
-    CouplerMVC couplerMVC;
+    LocationManage locationManage;
     MyGuarderVO vo;
 
     //db
@@ -447,6 +454,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
                     reDrawPolyline();
 
+                    printLocationFrag = false;
+
                     return false;
                 }
             });
@@ -537,7 +546,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                     "civilianID");
 
             //insert
-            int res = couplerMVC.controller.insert(vo.locationDataToContentValues());
+            int res = locationManage.controller.insert(vo.locationDataToContentValues());
             Log.d("ProGuardian", "controller.insert - "+res);
 
 
@@ -564,20 +573,41 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             Log.d("TimeMillis", "now - first");
             first = now;
 
-            if(true) {
-                //이동경로 그리기
-                endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
-                drawPolyline(startPL, endPL, polylinesLocation);
-                drawMarker(startPL, markersLocation);
+            //이동경로 그리기
+            endPL = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
-                //구조 변경 고려  현재위치 이동경로 그리기 1. 위치를 저장해서 폴리라인그리기 2. 폴리라인으로 관리
-                // -> 둘중하나 고려
+            drawPolyline(startPL, endPL, polylinesLocation);
+            drawMarker(startPL, markersLocation);
 
-                startPL = endPL;
+            // 지난위치보기 클릭시 polyline, marker 안보임
+            if(printLocationFrag) {
+                mapVisibleFalse();
             }
 
+            startPL = endPL;
+
+
             showCamera();
+        }
+    }
+/**
+ *
+ * @author 경창현
+ * @version 1.0.0
+ * @text 현재위치 맵 안보이기
+ * @since 2018-01-07 오후 4:39
+**/
+    public void mapVisibleFalse() {
+        Log.d("visibleTest","false");
+
+        for(Polyline line : polylinesLocation)
+        {
+            line.setVisible(false);
+        }
+        for(Marker marker : markersLocation)
+        {
+            marker.setVisible(false);
         }
     }
 
@@ -638,20 +668,28 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         //맵 클리어 해주고
         googleMap.clear();
 
+        int ind = 0;
         //폴리라인 그리기
         for(Polyline line : polylinesLocation)
         {
-            googleMap.addPolyline(new PolylineOptions().add(line.getPoints().get(0),line.getPoints().get(1)).width(15).color(Color.RED).geodesic(true));
 
+            line.setVisible(true);
+            polylinesLocation.set(ind++,
+            googleMap.addPolyline(new PolylineOptions().add(line.getPoints().get(0),line.getPoints().get(1)).width(15).color(Color.RED).geodesic(true))
+            );
             Log.d("polylineVB",""+line.getPoints().get(0));
             Log.d("polylineVB",""+line.getPoints().get(1));
             Log.d("polylineVB",""+line.isVisible());
 
         }
 
+        ind = 0;
         for(Marker mark : markersLocation)
         {
-            googleMap.addMarker(new MarkerOptions().position(mark.getPosition()).draggable(true));
+            mark.setVisible(true);
+            markersLocation.set(ind++,
+            googleMap.addMarker(new MarkerOptions().position(mark.getPosition()).draggable(true))
+            );
         }
     }
 
@@ -802,8 +840,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @author 경창현
      * @version 1.0.0
      * @text
-     * 1. 지난위치 볼때 현재위치 그리지 않기  -> 구조 변경 고려 573라인
+     * 1. 지난위치 볼때 현재위치 그리지 않기  -> 구조 변경 고려 573라인  ok
+     * -> 문제사항 -  지난 위치보기 주기와 현재 위치보기 주기가 다름 (상관은 없을거 같다. 세부위치랑 서버 위치가 다르기때문)
      * 2. CouplerMVC에다가 insert,select등 수정
+     * -> ActivityCivilan 153라인
      * 3. 위치요청 다이얼로그 (신호줬을때 다이얼로그가 뜨는지)
      * 4. 피지킴이 목록
      * 5. 긴급버튼
