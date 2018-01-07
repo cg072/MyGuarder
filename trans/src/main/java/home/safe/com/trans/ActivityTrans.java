@@ -106,7 +106,7 @@ public class ActivityTrans extends AppCompatActivity {
         tabbarTrans = (TabLayout)findViewById(R.id.tabbarTrans);
         vpagerTrans = (ViewPager)findViewById(R.id.vpagerTrans);
 
-        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), new TransDBHelper(this, "safehome", null, 1, 501)));
+        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), this));
 
         //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
 

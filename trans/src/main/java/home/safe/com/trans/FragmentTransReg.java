@@ -65,13 +65,19 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     Button btnRegTrans;
     InputMethodManager imm;
 
-    String num = "a";
-    String kind = "b";
-    String text = "c";
+    String tseq = null;
+    String ttype = null;
+    String tname = null;
 
-    public TestListViewDTO regDto;
+    TestListViewDTO regDto;
     ArrayList<TestListViewDTO> regArrDto = new ArrayList<TestListViewDTO>();
+
+    TransIntegratedVO regTransIntegratedVO;
+    ArrayList<TransIntegratedVO> regArrTransIntegratedVO = new ArrayList<TransIntegratedVO>();
+
+
     FragmentTransList fragmentTransList;
+    TransManager transManager;
 
     TransController transController;
     TransDBHelper transDBHelper;
@@ -172,16 +178,16 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
             if (tvtranskind.getText().equals("이동수단 종류 선택")) {
                 Toast.makeText(getContext().getApplicationContext(), "이동수단이 선택되지 않음", Toast.LENGTH_LONG).show();
             } else {
-                kind = tvtranskind.getText().toString();
-                text = etTextTrans.getText().toString();
+                ttype = tvtranskind.getText().toString();
+                tname = etTextTrans.getText().toString();
 
-                if (text.length() >= 10) {
-                    text = text.substring(0, 10);
+                if (tname.length() >= 10) {
+                    tname = tname.substring(0, 10);
                 }
 
-                text = text.trim();
+                tname = tname.trim();
 
-                Log.v("텍스트입니다", text);
+                Log.v("텍스트입니다", tname);
 
                 AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());
                 regAlert.setTitle("이동수단 등록");
@@ -189,16 +195,14 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                 //엔터키 후 숫자가 먼저 들어갈 경우 에러 발생 해결해야 함!!!!!
                 //regAlert.setMessage("이동수단: " + kind.trim() +"\n" + "부가정보: " + text.trim() + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
-                regAlert.setMessage("이동수단: " + kind.trim() + "\n" + "부가정보: " + text + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
+                regAlert.setMessage("이동수단: " + ttype.trim() + "\n" + "부가정보: " + tname + "\n" + "\n" + "이 정보로 저장 하시겠습니까?");
 
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         //서버디비에 인서트
-                        setDto(num, kind, text);
-
-                        insertToServer(num, kind, text);
+                        //setDto(tseq, ttype, tname);
 
                         //sharedpreference를 호출
                         //toShared(kind, text);
@@ -234,14 +238,14 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
     //이 메소드에서 서버에 인서트를 해야 함.
     //생각해 볼 것 : 가상으로 콘트롤러를 거쳐야 함
-    public void insertToServer(String n, String k, String t) {
+    /*public void insertToServer(String n, String k, String t) {
 
         ContentValues contentValues = new ContentValues();
 
-    }
+    }*/
 
 
-    public void setDto(String makeNum, String makeKind, String makeText) {
+    /*public void setDto(String makeNum, String makeKind, String makeText) {
 
         regDto = new TestListViewDTO();
 
@@ -257,11 +261,26 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         fragmentTransList.setArryDtoFragList(regArrDto);
 
         Log.v("regArrDto" , "확인8");
+    }*/
+
+    public void intsertDB(String makettype, String maketname){
+
+        int check = 0;
+
+        regTransIntegratedVO = new TransIntegratedVO();
+
+        regTransIntegratedVO.setTtype(makettype);
+        regTransIntegratedVO.setTmemo(maketname);
     }
 
     public void setFragReg(FragmentTransList fraglist) {
         this.fragmentTransList = fraglist;
         Log.v("regArrDto" , "확인1");
+
+    }
+
+    public void setTransManager(TransManager transManager){
+        this.transManager = transManager;
 
     }
 

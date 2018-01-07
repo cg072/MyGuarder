@@ -17,6 +17,10 @@ public class TransVO extends ProGuardianVO implements Serializable{
     private String tname;
 
 
+    public TransVO(){
+
+    }
+
     public TransVO(int tseq, String ttype, String tname) {
         this.tseq = tseq;
         this.ttype = ttype;

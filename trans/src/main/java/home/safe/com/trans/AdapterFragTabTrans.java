@@ -1,5 +1,6 @@
 package home.safe.com.trans;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -25,15 +26,15 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
     FragmentTransReg fragmentTransReg = new FragmentTransReg();
     FragmentTransList fragmentTransList = new FragmentTransList();
+    TransManager transManager;
 
     TransController transController = new TransController();
     TransDBHelper transDBHelper;
 
 
-
-    public AdapterFragTabTrans(FragmentManager fm, TransDBHelper dbHelper) {
+    public AdapterFragTabTrans(FragmentManager fm, Context context) {
         super(fm);
-        this.transDBHelper = dbHelper;
+        this.transManager = new TransManager(context);
     }
 
 
@@ -45,14 +46,18 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
         switch (position) {
 
-            case 0 :
+            case 0:
+
+                fragmentTransReg.setTransManager(transManager);
                 fragmentTransReg.setFragReg(fragmentTransList);
-                Log.v("regArrDto" , "확인2");
+                Log.v("regArrDto", "확인2");
                 return fragmentTransReg;
 
-            case 1 :
-               // fragmentTransList.setFragList(adaptDto);
-                Log.v("regArrDto" , "확인3");
+            case 1:
+                // fragmentTransList.setFragList(adaptDto);
+                Log.v("regArrDto", "확인3");
+
+                fragmentTransList.setTransManager(transManager);
                 return fragmentTransList;
         }
 
@@ -64,6 +69,5 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     public int getCount() {
         return 2;
     }
-
 
 }

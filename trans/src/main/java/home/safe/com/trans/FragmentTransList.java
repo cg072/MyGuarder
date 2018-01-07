@@ -37,6 +37,8 @@ public class FragmentTransList extends Fragment {
 
     ArrayList<TestListViewDTO> listArrDto = new ArrayList<>();
 
+    TransManager transManager;
+
     public FragmentTransList(){
 
     }
@@ -149,6 +151,10 @@ public class FragmentTransList extends Fragment {
         }
         adapter.addItem(recvDto);
         adapter.notifyDataSetChanged();
+    }
+
+    public void setTransManager(TransManager transManager){
+        this.transManager = transManager;
     }
 }
 
