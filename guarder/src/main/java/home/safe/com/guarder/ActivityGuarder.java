@@ -172,19 +172,16 @@ public class ActivityGuarder extends AppCompatActivity {
       * */
     private void checkPermission()
     {
-        Log.v(TAG, "checkPermission들어옴");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             //퍼미션이 없는 경우
             //최초로 퍼미션을 요청하는 것인지 사용자가 취소되었던것을 다시 요청하려는건지 체크
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
                 //퍼미션을 재요청 하는 경우 - 왜 이 퍼미션이 필요한지등을 대화창에 넣어서 사용자를 설득할 수 있다.
                 //대화상자에 '다시 묻지 않기' 체크박스가 자동으로 추가된다.
-                Log.v(TAG, "퍼미션을 재요청 합니다.");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
 
             } else {
                 //처음 퍼미션을 요청하는 경우
-                Log.v(TAG, "첫 퍼미션 요청입니다.");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
             }
         } else {
@@ -197,12 +194,7 @@ public class ActivityGuarder extends AppCompatActivity {
                     // 당겨서 새로고침
                 }
             }, 2000);
-            //searchAdapterUpdate();
-            //guarderAdapterUpdate();
-            Log.v(TAG, "Permission is granted");
-            Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
         }
-        Log.v(TAG, "checkPermission나감");
     }
 
     /*
@@ -214,7 +206,6 @@ public class ActivityGuarder extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.v(TAG, "리퀘스트들어옴");
         switch (requestCode) {
             case 1: //
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -226,13 +217,6 @@ public class ActivityGuarder extends AppCompatActivity {
                 } else {
                     //사용자가 거부 했을때
                     Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
-
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 2000);*/
                 }
                 return;
         }

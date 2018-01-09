@@ -40,18 +40,15 @@ public class GuarderManager {
         createController();
     }
 
-    public void createController()
-    {
+    public void createController() {
         controller = new GuarderController();
         controller.setDBHelper(dbHelper);
     }
 
-    public void createDB()
-    {
+    public void createDB() {
         dbHelper =
                 new GuarderDBHelper(context, ProGuardianDBHelper.DB_NAME,null,ProGuardianDBHelper.DB_VERSION,GuarderDBHelper.PG_GUARDER);
-        db = dbHelper.getWritableDatabase();
-
+        //db = dbHelper.getWritableDatabase();
     }
 
     public void closeDB()
@@ -61,6 +58,7 @@ public class GuarderManager {
 
     public int insert(GuarderVO guarderVO) {
         int check = 0;
+
         ContentValues sendCV = guarderVO.convertDataToContentValuesSendDB();
 
         check = controller.insert(sendCV);

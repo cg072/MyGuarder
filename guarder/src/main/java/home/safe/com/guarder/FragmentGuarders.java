@@ -288,7 +288,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         regAlert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getContext(), "취소할거면 왜눌러 띱때야", Toast.LENGTH_SHORT).show();// 취소는 없다.
+                // 취소를 누를땐 별 다른 내용이 없다.
             }
         });
     }

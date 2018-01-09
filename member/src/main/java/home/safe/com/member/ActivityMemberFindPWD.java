@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ActivityMemberFindPWD extends AppCompatActivity {
 
@@ -15,8 +16,6 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
 
     private String email = "hotkiss86kjh@gmail.com";
     private String password = "5029kjhkjh";
-
-    private MemberVO memberVO = new MemberVO();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +29,25 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
         btnSend.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                memberVO.setMid(etID.toString().toString().trim());
-                memberVO.setMemail(etEmail.getText().toString().trim());
-
-                // 비번 찾기랑 마찬가지로 서버로 보내고 결과값을 받는다.
+                switch (sendData()) {
+                    case 0 :
+                        Toast.makeText(ActivityMemberFindPWD.this, "해당 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1 :
+                        Toast.makeText(ActivityMemberFindPWD.this, "해당 e-Mail로 발송하였습니다", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         });
+    }
+
+    private int sendData() {
+        int check = 0;
+
+        MemberVO memberVO = new MemberVO();
+        memberVO.setMid(etID.toString().toString().trim());
+        memberVO.setMemail(etEmail.getText().toString().trim());
+
+        return check;
     }
 }

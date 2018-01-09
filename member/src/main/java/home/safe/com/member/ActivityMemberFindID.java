@@ -5,16 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ActivityMemberFindID extends AppCompatActivity {
 
     private EditText etEmail;
     private EditText etPhone;
     private Button btnSend;
-
-    private MemberVO memberVO = new MemberVO();
-
-    private String savedEmail;
 
     // 테스트용
     private String code = "1111";
@@ -30,13 +27,28 @@ public class ActivityMemberFindID extends AppCompatActivity {
         btnSend.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                memberVO.setMemail(etEmail.getText().toString().trim());
-                memberVO.setMphone(etPhone.getText().toString().trim());
-
+                switch (sendData()) {
+                    case 0 :
+                        Toast.makeText(ActivityMemberFindID.this, "해당 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1 :
+                        Toast.makeText(ActivityMemberFindID.this, "해당 e-Mail로 발송하였습니다", Toast.LENGTH_SHORT).show();
+                        break;
+                }
                 // 서버로 보내고 이메일이 발송되으면 발송되었다고, 오류가 났으면 났다고 함
             }
         });
 
+    }
+
+    private int sendData() {
+        int check = 0;
+
+        MemberVO memberVO = new MemberVO();
+        memberVO.setMemail(etEmail.getText().toString().trim());
+        memberVO.setMphone(etPhone.getText().toString().trim());
+
+        return check;
     }
 
 }
