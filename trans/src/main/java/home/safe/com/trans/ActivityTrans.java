@@ -83,6 +83,9 @@ import java.util.ArrayList;
 *
 * 액티비티클래스 안에서 데이터 가공을 하지 말것!!
 *
+*
+* ////////////메인액티비티에서 transManager생성 안됌 이렇게 쓰지 말것!!///////////////
+*
 * */
 
 
@@ -96,7 +99,7 @@ public class ActivityTrans extends AppCompatActivity {
     TabLayout tabbarTrans;
     ViewPager vpagerTrans;
 
-    TransManager transManager = new TransManager(this);
+    TransManager transManager; //= new TransManager(this);
     TransIntegratedVO integratedVO = new TransIntegratedVO();
 
 
@@ -117,8 +120,11 @@ public class ActivityTrans extends AppCompatActivity {
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단등록"), 0 , true);
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단내역"), 1);
 
+        //transManager = new TransManager(this);
+
         //어댑터세팅
-        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), transManager, this));
+        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), this));
+        //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), transManager, this));
         //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
 
         tabbarTrans.addOnTabSelectedListener(tabSelectedListener);

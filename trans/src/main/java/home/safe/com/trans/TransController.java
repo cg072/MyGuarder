@@ -15,13 +15,16 @@ import java.util.List;
 public class TransController implements IProGuardianController{
 
     private ProGuardianDBHelper proGuardianDBHelper;
+
     int result;
 
     @Override
     public int insert(ContentValues contentValues) {
 
         Log.d("controllerInsert", "insert");
+        Log.d("contentval", contentValues.getAsString("ttype"));
         result = proGuardianDBHelper.insert(contentValues);
+
         return result;
     }
 

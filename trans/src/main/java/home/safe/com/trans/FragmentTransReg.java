@@ -267,6 +267,8 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
         int check = 0;
 
+        transManager = new TransManager(getContext());
+
         regTransIntegratedVO = new TransIntegratedVO();
 
         regTransIntegratedVO.setTtype(makettype);
@@ -276,7 +278,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
         //regArrTransIntegratedVO.add(regTransIntegratedVO);
 
-        transManager.insert(regTransIntegratedVO);
+        check = transManager.insert(regTransIntegratedVO);
         Log.d("들어갑니까?", "확인2222");
 
         if(check != 0){

@@ -16,13 +16,14 @@ public class TransManager {
     SQLiteDatabase db;
     TransController controller;
 
-    TransManager transManager;
+    TransIntegratedVO integratedVO = new TransIntegratedVO();
+
 
     public TransManager(Context context){
         this.context = context;
 
-        createController();
         createDB();
+        createController();
     }
 
     public void createController(){
@@ -32,6 +33,7 @@ public class TransManager {
 
     public void createDB(){
         dbHelper = new TransDBHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, ProGuardianDBHelper.PG_TRANS);
+        db = dbHelper.getWritableDatabase();
     }
 
     public void closeDB(){
@@ -40,13 +42,18 @@ public class TransManager {
 
     public int insert(TransIntegratedVO integratedVO){
         int check = 0;
+
+        //dbHelper.removeTable();
+
+        this.integratedVO = integratedVO;
+
         ContentValues values = new ContentValues();
-        values.put("ttype", integratedVO.getTtype());
-        values.put("tmemo", integratedVO.getTmemo());
+        values.put("tlseq", integratedVO.getTmemo());
+        values.put("tid", integratedVO.getTtype());
+        values.put("ttype", integratedVO.getTmemo());
+        values.put("tday", integratedVO.getTtype());
 
         check = controller.insert(values);
-
-
 
         return check;
 
