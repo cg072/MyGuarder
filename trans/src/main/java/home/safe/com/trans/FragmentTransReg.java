@@ -72,9 +72,8 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     TestListViewDTO regDto;
     ArrayList<TestListViewDTO> regArrDto = new ArrayList<TestListViewDTO>();
 
-    TransIntegratedVO regTransIntegratedVO;
+    TransIntegratedVO regTransIntegratedVO ;
     ArrayList<TransIntegratedVO> regArrTransIntegratedVO = new ArrayList<TransIntegratedVO>();
-
 
     FragmentTransList fragmentTransList;
     TransManager transManager;
@@ -203,6 +202,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
                         //서버디비에 인서트
                         //setDto(tseq, ttype, tname);
+                        intsertDB(ttype, tname);
 
                         //sharedpreference를 호출
                         //toShared(kind, text);
@@ -245,7 +245,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     }*/
 
 
-    /*public void setDto(String makeNum, String makeKind, String makeText) {
+    public void setDto(String makeNum, String makeKind, String makeText) {
 
         regDto = new TestListViewDTO();
 
@@ -261,7 +261,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         fragmentTransList.setArryDtoFragList(regArrDto);
 
         Log.v("regArrDto" , "확인8");
-    }*/
+    }
 
     public void intsertDB(String makettype, String maketname){
 
@@ -271,6 +271,19 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
         regTransIntegratedVO.setTtype(makettype);
         regTransIntegratedVO.setTmemo(maketname);
+
+        Log.d("들어갑니까?", "확인");
+
+        //regArrTransIntegratedVO.add(regTransIntegratedVO);
+
+        transManager.insert(regTransIntegratedVO);
+        Log.d("들어갑니까?", "확인2222");
+
+        if(check != 0){
+            Log.d("성공여부", Integer.toString(check));
+        }
+
+
     }
 
     public void setFragReg(FragmentTransList fraglist) {

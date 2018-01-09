@@ -1,5 +1,6 @@
 package home.safe.com.trans;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -14,6 +15,8 @@ public class TransManager {
     TransDBHelper dbHelper;
     SQLiteDatabase db;
     TransController controller;
+
+    TransManager transManager;
 
     public TransManager(Context context){
         this.context = context;
@@ -35,9 +38,18 @@ public class TransManager {
         dbHelper.close();
     }
 
+    public int insert(TransIntegratedVO integratedVO){
+        int check = 0;
+        ContentValues values = new ContentValues();
+        values.put("ttype", integratedVO.getTtype());
+        values.put("tmemo", integratedVO.getTmemo());
+
+        check = controller.insert(values);
 
 
 
+        return check;
 
+    }
 
 }

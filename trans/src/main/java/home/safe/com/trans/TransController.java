@@ -1,6 +1,7 @@
 package home.safe.com.trans;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import com.safe.home.pgchanger.IProGuardianController;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
@@ -18,6 +19,8 @@ public class TransController implements IProGuardianController{
 
     @Override
     public int insert(ContentValues contentValues) {
+
+        Log.d("controllerInsert", "insert");
         result = proGuardianDBHelper.insert(contentValues);
         return result;
     }
@@ -60,10 +63,12 @@ public class TransController implements IProGuardianController{
     @Override
     public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper) {
 
+        this.proGuardianDBHelper = proGuardianDBHelper;
+
     }
 
     @Override
     public ProGuardianDBHelper getDBHelper() {
-        return null;
+        return proGuardianDBHelper;
     }
 }
