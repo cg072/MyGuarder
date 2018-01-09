@@ -26,6 +26,9 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
     private String ltime;
     private String lid;
 
+    public MyGuarderVO() {
+    }
+
     public MyGuarderVO(int lseq, String lday) {
         this.lseq = lseq;
         this.lday = lday;
@@ -136,7 +139,7 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
 
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {
-        setLseq((int)contentValues.get("lseq"));
+        setLseq(contentValues.getAsInteger("lseq"));
         setLlat(contentValues.getAsString("llat"));
         setLlong(contentValues.getAsString("llong"));
         setLday(contentValues.getAsString("lday"));

@@ -139,21 +139,21 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
             MyGuarderVO vo = new MyGuarderVO(0,"37.2316841","127.0548355","2018-01-04","07:39:23","civilianID");
 
             //insert
-            int res = locationManage.controller.insert(vo.locationDataToContentValues());
-            Log.d("MainActivity", "controller.insert - "+res);
+//            int res = locationManage.controller.insert(vo.locationDataToContentValues());
+//            Log.d("MainActivity", "controller.insert - "+res);
 
             //update
 //            int res = locationManage.controller.update(vo.convertDataToContentValues());
 //            Log.d("MainActivity", "controller.update - "+res);
 
             //delete
-//            int res = locationManage.controller.remove(vo.convertDataToContentValues());
-//            Log.d("MainActivity", "controller.remove - "+res);
+            int res = locationManage.remove(vo.convertDataToContentValues());
+            Log.d("MainActivity", "controller.remove - "+res);
 
             //search
-            List<ContentValues> list;
-            list = locationManage.controller.search(new ContentValues());
-            Log.d("MainActivity", "controller.search - "+list.size());
+//            List<ContentValues> list;
+//            list = locationManage.controller.search(new ContentValues());
+//            Log.d("MainActivity", "controller.search - "+list.size());
 
 
             Toast.makeText(this,""+btnMainChanger.getText(),Toast.LENGTH_SHORT).show();

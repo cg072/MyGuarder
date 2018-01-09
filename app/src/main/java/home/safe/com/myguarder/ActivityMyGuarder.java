@@ -108,10 +108,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         }
         else if(view.getId() == btnLocation.getId())
         {
-//            drawPolyline(new LatLng(37.2350000, 127.0620000),new LatLng(37.2353114, 127.0626726));
             civilianLocationRequest();
-
-
         }
     }
 
@@ -123,6 +120,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
  * @since 2017-12-12 오후 5:17
 **/
     private void civilianLocationRequest() {
+        Toast.makeText(this,"위치요청!!",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -197,6 +195,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
      * @version 1.0.0
      * @text 날짜를 가지고 sql로 리스트를 불러와서 맵에 뿌려주는 메서드
      * reference String date
+     * 사용안함 -> 지난위치보기 필요없음
      * @since 2017-12-08 오후 1:52
      **/
     private void selectPopupList(String date)

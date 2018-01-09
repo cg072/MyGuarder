@@ -35,7 +35,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     private String myGuarderCol[] = {"lseq","llat","llong","lday","ltime","lid"};
 
     //SELECT ALL
-    List<ContentValues> list;
+    ArrayList<MyGuarderVO> list;
     //Location LL
     ArrayList<LatLng> LastLocationList;
 
@@ -158,13 +158,13 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
             String compactBox = "";
 
-            for(ContentValues fList : list)
+            for(MyGuarderVO fList : list)
             {
-                if(!compactBox.equals(fList.getAsString(myGuarderCol[3])))
+                if(!compactBox.equals(fList.getLday()))
                 {
-                    dateList.add(fList.getAsString(myGuarderCol[3]));
+                    dateList.add(fList.getLday());
 
-                    compactBox = fList.getAsString(myGuarderCol[3]);
+                    compactBox = fList.getLday();
                 }
 
             }
@@ -248,12 +248,12 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         Toast.makeText(this,""+date,Toast.LENGTH_SHORT).show();
         LastLocationList = new ArrayList<>();
 
-        for(ContentValues fList : list)
+        for(MyGuarderVO fList : list)
         {
-            if(date.equals(fList.getAsString(myGuarderCol[3])))
+            if(date.equals(fList.getLday()))
             {
-                Log.d("asd",""+fList.getAsDouble(myGuarderCol[1]));
-                LastLocationList.add(new LatLng(fList.getAsDouble(myGuarderCol[1]) ,fList.getAsDouble(myGuarderCol[2])));
+                Log.d("asd",""+fList.getLlat());
+                LastLocationList.add(new LatLng(Double.parseDouble(fList.getLlat()) ,Double.parseDouble(fList.getLlong())));
             }
         }
 

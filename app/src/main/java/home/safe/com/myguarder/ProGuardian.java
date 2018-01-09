@@ -842,11 +842,22 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @text
      * 1. 지난위치 볼때 현재위치 그리지 않기  -> 구조 변경 고려 573라인  ok
      * -> 문제사항 -  지난 위치보기 주기와 현재 위치보기 주기가 다름 (상관은 없을거 같다. 세부위치랑 서버 위치가 다르기때문)
-     * 2. CouplerMVC에다가 insert,select등 수정
-     * -> ActivityCivilan 153라인
-     * 3. 위치요청 다이얼로그 (신호줬을때 다이얼로그가 뜨는지)
+     * 2. CouplerMVC에다가 insert,select등 수정 ok  -> 리스트 VO로 바꿔줌
+     * 3. 위치요청 다이얼로그 (신호줬을때 다이얼로그가 뜨는지) -> 1. 서버를 통해 받아오기 2. 앱이 안켜져있을때 행동
      * 4. 피지킴이 목록
-     * 5. 긴급버튼
+     * 5. 긴급버튼 -> 전화인가
      * @since 2018-01-05 오후 4:29
+    **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. CouplerMVC에다가 insert,select등 수정 ok  -> 리스트 VO로 바꿔줌 ok
+     * 2. 위치요청 다이얼로그 -> 서비스에서 리슨만 하고 있고 요청오면 다이얼로그 띄워서 확인하면 서버에서 위치만 보냄
+     * 3. 긴급버튼 문자 보냄
+     * 4. 긴급버튼 -> 전화인가
+     * @since 2018-01-09 오후 3:33
     **/
 }

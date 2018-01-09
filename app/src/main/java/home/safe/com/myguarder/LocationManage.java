@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,8 @@ public class LocationManage extends ProGuardian{
     MyGuarderDBHelper dbHelper;
     SQLiteDatabase db;
     MyGuarderController controller;
+
+    int result = 0;
 
     public LocationManage(Context context) {
         this.context = context;
@@ -47,25 +50,25 @@ public class LocationManage extends ProGuardian{
         dbHelper.close();
     }
 
-//    public int insert(ContentValues contentValues) {
-//        Log.d("MyGuarderController", "insert");
-//        result = proGuardianDBHelper.insert(contentValues);
-//        return result;
-//    }
-//
-//    public int update(ContentValues contentValues) {
-//        Log.d("MyGuarderController", "update");
-//        result = proGuardianDBHelper.update(contentValues);
-//        return result;
-//    }
-//
-//    public int remove(ContentValues contentValues) {
-//        Log.d("MyGuarderController", "remove");
-//        result = proGuardianDBHelper.remove(contentValues);
-//        return result;
-//    }
+    public int insert(ContentValues contentValues) {
+        Log.d("MyGuarderController", "insert");
+        result = controller.insert(contentValues);
+        return result;
+    }
 
-    public List<ContentValues> search(ContentValues contentValues) {
+    public int update(ContentValues contentValues) {
+        Log.d("MyGuarderController", "update");
+        result = controller.update(contentValues);
+        return result;
+    }
+
+    public int remove(ContentValues contentValues) {
+        Log.d("MyGuarderController", "remove");
+        result = controller.remove(contentValues);
+        return result;
+    }
+
+    public ArrayList<MyGuarderVO> search(ContentValues contentValues) {
         Log.d("MyGuarderController", "search");
         //SELECT ALL
         List<ContentValues> list;
@@ -73,7 +76,18 @@ public class LocationManage extends ProGuardian{
         list = controller.search(contentValues);
         Log.d("MainActivity", "controller.search - "+list.size());
 
-        return list;
+        ArrayList<MyGuarderVO> alMyGuarderVOList = new ArrayList<>();
+        MyGuarderVO vo;
+
+        for(ContentValues ls : list)
+        {
+            vo = new MyGuarderVO();
+            vo.convertContentValuesToData(ls);
+            alMyGuarderVOList.add(vo);
+
+        }
+
+        return alMyGuarderVOList;
     }
 
 
