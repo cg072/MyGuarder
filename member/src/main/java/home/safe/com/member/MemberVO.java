@@ -131,6 +131,8 @@ public class MemberVO extends ProGuardianVO implements Serializable {
 
     @Override
     public ContentValues convertDataToContentValues() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("mseq", getMseq());
         return null;
     }
 

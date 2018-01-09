@@ -32,9 +32,10 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     TransDBHelper transDBHelper;
 
 
-    public AdapterFragTabTrans(FragmentManager fm, Context context) {
+    public AdapterFragTabTrans(FragmentManager fm, TransManager transManager, Context context) {
         super(fm);
-        this.transManager = new TransManager(context);
+       // this.transManager = new TransManager(context);
+        this.transManager = transManager;
     }
 
 
@@ -49,15 +50,17 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
             case 0:
 
                 fragmentTransReg.setTransManager(transManager);
-                fragmentTransReg.setFragReg(fragmentTransList);
                 Log.v("regArrDto", "확인2");
+                fragmentTransReg.setFragReg(fragmentTransList);
+
                 return fragmentTransReg;
 
             case 1:
-                // fragmentTransList.setFragList(adaptDto);
                 Log.v("regArrDto", "확인3");
+                // fragmentTransList.setFragList(adaptDto);
 
                 fragmentTransList.setTransManager(transManager);
+
                 return fragmentTransList;
         }
 

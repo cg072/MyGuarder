@@ -61,10 +61,7 @@ public class GuarderManager {
 
     public int insert(GuarderVO guarderVO) {
         int check = 0;
-        ContentValues sendCV = new ContentValues();
-        sendCV.put(COL_NAME, guarderVO.getGmcname());
-        sendCV.put(COL_PHONE, guarderVO.getGmcphone());
-        sendCV.put(COL_USE, guarderVO.getGstate());
+        ContentValues sendCV = guarderVO.convertDataToContentValuesSendDB();
 
         check = controller.insert(sendCV);
 
@@ -79,10 +76,7 @@ public class GuarderManager {
     public int update(GuarderVO guarderVO) {
         int check = 0;
 
-        ContentValues sendCV = new ContentValues();
-        sendCV.put(COL_NAME, guarderVO.getGmcname());
-        sendCV.put(COL_PHONE, guarderVO.getGmcphone());
-        sendCV.put(COL_USE, guarderVO.getGstate());
+        ContentValues sendCV = guarderVO.convertDataToContentValuesSendDB();
 
         check = controller.update(sendCV);
 
@@ -91,7 +85,7 @@ public class GuarderManager {
 
     public ArrayList<GuarderVO> select(String type, GuarderVO data) {
         Log.v("가더","디비 보내기 진입");
-        List<ContentValues> resultList = new ArrayList<ContentValues>();
+        List<ContentValues> resultList;
         ContentValues contentValues = new ContentValues();
         contentValues.put(SELECT_TYPE, type);
         contentValues.put("gstate", data.getGstate());
@@ -106,7 +100,7 @@ public class GuarderManager {
             guaderlist.add(guarderVO);
         }
 
-        Collections.sort(guaderlist, new NameDescCompareGuarders());
+        Collections.sort(guaderlist, new sortOrder());
 
         return guaderlist;
     }
@@ -114,10 +108,10 @@ public class GuarderManager {
     /*
     *  date     : 2017.11.22
     *  author   : Kim Jong-ha
-    *  title    : NameDescCompareGuarders, NameDescCompareSearch 메소드 생성
+    *  title    : sortOrder, NameDescCompareSearch 메소드 생성
     *  comment  : 이름순 정렬
     * */
-    private class NameDescCompareGuarders implements Comparator<GuarderVO> {
+    private class sortOrder implements Comparator<GuarderVO> {
         @Override
         public int compare(GuarderVO arg0, GuarderVO arg1) {
             return  arg0.getGmcname().compareTo(arg1.getGmcname());

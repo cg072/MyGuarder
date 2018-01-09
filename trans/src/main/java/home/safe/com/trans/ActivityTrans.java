@@ -88,11 +88,16 @@ import java.util.ArrayList;
 
 public class ActivityTrans extends AppCompatActivity {
 
-    FragmentTransReg fragmentTransReg;
-    FragmentTransList fragmentTransList;
+    FragmentTransReg fragmentTransReg = new FragmentTransReg();
+    FragmentTransList fragmentTransList = new FragmentTransList();
+
+
     android.support.v7.widget.Toolbar toolbarTrans;
     TabLayout tabbarTrans;
     ViewPager vpagerTrans;
+
+    TransManager transManager = new TransManager(this);
+    TransIntegratedVO integratedVO = new TransIntegratedVO();
 
 
     final private String tag = "이동수단";
@@ -106,16 +111,15 @@ public class ActivityTrans extends AppCompatActivity {
         tabbarTrans = (TabLayout)findViewById(R.id.tabbarTrans);
         vpagerTrans = (ViewPager)findViewById(R.id.vpagerTrans);
 
-        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), this));
-
-        //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
-
-
         //플래그먼트를 미리 로딩 시켜놓음
         vpagerTrans.setOffscreenPageLimit(1);
 
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단등록"), 0 , true);
         tabbarTrans.addTab(tabbarTrans.newTab().setText("이동수단내역"), 1);
+
+        //어댑터세팅
+        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), transManager, this));
+        //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
 
         tabbarTrans.addOnTabSelectedListener(tabSelectedListener);
 
@@ -141,9 +145,12 @@ public class ActivityTrans extends AppCompatActivity {
 
 
             // 리스트페이지로 갈때, 디비헬퍼로 리스트 가져와야 함!!
-            /*if(tab.getPosition() == 1){
 
-            }*/
+            if(tab.getPosition() == 1){
+
+
+
+            }
         }
 
         @Override

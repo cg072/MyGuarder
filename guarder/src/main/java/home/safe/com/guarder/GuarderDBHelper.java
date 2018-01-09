@@ -51,7 +51,7 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
         // 데이터 백업은 따로 짜야하는듯?
     }
 
-    @Override
+/*    @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
         this.sqLiteDB = db;
@@ -63,7 +63,7 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
             Log.v("디비", "오픈 Error");
             Log.v("디비", e.getMessage());
         }
-    }
+    }*/
 
     @Override
     public int insert(ContentValues contentValues) {
@@ -118,15 +118,19 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
         Log.v("DB","Update 진입");
         sqLiteDB = getWritableDatabase();
         Log.v("DB","Update 진입");
+
         String name = String.valueOf(contentValues.get(NAME));
         String phone = String.valueOf(contentValues.get(PHONE));
-
+        String use = String.valueOf(contentValues.get(USE));
+        Log.v("디비업",name);
+        Log.v("디비업",phone);
+        Log.v("디비업",String.valueOf(use));
         int check = sqLiteDB.update(
                 TABLE_NAME,
                 contentValues,
                 NAME + " = ? and " + PHONE +" = ? " ,
                 new String[]{name, phone});
-
+        Log.v("디비업",String.valueOf(check));
         return check;
     }
 

@@ -18,7 +18,7 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
     private SQLiteDatabase db;
     final static private String TABLE_NAME = "transportation";
-    private String transCol[] = {"rtseq", "rlseq", "rmemo", "rday", "rmid"};
+    private String transCol[] = {"tseq", "tlseq", "tid", "ttype", "tmemo", "tday"};
 
     public TransDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
@@ -42,11 +42,12 @@ public class TransDBHelper extends ProGuardianDBHelper{
         db = sqLiteDatabase;
         String sql = "CREATE TABLE IF NOT EXISTS" +
                 TABLE_NAME + "(" +
-                transCol[0] + "INTEGER DEFAULT 0," +
-                transCol[1] + "INTEGET DEFAULT 0," +
+                transCol[0] + "INTEGER PRIMARY KEY AUTOINCREMENT," +
+                transCol[1] + "INTEGER DEFAULT 0," +
                 transCol[2] + "TEXT DEFAULT 20," +
-                transCol[3] + "DATE DEFAULT 20," +
-                transCol[4] + "TEXT DEFAULT 20)";
+                transCol[3] + "TEXT DEFAULT 20," +
+                transCol[4] + "TEXT DEFAULT 20," +
+                transCol[5] + "DATE DEFAULT 20)";
 
         db.execSQL(sql);
 

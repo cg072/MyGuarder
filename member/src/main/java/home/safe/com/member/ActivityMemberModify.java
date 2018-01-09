@@ -77,7 +77,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         btnDuplicationID = (Button) findViewById(R.id.btnDuplicationID);
 
         // 사전 셋팅(사전에 셋팅해야할 서버로부터 받은 정보 등을 받고 셋팅)
-        beforeSetting();
+        changeViewContents();
 
         // 기기에서 번호 가져오기
         getMemberPhone();
@@ -113,7 +113,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         // 인증을 꼭 해야하도록 한다.
     }
 
-    private void beforeSetting() {
+    private void changeViewContents() {
         // 타이틀 셋팅
         tvTitle.setText(TAG);
 
@@ -151,7 +151,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         memberVO.setMid(etID.getText().toString().trim());
         memberVO.setMpwd(etPWD.getText().toString().trim());
         memberVO.setMname(etName.getText().toString().trim());
-        memberVO.setMphone(hyphenRemove(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
+        memberVO.setMphone(removeHyphen(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
         memberVO.setMbirth(etBirth.getText().toString().trim());
         memberVO.setMemail(etEMail.getText().toString().trim());
 
@@ -283,7 +283,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 myNumber = mgr.getLine1Number();
                 myNumber = myNumber.replace("+82", "0");
                 Toast.makeText(this, myNumber, Toast.LENGTH_SHORT).show();
-                tvPhone.setText(hyphenAdd(myNumber));
+                tvPhone.setText(addHyphen(myNumber));
             } catch (Exception e) {
                 Toast.makeText(this, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
@@ -293,11 +293,11 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
     /*
      *  date     : 2017.11.22
      *  author   : Kim Jong-ha
-     *  title    : hyphenAdd() 메소드 생성
+     *  title    : addHyphen() 메소드 생성
      *  comment  : 전화 번호 사이의 '-' 를 추가한다
      *  return   : String 형태
      * */
-    private String hyphenAdd(String phone) {
+    private String addHyphen(String phone) {
 
         String resultString = phone;
 
@@ -323,20 +323,32 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
     /*
      *  date     : 2017.11.22
      *  author   : Kim Jong-ha
-     *  title    : hyphenRemove() 메소드 생성
+     *  title    : removeHyphen() 메소드 생성
      *  comment  : 전화 번호 사이의 '-' 를 제거한다
      *  return   : String 형태
      * */
-    private String hyphenRemove(String phone) {
+    private String removeHyphen(String phone) {
 
         String[] basePhone = phone.split("-");
-
-        Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
         String resultPhone = basePhone[0];
-        if(basePhone[0].length() < 10) {
-            resultPhone = resultPhone + basePhone[1] + basePhone[2];
-        }
 
+        if(phone.contains(phone)) {
+            int check = 0;
+            for(int i = 0 ; i < phone.length() ; i++) {
+                if(phone.charAt(i) == '-') {
+                    check++;
+                }
+            }
+            switch ( check ) {
+                // check = 0 일때는 resultPhone에 이미 basePhone[0] 이 들어있음
+                case 1 :
+                    resultPhone += basePhone[1];
+                    break;
+                case 2 :
+                    resultPhone = basePhone[1] + basePhone[2];
+                    break;
+            }
+        }
         return resultPhone;
     }
 }

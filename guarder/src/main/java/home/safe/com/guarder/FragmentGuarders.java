@@ -16,13 +16,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 
 public class FragmentGuarders extends Fragment implements ListViewAdapterGuarders.GuardersListBtnClickListener {
 
     // 지킴이로 설정되어있다면 use = 1
     // 지킴이로 설정되어있지 않다면 use = 0
-    final static String TAG = "MEMBER";
 
     private ListViewAdapterGuarders lvAdapterGuarders;
     private ListView lvGuarders;
@@ -59,7 +57,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, alGuarders, this);
         lvGuarders.setAdapter(lvAdapterGuarders);
 
-        setList(loadDB());
+        setAlGuarder(loadGuarderList());
 
         return rootView;
     }
@@ -105,6 +103,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         regAlert.show();            // 해당 정보로 다이얼로그 보여줌
     }
 
+    // 회원 리스트에서 등록 버튼을 눌렀을 시에, 서버로 보내는 메소드
     private boolean sendToServer(String name, String phone) {
         boolean check = true;
 
@@ -114,69 +113,124 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     /*
     *  date     : 2017.11.22
     *  author   : Kim Jong-ha
-    *  title    : NameDescCompareGuarders, NameDescCompareSearch 메소드 생성
+    *  title    : sortOrder 메소드 생성
     *  comment  : 이름순 정렬
     * */
-    private class NameDescCompareGuarders implements Comparator<GuarderVO> {
+    private class sortOrder implements Comparator<GuarderVO> {
         @Override
         public int compare(GuarderVO arg0, GuarderVO arg1) {
             return  arg0.getGmcname().compareTo(arg1.getGmcname());
         }
     }
 
-    // ArrayList에 지킴이를 추가함 [서버와 연결 후 부터는 서버로부터 받아와야한다.]
-    public void guarderAdd(GuarderVO recieveVO) {
+    /*
+    *  date     : 2017.12.15
+    *  author   : Kim Jong-ha
+    *  title    : addGuarder 메소드 생성
+    *  comment  : 등록을 눌렀고, sendToServer 에서 결과값이 ok라면,
+    *             1차적으로 DB에 insert를 하고, insert가 정상적이라면
+    *             2차적으로 alGuarder(지킴이 리스트)에 추가한다. (정렬 후, 어댑터 갱신)
+    * */
+    public void addGuarder(GuarderVO recieveVO) {
         Log.v("지킴이 추가","진입");
         int check = 0;
 
         GuarderVO guarderVO = new GuarderVO(recieveVO.getGmcname(), recieveVO.getGmcphone(), 0);    // 지킴이 포장( 형태 GuarderVO)
 
-        check = guarderManager.insert(guarderVO); // guarderManager로 전송
+        check = guarderManager.insert(guarderVO);                                           // guarderManager로 전송
 
         if(check != 0) {                                                                    // 결과값이 성공적이라면 ( 0 이 아니라면)
             alGuarders.add(guarderVO);                                                     // 지킴이 리스트에 추가
-            Collections.sort(alGuarders, new FragmentGuarders.NameDescCompareGuarders());  // 지킴이 리스트 이름순 정렬
+            Collections.sort(alGuarders, new sortOrder());                                  // 지킴이 리스트 이름순 정렬
             lvAdapterGuarders.notifyDataSetChanged();                                      // 어댑터 갱신
         }
     }
 
-    public void setList(ArrayList<GuarderVO> list) {    // 지킴이 목록을 보여주는 현재 화면에 외부에서 리스트를 전송하여 어댑터 갱신(외부전용)
-        inputAlGuarders(list);
+    /*
+    *  date     : 2017.01.03
+    *  author   : Kim Jong-ha
+    *  title    : sortOrder 메소드 생성
+    *  comment  : 지킴이 목록을 보여주는 현재 화면에 외부에서 리스트를 전송하여 어댑터 갱신(외부전용)
+    * */
+    public void setAlGuarder(ArrayList<GuarderVO> list) {
+        changeGurderList(list);
         lvAdapterGuarders.notifyDataSetChanged();
     }
 
-    private ArrayList<GuarderVO> loadDB() {         // DB로 부터 초기 목록화면을 가져온다.
-
+    /*
+    *  date     : 2017.01.03
+    *  author   : Kim Jong-ha
+    *  title    : loadGuarderList 메소드 생성
+    *  comment  : DB로부터 지킴이Fragment를 초기 구성할 지킴이 리스트를 가져온다.
+    *             현재 지킴이 상태를 나타내는 메소드 사용(setNowGuarder)
+    * */
+    private ArrayList<GuarderVO> loadGuarderList() {                                                // DB로 부터 초기 목록화면을 가져온다.
         ArrayList<GuarderVO> resultList = guarderManager.select("all", new GuarderVO());    // DB selectAll을 위한 매니저로 전송
-        for (GuarderVO gv : resultList) {           // 리스트중 현재 지킴이 상태인 회원을 뽑는다.
+        for (GuarderVO gv : resultList) {                                                           // 리스트중 현재 지킴이 상태인 회원을 뽑는다.
             if(gv.getGstate() == 1) {
                 nowGuarderName = gv.getGmcname();
                 nowGuarderPhone = gv.getGmcphone();
                 setNowGuarder(nowGuarderName, nowGuarderPhone);     // Context 및 텍스트뷰에 현재 지킴이로 등록
             }
         }
-
         return resultList;
     }
 
+    /*
+    *  date     : 2017.01.05
+    *  author   : Kim Jong-ha
+    *  title    : setGuarderManager
+    *  comment  : Adapter에서 Fragment를 만들어줄 때, guarderManager를 셋팅해주는 메소드(외부 셋팅용 - FragmentAdapter)
+    * */
     public void setGuarderManager(GuarderManager guarderManager) {      // guarderManager 셋팅
         this.guarderManager = guarderManager;
     }
 
-    public ArrayList<GuarderVO> getList() {         // 외부로 지킴이 리스트 전송( FragmentSearch에서 사용중 - 중복 제거를 위한)
+    /*
+    *  date     : 2017.01.05
+    *  author   : Kim Jong-ha
+    *  title    : getGuarderList 메소드 생성
+    *  comment  : 외부로 지킴이 리스트 전송( FragmentSearch에서 중복 제거를 위해 사용중)
+    * */
+    public ArrayList<GuarderVO> getGuarderList() {
         return alGuarders;
     }
 
-    private void setNowGuarder(String name, String phone) {     // 상단의 텍스트뷰에 현재 지킴이 정보 표시
+    /*
+    *  date     : 2017.01.05
+    *  author   : Kim Jong-ha
+    *  title    : setNowGuarder 메소드 생성
+    *  comment  : // 상단의 텍스트뷰에 현재 지킴이 정보 표시
+    * */
+    private void setNowGuarder(String name, String phone) {
         tvGuarderName.setText(name);
         tvGuarderPhone.setText(phone);
     }
 
-    private void inputAlGuarders(ArrayList<GuarderVO> list) {
+    /*
+    *  date     : 2017.01.05
+    *  author   : Kim Jong-ha
+    *  title    : inputAlguarder 메소드 생성
+    *  comment  : alGuarder = OTHER ArrayList<GuarderVO>(); 할 경우,
+    *             adapter에 setAdapter로 적용된 alGuarder의 주소값이 바뀌므로,
+    *             비우고, 추가하는 형태로 작성
+    * */
+    private void changeGurderList(ArrayList<GuarderVO> list) {
         alGuarders.clear();
         alGuarders.addAll(list);
     }
 
+    /*
+    *  date     : 2017.01.07
+    *  author   : Kim Jong-ha
+    *  title    : setDialog 메소드 생성
+    *  comment  : 다이얼로그를 나타내는 메소드를 구성한다.
+    *             확인 버튼을 눌렀을 시,
+    *             지킴이 상태일때, 지킴이 상태가 아닐때로 두가지의 경우가 필요하다.
+    *             1. 모든 지킴이 상태를 (0 으로 update)
+    *             2. 해당 포지션의 지킴이의 상태를 update
+    *             3. DB로 부터 갱신이 완료된 지킴이리스트를 Load
+    * */
     private void setDialog(int check, AlertDialog.Builder regAlert) {
 
         regAlert.setTitle("지킴이 등록");
@@ -200,13 +254,14 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                         dialogGuarderVO.setGstate(0);
                         postCheck = guarderManager.update(dialogGuarderVO);                   // 해당 포지션 업데이트
 
-                        inputAlGuarders(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        changeGurderList(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
                         lvAdapterGuarders.notifyDataSetChanged();                                // 지킴이 목록을 화면에 갱신
                     }
                 });
                 break;
             case 1 :
                 // 지킴이 등록
+                Log.v("지킴이등록", String.valueOf(dialogGuarderVO.getGstate()));
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -221,7 +276,8 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                         dialogGuarderVO.setGstate(1);
                         postCheck = guarderManager.update(dialogGuarderVO);                 // 해당 포지션 업데이트
 
-                        inputAlGuarders(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        Log.v("지킴이등록", String.valueOf(dialogGuarderVO.getGstate()));
+                        changeGurderList(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
                         lvAdapterGuarders.notifyDataSetChanged();                             // 지킴이 목록을 화면에 갱신
                         Toast.makeText(getContext(), nowGuarderName + " " + nowGuarderPhone, Toast.LENGTH_SHORT).show();
                     }
@@ -235,32 +291,6 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                 Toast.makeText(getContext(), "취소할거면 왜눌러 띱때야", Toast.LENGTH_SHORT).show();// 취소는 없다.
             }
         });
-    }
-
-    private Object sendDB(int type, GuarderVO guarderVO, String selectType) {
-
-        int resultCheck = 0;
-        ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
-
-        switch(type){
-            case TYPE_INSERT :
-                resultCheck = guarderManager.insert(guarderVO);
-                return resultCheck;
-            case TYPE_DELETE :
-                resultCheck = guarderManager.delete(guarderVO);
-                return resultCheck;
-            case TYPE_UPDATE :
-                resultCheck = guarderManager.update(guarderVO);
-                return resultCheck;
-            case TYPE_SELECT_ALL :
-                resultList = guarderManager.select(selectType, guarderVO);
-                return resultList;
-            case TYPE_SELECT_PART :
-                resultList = guarderManager.select(selectType, guarderVO);
-                return resultList;
-        }
-
-        return null;
     }
 
     // 1. ArrayList에 있는 것을 저장.

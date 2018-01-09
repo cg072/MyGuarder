@@ -4,9 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteCursorDriver;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQuery;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -15,7 +12,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -40,8 +36,6 @@ public class ActivityGuarder extends AppCompatActivity {
     GuarderVO guarderVO;
 
     ArrayList<GuarderVO> alSearch = null;
-    ArrayList<GuarderVO> alSearchResult = null;
-    ArrayList<GuarderVO> alGuarders = null;
 
     final private String TAG = "가드";
 
@@ -91,20 +85,32 @@ public class ActivityGuarder extends AppCompatActivity {
     /*
      *  date     : 2017.11.22
      *  author   : Kim Jong-ha
-     *  title    : hyphenRemove() 메소드 생성
+     *  title    : removeHyphen() 메소드 생성
      *  comment  : 전화 번호 사이의 '-' 를 제거한다
      *  return   : String 형태
      * */
-    private String hyphenRemove(String phone) {
+    private String removeHyphen(String phone) {
 
         String[] basePhone = phone.split("-");
-        Log.v(TAG, "나누기 시작");
-        Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
         String resultPhone = basePhone[0];
-        if(basePhone[0].length() < 4) {
-            resultPhone = resultPhone + basePhone[1] + basePhone[2];
-        }
 
+        if(phone.contains(phone)) {
+            int check = 0;
+            for(int i = 0 ; i < phone.length() ; i++) {
+                if(phone.charAt(i) == '-') {
+                    check++;
+                }
+            }
+            switch ( check ) {
+                    // resultPhone에 이미 basePhone[0] 이 들어있음
+                case 1 :
+                    resultPhone += basePhone[1];
+                    break;
+                case 2 :
+                    resultPhone = basePhone[1] + basePhone[2];
+                    break;
+            }
+        }
         return resultPhone;
     }
 
@@ -112,10 +118,10 @@ public class ActivityGuarder extends AppCompatActivity {
    /*
     *  date     : 2017.11.19
     *  author   : Kim Jong-ha
-    *  title    : getList 메소드 생성
-    *  comment  : 시험용 리스트
+    *  title    : loadMemberList 메소드 생성
+    *  comment  : DB에 있는 전화번호부 리스트를 불러온다
     * */
-    private void loadList() {
+    private void loadMemberList() {
         Log.v(TAG, "loadList들어옴");
         alSearch = new ArrayList<GuarderVO>();
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
@@ -143,7 +149,7 @@ public class ActivityGuarder extends AppCompatActivity {
                         ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                 // hyphen을 제거하는 메소드를 추가하였다.
-                guarderVO.setGmcphone(hyphenRemove(phone));
+                guarderVO.setGmcphone(removeHyphen(phone));
 
                 // 여기 if문 아래서 추가를 해야 전화번호가 있는 사람만 담아간다.
                 alSearch.add(guarderVO);
@@ -184,7 +190,7 @@ public class ActivityGuarder extends AppCompatActivity {
         } else {
             //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
             checkPermission = true;
-            loadList();
+            loadMemberList();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -216,7 +222,7 @@ public class ActivityGuarder extends AppCompatActivity {
                     Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
                     checkPermission = true;
                     checkPermission();
-                    //loadList();
+                    //loadMemberList();
                 } else {
                     //사용자가 거부 했을때
                     Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();

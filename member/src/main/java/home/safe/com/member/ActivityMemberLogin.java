@@ -124,13 +124,13 @@ public class ActivityMemberLogin extends AppCompatActivity {
         naverLogin = (RelativeLayout) findViewById(R.id.btnNaverLogin);
         tvNaver = (TextView)findViewById(R.id.tvNaver);
 
-        naverSetting();
-        googleSetting();
+        callNaverLogin();
+        callGoogleLogin();
 
         loadData();
-        if(autoLogin() == true) {
+        if(checkAutoLogin() == true) {
             loadData();
-            loginCheck();
+            checkLogin();
         }
 
         if(setTestLogin() == true && autoLoginCheck == true) {
@@ -230,7 +230,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
         return false;
     }
 
-    private void loginCheck() {
+    private void checkLogin() {
         Map<String, String> map = new HashMap<String, String>();
 
         String id = etID.getText().toString().trim();
@@ -260,7 +260,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     }
 
     // 자동 로그인 여부 체크
-    private boolean autoLogin() {
+    private boolean checkAutoLogin() {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         return preferences.getBoolean("MemberAuto", false);
     }
@@ -289,10 +289,10 @@ public class ActivityMemberLogin extends AppCompatActivity {
     /*
     *  date     : 2017.12.03
     *  author   : Kim Jong-ha
-    *  title    : googleSetting 메소드 생성
+    *  title    : callGoogleLogin 메소드 생성
     *  comment  : Google 로그인에 필요한 것들
     * */
-    private void googleSetting() {
+    private void callGoogleLogin() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder( GoogleSignInOptions.DEFAULT_SIGN_IN )
                 // 필요한 항목이 있으면 아래에 추가
                 .requestEmail( )
@@ -315,10 +315,10 @@ public class ActivityMemberLogin extends AppCompatActivity {
     /*
     *  date     : 2017.11.29
     *  author   : Kim Jong-ha
-    *  title    : naverSetting 메소드 생성
+    *  title    : callNaverLogin 메소드 생성
     *  comment  : Naver 로그인에 필요한 것들 세팅
     * */
-    private void naverSetting() {
+    private void callNaverLogin() {
 
         Typeface type = Typeface.createFromAsset(this.getAssets(), "NanumBarunGothic_Bold(subset).otf"); // asset 폴더에 넣은 폰트 파일 명
         tvNaver.setTypeface(type);
@@ -396,7 +396,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     };
 
     private void loginAfter() {
-        if(memberCheck() == true) {
+        if(checkMember() == true) {
             goMainTest();
         } else {
             // 회원이 아니었는데, 가입한 경우 이므로 전화번호 인증 창으로 간다.
@@ -405,20 +405,20 @@ public class ActivityMemberLogin extends AppCompatActivity {
         }
     }
 
-    private boolean memberCheck() {
-        boolean memberCheck = false;
+    private boolean checkMember() {
+        boolean cheeckMember = false;
         // 회원인지 여부 판단후에 회원이면
-        //memberCheck = true;
+        //checkMember = true;
 
         // 회원이 아니면 false로 간다.
 
-        return memberCheck;
+        return cheeckMember;
     }
 
     /*
     *  date     : 2017.11.29
     *  author   : Kim Jong-ha
-    *  title    : googleSetting 메소드 생성
+    *  title    : callGoogleLogin 메소드 생성
     *  comment  : Naver 로그인 API 작업에 필요한 부분
     * */
     // API 요청 작업
