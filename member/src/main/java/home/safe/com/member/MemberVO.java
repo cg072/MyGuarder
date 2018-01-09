@@ -133,12 +133,37 @@ public class MemberVO extends ProGuardianVO implements Serializable {
     public ContentValues convertDataToContentValues() {
         ContentValues contentValues = new ContentValues();
         contentValues.put("mseq", getMseq());
-        return null;
+        contentValues.put("mname", getMname());
+        contentValues.put("mphone", getMphone());
+        contentValues.put("mid", getMid());
+        contentValues.put("mpwd", getMpwd());
+        contentValues.put("mcertday", getMcertday());
+        contentValues.put("mbirth", getMbirth());
+        contentValues.put("memail", getMemail());
+        contentValues.put("mgender", getMgender());
+        contentValues.put("msns", getMsns());
+        contentValues.put("msnsid", getMsnsid());
+        contentValues.put("mregday", getMregday());
+        contentValues.put("mnickname", getMnickname());
+
+        return contentValues;
     }
 
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {
-
+        this.setMseq(contentValues.getAsInteger("mseq"));
+        this.setMname(contentValues.getAsString("mname"));
+        this.setMphone(contentValues.getAsString("mphone"));
+        this.setMid(contentValues.getAsString("mid"));
+        this.setMpwd(contentValues.getAsString("mpwd"));
+        this.setMcertday(contentValues.getAsString("mcertday"));
+        this.setMbirth(contentValues.getAsString("mbirth"));
+        this.setMemail(contentValues.getAsString("memail"));
+        this.setMgender(contentValues.getAsString("mgender"));
+        this.setMsns(contentValues.getAsString("msns"));
+        this.setMsnsid(contentValues.getAsString("msnsid"));
+        this.setMregday(contentValues.getAsString("mregday"));
+        this.setMnickname(contentValues.getAsString("mnickname"));
     }
 
     @Override

@@ -92,17 +92,17 @@ public class GuarderManager {
         resultList = controller.search(contentValues);
 
         GuarderVO guarderVO;
-        ArrayList<GuarderVO> guaderlist = new ArrayList<GuarderVO>();
+        ArrayList<GuarderVO> guaderList = new ArrayList<GuarderVO>();
 
         for (ContentValues cv : resultList) {
             guarderVO = new GuarderVO();
             guarderVO.convertContentValuesToData(cv);
-            guaderlist.add(guarderVO);
+            guaderList.add(guarderVO);
         }
 
-        Collections.sort(guaderlist, new sortOrder());
+        Collections.sort(guaderList, new sortOrder());
 
-        return guaderlist;
+        return guaderList;
     }
 
     /*
