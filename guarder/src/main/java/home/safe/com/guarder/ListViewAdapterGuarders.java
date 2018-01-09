@@ -1,14 +1,11 @@
 package home.safe.com.guarder;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -54,7 +51,7 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
         final GuarderVO guarderVO = (GuarderVO) getItem(position);
 
         tvName.setText(guarderVO.getGmcname());
-        tvPhone.setText(hyphenAdd(guarderVO.getGmcphone()));
+        tvPhone.setText(addHyphen(guarderVO.getGmcphone()));
 
         btnGuardReg = (TextView) convertView.findViewById(R.id.btnGuardReg);
         btnGuardReg.setTag(position);
@@ -81,11 +78,11 @@ public class ListViewAdapterGuarders extends ArrayAdapter implements View.OnClic
     /*
      *  date     : 2017.11.22
      *  author   : Kim Jong-ha
-     *  title    : hyphenAdd() 메소드 생성
+     *  title    : addHyphen() 메소드 생성
      *  comment  : 전화 번호 사이의 '-' 를 추가한다
      *  return   : String 형태
      * */
-    private String hyphenAdd(String phone) {
+    private String addHyphen(String phone) {
 
         String resultString = phone;
 

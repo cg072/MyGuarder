@@ -41,22 +41,26 @@ public class GuarderController implements IProGuardianController {
 
     @Override
     public int insertServer(ContentValues contentValues) {
-        return 0;
+        int check = 0;
+        return check;
     }
 
     @Override
     public int updateServer(ContentValues contentValues) {
-        return 0;
+        int check = 0;
+        return check;
     }
 
     @Override
     public int removeServer(ContentValues contentValues) {
-        return 0;
+        int check = 0;
+        return check;
     }
 
     @Override
     public List<ContentValues> searchServer(ContentValues contentValues) {
-        return null;
+        List<ContentValues> list = new ArrayList<ContentValues>();
+        return list;
     }
 
     @Override

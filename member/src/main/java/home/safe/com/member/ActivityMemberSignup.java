@@ -118,7 +118,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
                     memberVO.setMid(etID.getText().toString().trim());
                     memberVO.setMpwd(etPWD.getText().toString().trim());
                     memberVO.setMname(etName.getText().toString().trim());
-                    memberVO.setMphone(hyphenRemove(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
+                    memberVO.setMphone(removeHyphen(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
                     memberVO.setMbirth(etBirth.getText().toString().trim());
                     memberVO.setMemail(etEMail.getText().toString().trim());
 
@@ -142,17 +142,6 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         getMemberPhone();
         setTestSignup();
     }
-
-
-    private void setTestSignup() {
-        etID.setText("abcd123");
-        etPWD.setText("aAbBcC11");
-        etCheckPWD.setText("aAbBcC11");
-        etName.setText("김종핰");
-        etBirth.setText("");
-        etEMail.setText("sdf@fds.com");
-    }
-
 
     @Override
     public void onClick(View view) {
@@ -247,6 +236,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
                 return;
         }
     }
+
     /*
     *  date     : 2017.11.12
     *  author   : Kim Jong-ha
@@ -269,7 +259,7 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
                 myNumber = mgr.getLine1Number();
                 myNumber = myNumber.replace("+82", "0");
                 Toast.makeText(this, myNumber, Toast.LENGTH_SHORT).show();
-                tvPhone.setText(hyphenAdd(myNumber));
+                tvPhone.setText(addHyphen(myNumber));
             } catch (Exception e) {
                 Toast.makeText(this, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
@@ -279,11 +269,11 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
     /*
      *  date     : 2017.11.22
      *  author   : Kim Jong-ha
-     *  title    : hyphenAdd() 메소드 생성
+     *  title    : addHyphen() 메소드 생성
      *  comment  : 전화 번호 사이의 '-' 를 추가한다
      *  return   : String 형태
      * */
-    private String hyphenAdd(String phone) {
+    private String addHyphen(String phone) {
 
         String resultString = phone;
 
@@ -308,20 +298,43 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
     /*
      *  date     : 2017.11.22
      *  author   : Kim Jong-ha
-     *  title    : hyphenRemove() 메소드 생성
+     *  title    : removeHyphen() 메소드 생성
      *  comment  : 전화 번호 사이의 '-' 를 제거한다
      *  return   : String 형태
      * */
-    private String hyphenRemove(String phone) {
+    private String removeHyphen(String phone) {
 
         String[] basePhone = phone.split("-");
-
-        Log.v(TAG, "나눔"+basePhone[0].length()+ " " + basePhone[0]);
         String resultPhone = basePhone[0];
-        if(basePhone[0].length() < 10) {
-            resultPhone = resultPhone + basePhone[1] + basePhone[2];
-        }
 
+        if(phone.contains(phone)) {
+            int check = 0;
+            for(int i = 0 ; i < phone.length() ; i++) {
+                if(phone.charAt(i) == '-') {
+                    check++;
+                }
+            }
+            switch ( check ) {
+                // check = 0 일때는 resultPhone에 이미 basePhone[0] 이 들어있음
+                case 1 :
+                    resultPhone += basePhone[1];
+                    break;
+                case 2 :
+                    resultPhone = basePhone[1] + basePhone[2];
+                    break;
+            }
+        }
         return resultPhone;
     }
+
+    // 테스트용
+    private void setTestSignup() {
+        etID.setText("abcd123");
+        etPWD.setText("aAbBcC11");
+        etCheckPWD.setText("aAbBcC11");
+        etName.setText("김종핰");
+        etBirth.setText("");
+        etEMail.setText("sdf@fds.com");
+    }
+
 }

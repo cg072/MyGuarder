@@ -108,17 +108,16 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     public ContentValues convertDataToContentValues() {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SEQ, getGseq());
         contentValues.put(NAME, getGmcname());
         contentValues.put(PHONE, getGmcphone());
         contentValues.put(USE, getGstate());
+        contentValues.put(SEQ, getGseq());
         contentValues.put(MID, getGmid());
         contentValues.put(MCID, getGmcid());
         contentValues.put(REGDAY, getGregday());
 
         return contentValues;
     }
-
 
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {
@@ -129,6 +128,22 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
         setGmid(contentValues.getAsString(MID));
         setGmcid(contentValues.getAsString(MCID));
         setGregday(contentValues.getAsString(REGDAY));
+    }
+
+    public ContentValues convertDataToContentValuesSendDB() {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NAME, getGmcname());
+        contentValues.put(PHONE, getGmcphone());
+        contentValues.put(USE, getGstate());
+
+        return contentValues;
+    }
+
+    public void convertContentValuesToDataRecvDB(ContentValues contentValues) {
+        setGmcname(contentValues.getAsString(NAME));
+        setGmcphone(contentValues.getAsString(PHONE));
+        setGstate(contentValues.getAsInteger(USE));
     }
 
     @Override

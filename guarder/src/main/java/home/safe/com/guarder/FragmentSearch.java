@@ -1,10 +1,8 @@
 package home.safe.com.guarder;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     private ListView lvSearch;
     private ArrayList<GuarderVO> alSearch;
     private ArrayList<GuarderVO> alGuarders;
-    private ArrayList<GuarderVO> alSend = new ArrayList<GuarderVO>();
+    private ArrayList<GuarderVO> alPostGuarder = new ArrayList<GuarderVO>();
     private EditText etSearch;
     private Button btnSearch;
     ViewGroup rootView = null;
@@ -45,7 +43,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         etSearch = (EditText) rootView.findViewById(R.id.etSearch);
         btnSearch = (Button) rootView.findViewById(R.id.btnSearch);
 
-        lvAdapterSearch = new ListViewAdapterSearch(rootView.getContext(), R.layout.listview_item_search, alSend, this);
+        lvAdapterSearch = new ListViewAdapterSearch(rootView.getContext(), R.layout.listview_item_search, alPostGuarder, this);
         lvSearch.setAdapter(lvAdapterSearch);
 
         etSearch.setOnEditorActionListener(this);
@@ -65,11 +63,11 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         GuarderVO guarderVO = new GuarderVO(name, phone);
 
         // 서버로 전화번호를 보내서, 지킴이 목록에 추가한다.
-        fragmentGuarders.guarderAdd(guarderVO);           // 지킴이 리스트에 전달
+        fragmentGuarders.addGuarder(guarderVO);           // 지킴이 리스트에 전달
 
         alSearchResult.remove(position);                    // 결과 관리 리스트에서 삭제
 
-        inputAlSend(alSearchResult);                        // 전달 관리 리스트 갱신
+        changePostGuarderList(alSearchResult);                        // 전달 관리 리스트 갱신
         lvAdapterSearch.notifyDataSetChanged();             // 어댑터 갱신
     }
 
@@ -77,7 +75,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     public void onClick(View view) {
         // 검색 버튼을 눌렀을 시 해야할 행동
         if(btnSearch.getId() == view.getId()) {
-            resultSearch();
+            searchResult();
         }
     }
 
@@ -85,7 +83,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
 
         if(etSearch.getId() == textView.getId() && i == EditorInfo.IME_ACTION_SEARCH) {
-            resultSearch();
+            searchResult();
         }
         return false;
     }
@@ -98,7 +96,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
      *             본래는 서버로 String를 보내고, 필터링된 값들을 리스트에 담아야한다.
      *  return   : ArrayList<ListViewItemSearch>
      * */
-    private void resultSearch() {
+    private void searchResult() {
         // 결과 담는 ArrayList 초기화
         ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
 
@@ -114,14 +112,21 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
             }
         }
 
-        alSearchResult = duplicationRemove(resultList, fragmentGuarders.getList());
-        inputAlSend(alSearchResult);
+        alSearchResult = removeDuplication(resultList, fragmentGuarders.getGuarderList());
+        changePostGuarderList(alSearchResult);
         lvAdapterSearch.notifyDataSetChanged();
     }
 
-    private void inputAlSend (ArrayList<GuarderVO> list) {
-        alSend.clear();
-        alSend.addAll(list);
+    /*
+   *  date     : 2017.11.20
+   *  author   : Kim Jong-ha
+   *  title    : guarderSearchUpdate(ArrayList<ListViewItemSearch> alSearch, ArrayList<ListViewItemGuarders> alGuarders 메소드 생성
+   *  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
+   *  return   : ArrayList<ListViewItemSearch> 형태
+   * */
+    private void changePostGuarderList(ArrayList<GuarderVO> list) {
+        alPostGuarder.clear();
+        alPostGuarder.addAll(list);
     }
 
     /*
@@ -131,7 +136,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     *  comment  : Activity 로딩 시, 회원 목록과 지킴이 목록의 중첩을 검색 후, 회원목록에서 삭제한다.
     *  return   : ArrayList<ListViewItemSearch> 형태
     * */
-    private ArrayList<GuarderVO> duplicationRemove(ArrayList<GuarderVO> searchs, ArrayList<GuarderVO> guarders) {
+    private ArrayList<GuarderVO> removeDuplication(ArrayList<GuarderVO> searchs, ArrayList<GuarderVO> guarders) {
 
         ArrayList<GuarderVO> tempSearch = new ArrayList<GuarderVO>();
         tempSearch.addAll(searchs);
@@ -158,9 +163,9 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     public void setInstance(ArrayList<GuarderVO> list, FragmentGuarders fragmentGuarders) {
 
         this.fragmentGuarders = fragmentGuarders;
-        alGuarders = this.fragmentGuarders.getList();
+        alGuarders = this.fragmentGuarders.getGuarderList();
         // 첫 로딩 때, 전화번호부에서 지킴이 리스트에 있는 사람들을 제외하고 띄운다.
-        alSearch = duplicationRemove(list, alGuarders);
+        alSearch = removeDuplication(list, alGuarders);
         alSearch = list;
     }
 

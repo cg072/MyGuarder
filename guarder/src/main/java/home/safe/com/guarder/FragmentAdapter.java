@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     ArrayList<GuarderVO> alSearch;
-    ArrayList<GuarderVO> alGuarder;
     FragmentSearch fragmentSearch = new FragmentSearch();
     FragmentGuarders fragmentGuarders = new FragmentGuarders();
     GuarderManager guarderManager;

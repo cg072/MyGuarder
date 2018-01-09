@@ -18,12 +18,12 @@ import java.util.List;
 public class MemberDBHelper extends PreTestDBHelper {
 
     SQLiteDatabase sqLiteDB;
-    final static private String TABLE_NAME = "guarderlist";
+    final static private String TABLE_NAME = "memberlist";
 
     final static String[] MEMBER_COL = {   "mseq"     , "mname" , "mphone", "mid"     , "mpwd",
-            "mcertday", "mbirth", "memail", "mgender" , "msns",
-            "msnid"    , "mregday"};
-    final String sqlCreate = "create table member(" +
+                                             "mcertday", "mbirth", "memail", "mgender" , "msns",
+                                             "msnid"    , "mregday"};
+    final String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
             MEMBER_COL[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             MEMBER_COL[1] + " TEXT NOT NULL, " +
             MEMBER_COL[2] + " TEXT NOT NULL, " +

@@ -48,6 +48,7 @@ public class ActivityMemberCertDialog extends Dialog {
         });
     }
 
+    // 서버로 부터 받은 코드를 TextView에 셋팅
     public void setRecvCode(String recvCode) {
         this.recvCode = recvCode;
         this.tvCertCode.setText(this.recvCode);
@@ -57,6 +58,8 @@ public class ActivityMemberCertDialog extends Dialog {
         return recvCode;
     }
 
+    // 입력한 코드값이 서버로부터 받은 값과 일치하는지 여부를 판단한다.
+    // 지금은 sendCode지만, 변수명 교체요망
     public String getSendCode() {
         sendCode = etCertCode.getText().toString();
         return sendCode;
