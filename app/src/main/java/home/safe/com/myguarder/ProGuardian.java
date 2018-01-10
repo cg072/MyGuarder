@@ -856,6 +856,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @text
      * 1. CouplerMVC에다가 insert,select등 수정 ok  -> 리스트 VO로 바꿔줌 ok
      * 2. 위치요청 다이얼로그 -> 서비스에서 리슨만 하고 있고 요청오면 다이얼로그 띄워서 확인하면 서버에서 위치만 보냄
+     * -> http://twinw.tistory.com/49
+     * http://twinw.tistory.com/50
      * 3. 긴급버튼 문자 보냄
      * 4. 긴급버튼 -> 전화인가
      * @since 2018-01-09 오후 3:33
