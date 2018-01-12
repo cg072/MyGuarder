@@ -85,17 +85,17 @@ public class ListViewAdapterSearch extends ArrayAdapter implements View.OnClickL
         switch(resultString.length()) {
             case 10 :
                 resultString =  resultString.substring(0,3) + "-" +
-                                resultString.substring(3,6) + "-" +
-                                resultString.substring(6,10);
+                        resultString.substring(3,6) + "-" +
+                        resultString.substring(6,10);
                 break;
 
             case 11 :
                 resultString =  resultString.substring(0,3) + "-" +
-                                resultString.substring(3,7) + "-" +
-                                resultString.substring(7,11);
+                        resultString.substring(3,7) + "-" +
+                        resultString.substring(7,11);
                 break;
             default :
-                resultString = "Error";
+                resultString = "Not Mobile";
         }
         return resultString;
     }

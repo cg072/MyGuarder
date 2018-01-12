@@ -10,11 +10,9 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,7 +34,7 @@ public class ActivityGuarder extends AppCompatActivity {
     ListView lvGuarders;
     GuarderVO guarderVO;
 
-    ArrayList<GuarderVO> alSearch = null;
+    ArrayList<GuarderVO> phoneList = null;
     FragmentAdapter fragmentAdapter;
 
     final private String TAG = "가드";
@@ -49,14 +47,18 @@ public class ActivityGuarder extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        checkPermission();
-
         tabLayout.addTab(tabLayout.newTab().setText(TAB_FIRST), 0, true);
         tabLayout.addTab(tabLayout.newTab().setText(TAB_SECOND), 1);
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         lvGuarders = (ListView) findViewById(R.id.lvGuarders);
+
+        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
+        fragmentAdapter.setGuarderManager(this);
+        viewPager.setAdapter(fragmentAdapter);
+
+        checkPermission();
 
     }
 
@@ -71,6 +73,13 @@ public class ActivityGuarder extends AppCompatActivity {
             imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
 
             viewPager.setCurrentItem(tab.getPosition());
+
+            if(tab.getPosition() == 0) {
+                fragmentAdapter.resetAddGuarderVOInFmSearch();
+                fragmentAdapter.setGuarderListInFmSearch(fragmentAdapter.getGuarderListInFmGuarder());
+            } else if (tab.getPosition() == 1){
+                fragmentAdapter.setAddGuarderListInFmGuarder(fragmentAdapter.getAddGuarderListInFmSearch());
+            }
         }
 
         @Override
@@ -93,39 +102,39 @@ public class ActivityGuarder extends AppCompatActivity {
      * */
     private String removeHyphen(String phone) {
 
+        int check = 0;
         String[] basePhone = phone.split("-");
         String resultPhone = basePhone[0];
 
-        if(phone.contains(phone)) {
-            int check = 0;
-            for(int i = 0 ; i < phone.length() ; i++) {
-                if(phone.charAt(i) == '-') {
+        if(phone.contains("-")) {
+            for (int i = 0; i < phone.length(); i++) {
+                if (phone.charAt(i) == '-') {
                     check++;
                 }
             }
-            switch ( check ) {
-                    // resultPhone에 이미 basePhone[0] 이 들어있음
-                case 1 :
-                    resultPhone += basePhone[1];
-                    break;
-                case 2 :
-                    resultPhone = basePhone[1] + basePhone[2];
-                    break;
-            }
         }
+
+        switch ( check ) {
+            case 1 :
+                resultPhone += basePhone[1];
+                break;
+            case 2 :
+                resultPhone = resultPhone + basePhone[1] + basePhone[2];
+                break;
+        }
+
         return resultPhone;
-    }
+}
 
     // 이하의 코딩 내용은 주소록 불러오기 관련
    /*
     *  date     : 2017.11.19
     *  author   : Kim Jong-ha
-    *  title    : loadMemberList 메소드 생성
+    *  title    : loadPhoneList 메소드 생성
     *  comment  : DB에 있는 전화번호부 리스트를 불러온다
     * */
-    private void loadMemberList() {
-        Log.v(TAG, "loadList들어옴");
-        alSearch = new ArrayList<GuarderVO>();
+    private void loadPhoneList() {
+        phoneList = new ArrayList<GuarderVO>();
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
                 ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
@@ -154,16 +163,14 @@ public class ActivityGuarder extends AppCompatActivity {
                 guarderVO.setGmcphone(removeHyphen(phone));
 
                 // 여기 if문 아래서 추가를 해야 전화번호가 있는 사람만 담아간다.
-                alSearch.add(guarderVO);
+                phoneList.add(guarderVO);
             }
 
             phoneCursor.close();
 
         }// end while
 
-        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), alSearch, this);
-
-        //viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, this));
+        fragmentAdapter.setSearchListInFmSearch(phoneList, fragmentAdapter.getGuarderListInFmGuarder());
         c.close();
     }
 
@@ -191,7 +198,7 @@ public class ActivityGuarder extends AppCompatActivity {
         } else {
             //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
             checkPermission = true;
-            loadMemberList();
+            loadPhoneList();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -217,7 +224,7 @@ public class ActivityGuarder extends AppCompatActivity {
                     Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
                     checkPermission = true;
                     checkPermission();
-                    //loadMemberList();
+                    //loadPhoneList();
                 } else {
                     //사용자가 거부 했을때
                     Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();

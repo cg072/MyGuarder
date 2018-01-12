@@ -31,7 +31,9 @@ public class GuarderManager {
     final static String INSERT = "insert";
     final static String DELETE = "delete";
     final static String QUERY_TYPE = "type";
-    final static String SELECT_TYPE = "type";
+    final static String TYPE = "type";
+    final static String TYPE_SELECT_ALL = "all";
+    final static String TYPE_SELECT_CON = "con";
 
     public GuarderManager(Context context) {
         this.context = context;
@@ -84,8 +86,11 @@ public class GuarderManager {
     public ArrayList<GuarderVO> select(String type, GuarderVO data) {
         List<ContentValues> resultList;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SELECT_TYPE, type);
-        contentValues.put("gstate", data.getGstate());
+        contentValues.put(TYPE, type);
+        if(type.equals(TYPE_SELECT_CON)) {
+            contentValues.put("gstate", data.getGstate());
+        }
+
         resultList = controller.search(contentValues);
 
         GuarderVO guarderVO;
