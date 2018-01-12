@@ -48,7 +48,7 @@ public class GuarderManager {
     public void createDB() {
         dbHelper =
                 new GuarderDBHelper(context, ProGuardianDBHelper.DB_NAME,null,ProGuardianDBHelper.DB_VERSION,GuarderDBHelper.PG_GUARDER);
-        //db = dbHelper.getWritableDatabase();
+        db = dbHelper.getWritableDatabase();
     }
 
     public void closeDB()
@@ -82,7 +82,6 @@ public class GuarderManager {
     }
 
     public ArrayList<GuarderVO> select(String type, GuarderVO data) {
-        Log.v("가더","디비 보내기 진입");
         List<ContentValues> resultList;
         ContentValues contentValues = new ContentValues();
         contentValues.put(SELECT_TYPE, type);

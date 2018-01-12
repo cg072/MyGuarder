@@ -41,6 +41,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private final static int MY_LOGIN_SUCCESS_CODE = 201;
     private final static int MY_END_CODE = 100;
     private final static int ROOT_LOGIN_SUCCESS_CODE = 202;
-    private boolean loginFlag = false;
+    private boolean testLoginFlag;
 
     private final static String LOGIN_ID = "loginID";
     private final static String LOGIN_PWD = "loginPWD";
@@ -61,6 +62,14 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     private final static int REQUEST_CODE_PHONE = 11;
     private boolean autoLoginCheck;
+
+    final static String TYPE_INSERT = "insert";
+    final static String TYPE_DELETE = "delete";
+    final static String TYPE_UPDATE = "update";
+    final static String TYPE_SELECT_ALL = "selectAll";
+    final static String TYPE_SELECT_CON = "selectPart";
+    final static String TARGET_SERVER = "server";
+    final static String TARGET_DB = "db";
 
     // 기기내 파일 탐색
 
@@ -77,18 +86,19 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private RelativeLayout googleLogin;
     private RelativeLayout naverLogin;
     private TextView tvNaver;
+    private MemberVO memberVO = new MemberVO();
 
     // 구글 로그인 변수들
     //private static final int RESOLVE_CONNECTION_REQUEST_CODE = 1;
     private static final int REQUEST_CODE_GOOGLE = 1;
-    GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
+    private String google = "google";
 
     // 네이버 로그인 변수들
     private static String OAUTH_CLIENT_ID = "W3ENfk_vTn1YQaVsG3n_";  // 1)에서 받아온 값들을 넣어좁니다
     private static String OAUTH_CLIENT_SECRET = "q3B35mxCBe";
     private static String OAUTH_CLIENT_NAME = "Cooljj";
-
-    private MemberVO memberVO = new MemberVO();
+    private String naver = "naver";
 
     String accessToken = "";
 
@@ -100,12 +110,13 @@ public class ActivityMemberLogin extends AppCompatActivity {
     // 네이버 로그인 변수들
 
     // memberVO에 필요 없는 변수들
+    private String nickname;                 // nickname        = f_array[0];
     private String enc_id;                   // enc_id          = f_array[1];
     private String profile_image;           // 프로필 이미지   = f_array[2];
     private String age; ;                    // 나이대          = f_array[3]
     private String id;                       // 고유 ID         = f_array[5];
 
-    private boolean infoLoad = false;
+    private boolean checkLoadInfo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,18 +138,21 @@ public class ActivityMemberLogin extends AppCompatActivity {
         callNaverLogin();
         callGoogleLogin();
 
-        loadData();
-        if(checkAutoLogin() == true) {
-            loadData();
-            checkLogin();
-        }
+        loadSharePreData();
 
-        if(setTestLogin() == true && autoLoginCheck == true) {
-            goMainTest();
-        } else {
-            Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
-        }
 
+        // 자동로그인 체크
+        if(cboxCheck.isChecked() == true) {
+            if(sendLogInfoToServer() == 1) {
+                goMainTest();
+            } else {
+                Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        
+
+
+        // 구글 로그인 버튼 리스너
         googleLogin.setOnClickListener(new LinearLayout.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,6 +162,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
             }
         });
 
+        // 네이버 로그인 버튼 리스너
         naverLogin.setOnClickListener(new LinearLayout.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,13 +172,14 @@ public class ActivityMemberLogin extends AppCompatActivity {
             }
         });
 
-        // Login 메카니즘
+        // 어플 기본 로그인 메카니즘
         btnLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.v("로그인 버튼", "눌림");
                 saveData();
-                if(setTestLogin() == true) {
+                //testDB();
+                if(sendLogInfoToServer() == 1) {
                     goMainTest();
                 } else {
                     Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
@@ -201,54 +217,186 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     }
 
+    // 테스트 로그인
+    private void testDB(){
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+        MemberVO memberVO = new MemberVO();
+        memberManager.insert(TARGET_DB, memberVO);
+    }
+
+    // 테스트 로그인 후 ~ (서버디비 완성 후 -> 아래의 두 메소드를 사용(주석처리됨))
     private void goMainTest() {
         Log.v("로그인", "가즈아");
         // 회원일 경우이므로, 메인액티비티를 띄워준다.
         Intent intentData = new Intent();
-        if(loginFlag == true) {
+        if(testLoginFlag == true) {
             setResult(MY_LOGIN_SUCCESS_CODE, intentData);
         } else {
             setResult(ROOT_LOGIN_SUCCESS_CODE, intentData);
         }
         finish();
     }
+    
+    private int checkLogInfo() {
+        int check = 0;
+        if(sendLogInfoToServer() == 1) {
+            check = 1;
+        }
+        
+        return check;
+    }
 
+/*    private int sendToServer() {
+
+        int check = 0;
+
+        return check;
+    }
+
+   private void moveToMain(){
+        switch(sendToServer()){
+            case 0 :
+                Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+                break;
+            case 1 :
+                Intent intentData = new Intent();
+                if(testLoginFlag == true) {
+                    setResult(MY_LOGIN_SUCCESS_CODE, intentData);       // 테스터 로그인(회원)
+                } else {
+                    setResult(ROOT_LOGIN_SUCCESS_CODE, intentData);     // 운영자 로그인
+                }
+                finish();
+                break;
+        }
+    }*/
+
+/*    // 테스트용 아이디 세팅(서버 역활중)
     private boolean setTestLogin() {
-        loginFlag = false;
+        testLoginFlag = false;
         String rootID = "root";
         String rootPWD = "11111";
         String testID = "test";
         String testPWD = "11111";
 
         if((etID.getText().toString().equals(rootID) && etPWD.getText().toString().equals(rootPWD)) ||
-            (etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD))) {
+                (etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD))) {
             if(etID.getText().toString().equals(rootID)) {
-                loginFlag = true;
+                testLoginFlag = true;
             }
             return true;
         }
         return false;
-    }
+    }*/
 
-    private void checkLogin() {
-        Map<String, String> map = new HashMap<String, String>();
+    private int testServer(MemberVO memberVO){
+        int check = 0;
+        ArrayList<MemberVO> serverList = new ArrayList<MemberVO>();
+        MemberVO serverMember = new MemberVO();
 
-        String id = etID.getText().toString().trim();
-        String pwd = etPWD.getText().toString().trim();
-        map.put(LOGIN_ID,id);
-        map.put(LOGIN_PWD,pwd);
+        String rootID = "root";
+        String rootPWD = "11111";
+        
+        serverMember.setMid(rootID);
+        serverMember.setMpwd(rootPWD);
 
-        sendData(map);
+        serverList.add(serverMember);
 
-        // 서버의 Data 값과, 입력된 Data 값이 같다면 로그인.
-        if(id.equals(receiveData().get(LOGIN_ID)) && pwd.equals(receiveData().get(LOGIN_PWD))) {
-            saveData();
+        serverMember = new MemberVO();
 
+        String testID = "test";
+        String testPWD = "11111";
+
+        serverMember.setMid(testID);
+        serverMember.setMpwd(testPWD);
+
+        serverList.add(serverMember);
+
+        Log.v("체크값1", memberVO.getMid());
+        Log.v("체크값1", memberVO.getMpwd());
+
+        for(MemberVO m : serverList) {
+            Log.v("체크값2", "들어옴?2");
+            Log.v("체크값2", m.getMid());
+            Log.v("체크값2", m.getMpwd());
+            if(m.getMid().equals(memberVO.getMid()) && m.getMpwd().equals(memberVO.getMpwd())) {
+                Log.v("체크값3", "들어옴?3");
+                check = 1;
+                if (m.getMid().equals(rootID)) {
+                    testLoginFlag = false;
+                } else {
+                    testLoginFlag = true;
+                }
+                
+            }
         }
+        Log.v("체크값", String.valueOf(check));
+        return check;
     }
 
-    private void sendData (Map map) {
+    private int sendLogInfoToServer() {
+
+        int check = 0;
+
+        String sendID = etID.getText().toString().trim();
+        String sendPWD = etPWD.getText().toString().trim();
+        String recvID = "";
+        String recvPWD = "";
+        int checkLog = 0;
+        MemberVO memberVO = new MemberVO(sendID, sendPWD);
+
+        check =testServer(memberVO);
+
+        Log.v("체크값-2", String.valueOf(check));
+
+        return check;
+/*        ArrayList<MemberVO> resultList = sendDataForList(TARGET_SERVER, TYPE_SELECT_CON, memberVO);
+        if(resultList != null) {
+            int check = 0;
+            for(MemberVO m : resultList) {
+                check++;
+                if(sendID.equals(m.getMid()) && sendPWD.equals(m.getMpwd())) {
+                    checkLog = 1;
+                }
+            }
+            if(check != 1) {
+                checkLog = 0;
+            }
+        }
+        return checkLog; */
+    }
+
+    // int값으로 반환
+    private int sendDataForCehck (String target, String type, MemberVO memberVO) {
         // db로 데이터를 보냄
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        int check = 0;
+
+        switch (type) {
+            case TYPE_INSERT :
+                return memberManager.insert(target, memberVO);
+            case TYPE_DELETE :
+                return memberManager.delete(target, memberVO);
+            case TYPE_UPDATE :
+                return memberManager.update(target, memberVO);
+        }
+
+        return check;
+    }
+
+    // 리스트 형식으로 반환
+    private ArrayList<MemberVO> sendDataForList(String target, String type, MemberVO memberVO) {
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        switch (type) {
+            case TYPE_SELECT_ALL :
+                return memberManager.select(target, type, memberVO);
+            case TYPE_SELECT_CON:
+                return memberManager.select(target, type, memberVO);
+        }
+
+        return null;
     }
 
     private Map<String, String> receiveData () {
@@ -257,12 +405,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
         map = (Map)map;  // 여따 캐스팅해서 넣고
 
         return map;
-    }
-
-    // 자동 로그인 여부 체크
-    private boolean checkAutoLogin() {
-        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        return preferences.getBoolean("MemberAuto", false);
     }
 
     // 아이디, 비번, 자동 로그인 여부 저장
@@ -277,7 +419,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     }
 
     // 아이디, 비번 불러옴
-    private void loadData()
+    private void loadSharePreData()
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         etID.setText(preferences.getString("MemberID","root"));
@@ -395,7 +537,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
         };
     };
 
-    private void loginAfter() {
+    private void certPhone() {
         if(checkMember() == true) {
             goMainTest();
         } else {
@@ -447,12 +589,12 @@ public class ActivityMemberLogin extends AppCompatActivity {
         protected void onPostExecute(Void content) {
 
             // infoLoad가 ture일 경우..(모든 정보가 있을 경우)
-            if ( infoLoad == true ) {
+            if ( checkLoadInfo == true ) {
                 Toast.makeText(getBaseContext(), memberVO.getMname()+"님 환영합니다.", Toast.LENGTH_LONG).show();
 
-                loginAfter();
+                certPhone();
                 //finish();
-            // infoLoad가 false일 경우..(이름과 이메일을 받아오지 못할 경우를 포함해서, 정보가 없을 경우)
+                // infoLoad가 false일 경우..(이름과 이메일을 받아오지 못할 경우를 포함해서, 정보가 없을 경우)
             } else {
                 Toast.makeText(ActivityMemberLogin.this,
                         "로그인 실패하였습니다.  잠시후 다시 시도해 주세요!!", Toast.LENGTH_SHORT).show();
@@ -531,22 +673,21 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 Log.e("dd", "Error in network call", e);
             }
 
-            memberVO.setMnickname(f_array[0]);      // 닉네임
+            nickname = f_array[0];                  // 닉네임
             enc_id = f_array[1];                    // enc_id
             profile_image = f_array[2];            // 프로필 이미지
             age = f_array[3];                       // 나이대
-            memberVO.setMgender(f_array[4]);       // 성별
             id = f_array[5];                        // 고유 id (숫자)
-            memberVO.setMname(f_array[6]);         // 이름
-            memberVO.setMemail(f_array[7]);        // 이메일
-            memberVO.setMbirth(f_array[8]);        // 생일
+
+            MemberVO naverMemberVO = new MemberVO(f_array[4], f_array[6], f_array[7], f_array[8], naver);   // 성별, 이름, 이메일, 생일
+            memberVO = naverMemberVO;
 
             for(int i = 0 ; i < 9 ; i++) {
                 if(f_array[i] == null) {
-                    infoLoad = false;
+                    checkLoadInfo = false;
                     break;
                 } else {
-                    infoLoad = true;
+                    checkLoadInfo = true;
                 }
             }
         }
@@ -560,16 +701,17 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent( data );
                 if ( result.isSuccess( ) ) { GoogleSignInAccount acct = result.getSignInAccount( );
                     memberVO.setMemail(acct.getEmail());
+                    memberVO.setMid(acct.getEmail());
                     memberVO.setMname(acct.getDisplayName());
+                    memberVO.setMsns(google);
                     Toast.makeText(mContext, acct.getDisplayName() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
-                    loginAfter();
+                    certPhone();
                 }
                 break;
             case REQUEST_CODE_PHONE:
                 if(resultCode == SH_JOB_OK) {
                     Toast.makeText(mContext, "인증에 성공하였습니다", Toast.LENGTH_SHORT).show();
-                    String phone = data.getStringExtra("phone");
-                    memberVO.setMphone(phone);      // 인증된 전화번호를 memberVO 에 셋팅
+                    memberVO.setMphone(data.getStringExtra("phone"));
                     Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
                     startActivity(intent);
                     finish();

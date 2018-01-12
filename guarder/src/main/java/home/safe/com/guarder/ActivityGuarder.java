@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class ActivityGuarder extends AppCompatActivity {
     GuarderVO guarderVO;
 
     ArrayList<GuarderVO> alSearch = null;
+    FragmentAdapter fragmentAdapter;
 
     final private String TAG = "가드";
 
@@ -159,7 +161,9 @@ public class ActivityGuarder extends AppCompatActivity {
 
         }// end while
 
-        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, this));
+        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), alSearch, this);
+
+        //viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), alSearch, this));
         c.close();
     }
 

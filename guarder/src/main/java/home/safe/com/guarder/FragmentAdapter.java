@@ -45,5 +45,4 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return 2;
     }
-
 }

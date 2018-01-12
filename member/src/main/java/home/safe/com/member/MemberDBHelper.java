@@ -20,10 +20,16 @@ public class MemberDBHelper extends PreTestDBHelper {
     SQLiteDatabase sqLiteDB;
     final static private String TABLE_NAME = "memberlist";
 
-    final static String[] MEMBER_COL = {   "mseq"     , "mname" , "mphone", "mid"     , "mpwd",
+    /*final static String[] MEMBER_COL = {   "mseq"     , "mname" , "mphone", "mid"     , "mpwd",
                                              "mcertday", "mbirth", "memail", "mgender" , "msns",
-                                             "msnid"    , "mregday"};
-    final String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
+                                             "msnsid"    ,mregday };*/
+    final static String[] MEMBER_COL = {   "mseq"     , "mname" , "mphone" };
+        final String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
+            MEMBER_COL[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            MEMBER_COL[1] + " TEXT, " +
+            MEMBER_COL[2] + " TEXT)";
+
+/*    final String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
             MEMBER_COL[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             MEMBER_COL[1] + " TEXT NOT NULL, " +
             MEMBER_COL[2] + " TEXT NOT NULL, " +
@@ -35,7 +41,7 @@ public class MemberDBHelper extends PreTestDBHelper {
             MEMBER_COL[8] + " TEXT" +
             MEMBER_COL[9] + " TEXT" +
             MEMBER_COL[10]+ " TEXT" +
-            MEMBER_COL[11]+ " TEXT);";
+            MEMBER_COL[11]+ " TEXT);";*/
 
     public MemberDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
@@ -45,6 +51,7 @@ public class MemberDBHelper extends PreTestDBHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         super.onCreate(sqLiteDatabase);
+        Log.v("체크값","들어오냐");
 
         sqLiteDatabase.execSQL(sqlCreate);
     }
@@ -67,12 +74,16 @@ public class MemberDBHelper extends PreTestDBHelper {
     public int insert(ContentValues contentValues) {
         sqLiteDB = getWritableDatabase();
         String sqlnsert = "";
-        for(int i = 0 ; i < MEMBER_COL.length - 1; i ++) {
+
+/*        for(int i = 0 ; i < MEMBER_COL.length - 1; i ++) {
             sqlnsert += MEMBER_COL[i] + ", ";
         }
         sqlnsert += MEMBER_COL[MEMBER_COL.length - 1];
+        Log.v("체크값", sqlnsert);
+        int check = (int)sqLiteDB.insert(TABLE_NAME, sqlnsert, contentValues);*/
 
-        int check = (int)sqLiteDB.insert(TABLE_NAME, sqlnsert, contentValues);
+        int check = (int)sqLiteDB.insert(TABLE_NAME, null, contentValues);
+        Log.v("체크값", String.valueOf(check));
 
         return check;
     }

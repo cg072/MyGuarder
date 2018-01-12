@@ -12,18 +12,34 @@ import java.io.Serializable;
 
 public class MemberVO extends ProGuardianVO implements Serializable {
     private int mseq;
-    private String mname;
-    private String mphone;
-    private String mid;
-    private String mpwd;
-    private String mcertday;
-    private String mbirth;
-    private String memail;
-    private String mgender;
-    private String msns;
-    private String msnsid;
-    private String mregday;
-    private String mnickname;
+    private String mname = "ff";
+    private String mphone = "ff";
+    private String mid = "ff";
+    private String mpwd = "ff";
+    private String mcertday = "ff";
+    private String mbirth = "ff";
+    private String memail = "ff";
+    private String mgender = "ff";
+    private String msns = "ff";
+    private String msnsid = "ff";
+    private String mregday = "ff";
+
+    public MemberVO() {}
+
+    public MemberVO(String id, String pwd){
+        this.setMid(id);
+        this.setMpwd(pwd);
+    }
+
+    public MemberVO(String gender, String name, String email, String birth, String sns) {
+        this.setMid(email);
+        this.setMgender(gender);
+        this.setMname(name);
+        this.setMemail(email);
+        this.setMbirth(birth);
+        this.setMsns(sns);
+        this.setMsnsid(email);
+    }
 
     public int getMseq() {
         return mseq;
@@ -121,12 +137,13 @@ public class MemberVO extends ProGuardianVO implements Serializable {
         this.mregday = mregday;
     }
 
-    public String getMnickname() {
-        return mnickname;
-    }
+    public ContentValues convertDataToContentValuesSendDB() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("mseq", getMseq());
+        contentValues.put("mname", getMname());
+        contentValues.put("mphone", getMphone());
 
-    public void setMnickname(String mnickname) {
-        this.mnickname = mnickname;
+        return contentValues;
     }
 
     @Override
@@ -144,7 +161,6 @@ public class MemberVO extends ProGuardianVO implements Serializable {
         contentValues.put("msns", getMsns());
         contentValues.put("msnsid", getMsnsid());
         contentValues.put("mregday", getMregday());
-        contentValues.put("mnickname", getMnickname());
 
         return contentValues;
     }
@@ -163,7 +179,6 @@ public class MemberVO extends ProGuardianVO implements Serializable {
         this.setMsns(contentValues.getAsString("msns"));
         this.setMsnsid(contentValues.getAsString("msnsid"));
         this.setMregday(contentValues.getAsString("mregday"));
-        this.setMnickname(contentValues.getAsString("mnickname"));
     }
 
     @Override

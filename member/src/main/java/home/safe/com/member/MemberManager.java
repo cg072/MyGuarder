@@ -22,6 +22,8 @@ public class MemberManager {
     MemberController controller;
 
     final static String SELECT_TYPE = "type";
+    final static String TARGET_SERVER = "server";
+    final static String TARGET_DB = "db";
 
     public MemberManager(Context context) {
         this.context = context;
@@ -49,35 +51,56 @@ public class MemberManager {
         dbHelper.close();
     }
 
-    public int insert(MemberVO memberVO) {
+    public int insert(String target, MemberVO memberVO) {
         int check = 0;
         ContentValues sendCV = memberVO.convertDataToContentValues();
-        check = controller.insert(sendCV);
+        switch (target) {
+            case TARGET_DB :
+                return check = controller.insert(sendCV);
+            case TARGET_SERVER :
+                return check = controller.insertServer(sendCV);
+        }
+        return check;
+    }
+
+    public int delete(String target, MemberVO memberVO) {
+        int check = 0;
+        ContentValues sendCV = memberVO.convertDataToContentValues();
+        switch (target) {
+            case TARGET_DB :
+                return check = controller.remove(sendCV);
+            case TARGET_SERVER :
+                return check = controller.removeServer(sendCV);
+        }
+        return check;
+    }
+
+    public int update(String target, MemberVO memberVO) {
+        int check = 0;
+        ContentValues sendCV = memberVO.convertDataToContentValues();
+        switch (target) {
+            case TARGET_DB :
+                return check = controller.update(sendCV);
+            case TARGET_SERVER :
+                return check = controller.updateServer(sendCV);
+        }
 
         return check;
     }
 
-    public int delete(MemberVO memberVO) {
-        int check = 0;
-        ContentValues sendCV = memberVO.convertDataToContentValues();
-        check = controller.remove(sendCV);
-
-        return check;
-    }
-
-    public int update(MemberVO memberVO) {
-        int check = 0;
-        ContentValues sendCV = memberVO.convertDataToContentValues();
-        check = controller.update(sendCV);
-
-        return check;
-    }
-
-    public ArrayList<MemberVO> select(String type, MemberVO data) {
+    public ArrayList<MemberVO> select(String target, String type, MemberVO data) {
         Log.v("가더","디비 보내기 진입");
         List<ContentValues> resultList;
         ContentValues contentValues = new ContentValues();
         contentValues.put(SELECT_TYPE, type);
+
+        switch (target) {
+            case TARGET_DB :
+                resultList = controller.search(contentValues);
+            case TARGET_SERVER :
+                resultList = controller.searchServer(contentValues);
+        }
+
         resultList = controller.search(contentValues);
 
         MemberVO memberVO;
