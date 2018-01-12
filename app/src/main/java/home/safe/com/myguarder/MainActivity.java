@@ -1,5 +1,7 @@
 package home.safe.com.myguarder;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +34,8 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
     Button btnGuarderChanger;
     Button btnTransChanger;
 
+    Button btnMainChangerStop;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         btnNoticeChanger = (Button)findViewById(R.id.btnNoticeChanger);
         btnGuarderChanger = (Button)findViewById(R.id.btnGuarderChanger);
         btnTransChanger = (Button)findViewById(R.id.btnTransChanger);
+        btnMainChangerStop = (Button)findViewById(R.id.btnMainChangerStop);
 
 
         btnTest.setOnClickListener(this);
@@ -52,6 +57,7 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         btnNoticeChanger.setOnClickListener(this);
         btnGuarderChanger.setOnClickListener(this);
         btnTransChanger.setOnClickListener(this);
+        btnMainChangerStop.setOnClickListener(this);
 
 
             Intent intent = new Intent(this, ActivityMemberLogin.class);
@@ -135,8 +141,9 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         }
         else if(view.getId() == btnMainChanger.getId())
         {
-            LocationManage locationManage = new LocationManage(getApplicationContext());
-            MyGuarderVO vo = new MyGuarderVO(0,"37.2316841","127.0548355","2018-01-04","07:39:23","civilianID");
+            //db
+//            LocationManage locationManage = new LocationManage(getApplicationContext());
+//            MyGuarderVO vo = new MyGuarderVO(0,"37.2316841","127.0548355","2018-01-04","07:39:23","civilianID");
 
             //insert
 //            int res = locationManage.controller.insert(vo.locationDataToContentValues());
@@ -147,16 +154,28 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
 //            Log.d("MainActivity", "controller.update - "+res);
 
             //delete
-            int res = locationManage.remove(vo.convertDataToContentValues());
-            Log.d("MainActivity", "controller.remove - "+res);
+//            int res = locationManage.remove(vo.convertDataToContentValues());
+//            Log.d("MainActivity", "controller.remove - "+res);
 
             //search
 //            List<ContentValues> list;
 //            list = locationManage.controller.search(new ContentValues());
 //            Log.d("MainActivity", "controller.search - "+list.size());
 
+            //service 실행
+            Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, ServiceMyguarder.class);
+            startService(i);
+
 
             Toast.makeText(this,""+btnMainChanger.getText(),Toast.LENGTH_SHORT).show();
+        }
+        else if(view.getId() == btnMainChangerStop.getId())
+        {
+            //service 종료
+            Toast.makeText(getApplicationContext(),"Service 종료",Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, ServiceMyguarder.class);
+            stopService(i);
         }
         else if(view.getId() == btnMemberChanger.getId())
         {
@@ -176,5 +195,30 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         }
 
     }
+
+/**
+ *
+ * @author 경창현
+ * @version 1.0.0
+ * @text 서비스 중복 여부 판단 및 실행
+ * @since 2018-01-12 오후 10:46
+**/
+    public boolean isServiceRunning()
+    {
+        ActivityManager manager = (ActivityManager)this.getSystemService(Activity.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            //돌아가는 서비스가 있을 경우
+            if("home.safe.com.myguarder.ServiceMyguarder".equals(service.service.getClassName()))
+                return true;
+        }
+
+        //돌아가는 서비스가 없는 경우
+        Toast.makeText(getApplicationContext(),"Service 시작",Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(this, ServiceMyguarder.class);
+        startService(i);
+        return false;
+    }
+
 }
 

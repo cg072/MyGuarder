@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:layout_height="200dp"
+    tools:context="home.safe.com.myguarder.ActivityPopupLocationRequest">
+
+    <TextView
+        android:id="@+id/tvLocationReqTitle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_horizontal"
+        android:background="@drawable/border"
+        android:text="위치 정보 요청"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/tvLocationReqText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvLocationReqTitle"
+        android:layout_above="@+id/llayPopLocationBottom"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="지킴이께서 위치를 요청합니다."/>
+
+    <LinearLayout
+        android:id="@+id/llayPopLocationBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/btnLocationReqOk"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="확인"/>
+
+        <Button
+            android:id="@+id/btnLocationReqNo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="취소"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

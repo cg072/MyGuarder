@@ -16,12 +16,25 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="PGChanger Test"/>
-        <Button
-            android:id="@+id/btnMainChanger"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="MainChanger Test"/>
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnMainChanger"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="MainChanger Test"/>
+            <Button
+                android:id="@+id/btnMainChangerStop"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Stop Service"/>
+        </LinearLayout>
+
         <Button
             android:id="@+id/btnMemberChanger"
             android:layout_width="match_parent"

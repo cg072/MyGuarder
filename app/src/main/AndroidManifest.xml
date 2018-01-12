@@ -44,8 +44,17 @@
         <activity
             android:name=".ActivityPopupCycle"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
-        <activity android:name=".ActivityPopupCivilianList"
-            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
+        <activity
+            android:name=".ActivityPopupCivilianList"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+        <activity
+            android:name=".ActivityPopupLocationRequest"
+            android:theme="@android:style/Theme.Dialog" />
+
+        <service
+            android:name=".ServiceMyguarder"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
