@@ -3,10 +3,13 @@ package home.safe.com.member;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by hotki on 2017-12-07.
@@ -19,7 +22,7 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
     EditText etPWD;
     Button btnCheckPWD;
 
-    final static String password = "1";
+    final static String testPassword = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,7 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
 
                 String pwd = etPWD.getText().toString().trim();
 
-                if(password.equals(etPWD.getText().toString().trim())) {
+                if(testPassword.equals(etPWD.getText().toString().trim())) {
                     Intent intent = new Intent(ActivityMemberModifyCheck.this, ActivityMemberModify.class);
                     startActivity(intent);
                     finish();
@@ -45,5 +48,33 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private int recvPWDToServer() {
+
+        int check = 0;
+
+        MemberVO memberVO = new MemberVO();
+
+        String id = "이전 액티비티에서 아이디를 받아서 셋팅";
+        String pwd = etPWD.getText().toString().trim();
+
+        memberVO.setMid(id);
+        memberVO.setMpwd(pwd);
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+
+        try {
+            if (resultList.get(0).getMid().equals(id) && resultList.get(0).getMpwd().equals(pwd)) {
+                check = 1;
+            }
+        } catch (Exception e) {
+            Log.v("MemberModifyCheck", e.getMessage());
+        }
+
+        return check;
     }
 }

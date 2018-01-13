@@ -21,10 +21,6 @@ public class MemberManager {
     SQLiteDatabase db;
     MemberController controller;
 
-    final static String SELECT_TYPE = "type";
-    final static String TARGET_SERVER = "server";
-    final static String TARGET_DB = "db";
-
     public MemberManager(Context context) {
         this.context = context;
 
@@ -55,9 +51,9 @@ public class MemberManager {
         int check = 0;
         ContentValues sendCV = memberVO.convertDataToContentValues();
         switch (target) {
-            case TARGET_DB :
+            case MemberShareWord.TARGET_DB :
                 return check = controller.insert(sendCV);
-            case TARGET_SERVER :
+            case MemberShareWord.TARGET_SERVER :
                 return check = controller.insertServer(sendCV);
         }
         return check;
@@ -67,9 +63,9 @@ public class MemberManager {
         int check = 0;
         ContentValues sendCV = memberVO.convertDataToContentValues();
         switch (target) {
-            case TARGET_DB :
+            case MemberShareWord.TARGET_DB :
                 return check = controller.remove(sendCV);
-            case TARGET_SERVER :
+            case MemberShareWord.TARGET_SERVER :
                 return check = controller.removeServer(sendCV);
         }
         return check;
@@ -79,9 +75,9 @@ public class MemberManager {
         int check = 0;
         ContentValues sendCV = memberVO.convertDataToContentValues();
         switch (target) {
-            case TARGET_DB :
+            case MemberShareWord.TARGET_DB :
                 return check = controller.update(sendCV);
-            case TARGET_SERVER :
+            case MemberShareWord.TARGET_SERVER :
                 return check = controller.updateServer(sendCV);
         }
 
@@ -89,15 +85,14 @@ public class MemberManager {
     }
 
     public ArrayList<MemberVO> select(String target, String type, MemberVO data) {
-        Log.v("가더","디비 보내기 진입");
         List<ContentValues> resultList;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SELECT_TYPE, type);
+        contentValues.put(MemberShareWord.SELECT_TYPE, type);
 
         switch (target) {
-            case TARGET_DB :
+            case MemberShareWord.TARGET_DB :
                 resultList = controller.search(contentValues);
-            case TARGET_SERVER :
+            case MemberShareWord.TARGET_SERVER :
                 resultList = controller.searchServer(contentValues);
         }
 
@@ -113,5 +108,16 @@ public class MemberManager {
         }
 
         return memberList;
+    }
+
+    public String requestCode() {
+        String requestCode = "";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("code","request");
+
+        //requestCode = controller.
+
+        return requestCode;
     }
 }

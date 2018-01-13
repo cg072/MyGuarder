@@ -22,13 +22,23 @@ public class MemberVO extends ProGuardianVO implements Serializable {
     private String mgender = "ff";
     private String msns = "ff";
     private String msnsid = "ff";
-    private String mregday = "ff";
+    private String mregday = "ff";  //12
 
     public MemberVO() {}
 
     public MemberVO(String id, String pwd){
         this.setMid(id);
         this.setMpwd(pwd);
+    }
+
+    public MemberVO(String id, String pwd, String name, String phone, String birth, String email, String gender) {
+        this.setMid(id);
+        this.setMpwd(pwd);
+        this.setMphone(phone);
+        this.setMname(name);
+        this.setMbirth(birth);
+        this.setMemail(email);
+        this.setMgender(gender);
     }
 
     public MemberVO(String gender, String name, String email, String birth, String sns) {
@@ -139,7 +149,6 @@ public class MemberVO extends ProGuardianVO implements Serializable {
 
     public ContentValues convertDataToContentValuesSendDB() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("mseq", getMseq());
         contentValues.put("mname", getMname());
         contentValues.put("mphone", getMphone());
 

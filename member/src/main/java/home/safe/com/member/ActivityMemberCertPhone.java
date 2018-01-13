@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,11 +19,10 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
 
     private TextView tvPhone;
     private String myNumber = "";
-    final private static String TAG = "전화번호 인증";
     private Button btnCert;
     private int SH_JOB_OK = 200;
     private int SH_JOB_FALSE = 400;
-    private boolean certCheck = false;
+    private boolean checkCert = false;
     private boolean checkPermission = false;
     private ActivityMemberCertDialog certDialog;
 
@@ -63,7 +61,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
                     if(settingCode.equals(certDialog.getSendCode()))
                     {
                         //Toast.makeText(ActivityMemberCertPhone.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                        certCheck = true;
+                        checkCert = true;
                     }
                     else
                     {
@@ -71,18 +69,27 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
                     }
                     Intent intent = new Intent();
                     intent.putExtra("phone", myNumber);
-                    if(certCheck == true) {
+                    if(checkCert == true) {
                         setResult(SH_JOB_OK, intent);
-                        //setResult(SH_JOB_OK);
                     } else {
                         setResult(SH_JOB_FALSE, intent);
-                        //setResult(SH_JOB_FALSE);
                     }
                     finish();
                 }
             });
             certDialog.show();
         }
+    }
+
+    // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
+    private String recvCodeFromServer() {
+        String requestCode = "";
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        requestCode = memberManager.requestCode();
+
+        return requestCode;
     }
 
     /*
@@ -95,12 +102,9 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
     private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             //퍼미션이 없는 경우
-            //최초로 퍼미션을 요청하는 것인지 사용자가 취소되었던것을 다시 요청하려는건지 체크
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_PHONE_STATE)) {
                 //퍼미션을 재요청 하는 경우 - 왜 이 퍼미션이 필요한지등을 대화창에 넣어서 사용자를 설득할 수 있다.
-                //대화상자에 '다시 묻지 않기' 체크박스가 자동으로 추가된다.
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 1);
-
             } else {
                 //처음 퍼미션을 요청하는 경우
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE}, 1);
@@ -131,13 +135,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
                 } else {
                     //사용자가 거부 했을때
                     Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
-
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 2000);*/
+                    finish();
                 }
                 return;
         }

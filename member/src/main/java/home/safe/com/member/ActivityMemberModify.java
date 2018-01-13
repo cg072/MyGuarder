@@ -144,32 +144,43 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         */
     }
 
-    private MemberVO setMemberVO() {
+    private int sendDataToServer() {
 
-        MemberVO memberVO = new MemberVO();
+        int check = 0;
 
-        memberVO.setMid(etID.getText().toString().trim());
-        memberVO.setMpwd(etPWD.getText().toString().trim());
-        memberVO.setMname(etName.getText().toString().trim());
-        memberVO.setMphone(removeHyphen(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
-        memberVO.setMbirth(etBirth.getText().toString().trim());
-        memberVO.setMemail(etEMail.getText().toString().trim());
+        MemberVO memberVO = setMemberVO();
+        MemberManager memberManager = new MemberManager(getApplicationContext());
 
+        check = memberManager.update(MemberShareWord.TARGET_SERVER, memberVO);
+
+        return check;
+    }
+
+    private MemberVO setMemberVO(){
+
+        String id = etID.getText().toString().trim();
+        String pwd = etPWD.getText().toString().trim();
+        String name = etName.getText().toString().trim();
+        String phone = removeHyphen(tvPhone.getText().toString().trim());  // 하이픈 제거해서 세팅
+        String birth = etBirth.getText().toString().trim();
+        String email = etEMail.getText().toString().trim();
+        String gender = "u";
         // 성별 판단 f,m,u
         if (rbFemale.isChecked()) {
-            memberVO.setMgender("f");
+            gender = "f";
         } else if (rbMale.isChecked()) {
-            memberVO.setMgender("m");
+            gender = "m";
         } else if (rbUndefine.isChecked()) {
-            memberVO.setMgender("u");
+            gender = "u";
         }
+
+        MemberVO memberVO = new MemberVO(id, pwd, name, phone, birth, email, gender);
 
         return memberVO;
     }
 
     @Override
     public void onClick(View view) {
-        Log.v("버튼","클릭");
         if(view.getId() == R.id.btnCertificationPhone) {
             certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
             certDialog.setCancelable(false);
@@ -197,6 +208,17 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         }
     }
 
+    // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
+    private String recvCodeFromServer() {
+        String requestCode = "";
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        requestCode = memberManager.requestCode();
+
+        return requestCode;
+    }
+
     /*
     *  date     : 2017.11.12
     *  author   : Kim Jong-ha
@@ -209,26 +231,20 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         Log.v(TAG, "checkPermission들어옴");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             //퍼미션이 없는 경우
-            //최초로 퍼미션을 요청하는 것인지 사용자가 취소되었던것을 다시 요청하려는건지 체크
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
                 //퍼미션을 재요청 하는 경우 - 왜 이 퍼미션이 필요한지등을 대화창에 넣어서 사용자를 설득할 수 있다.
-                //대화상자에 '다시 묻지 않기' 체크박스가 자동으로 추가된다.
-                Log.v(TAG, "퍼미션을 재요청 합니다.");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
 
             } else {
                 //처음 퍼미션을 요청하는 경우
-                Log.v(TAG, "첫 퍼미션 요청입니다.");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
             }
         } else {
             //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
             checkPermission = true;
 
-            Log.v(TAG, "Permission is granted");
             Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
         }
-        Log.v(TAG, "checkPermission나감");
     }
 
     /*
@@ -250,13 +266,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 } else {
                     //사용자가 거부 했을때
                     Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
-
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 2000);*/
+                    finish();
                 }
                 return;
         }
@@ -314,7 +324,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                         resultString.substring(7,11);
                 break;
             default :
-                resultString = "Error";
+                resultString = "Not Mobile";
         }
         return resultString;
     }

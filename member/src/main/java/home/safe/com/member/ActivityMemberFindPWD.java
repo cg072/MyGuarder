@@ -3,10 +3,13 @@ package home.safe.com.member;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class ActivityMemberFindPWD extends AppCompatActivity {
 
@@ -29,7 +32,7 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
         btnSend.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (sendData()) {
+                switch (sendDataToServer()) {
                     case 0 :
                         Toast.makeText(ActivityMemberFindPWD.this, "해당 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
                         break;
@@ -41,12 +44,29 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
         });
     }
 
-    private int sendData() {
+    private int sendDataToServer() {
         int check = 0;
 
+        String id = etID.toString().toString().trim();
+        String email = etEmail.getText().toString().trim();
+
         MemberVO memberVO = new MemberVO();
-        memberVO.setMid(etID.toString().toString().trim());
-        memberVO.setMemail(etEmail.getText().toString().trim());
+        memberVO.setMid(id);
+        memberVO.setMemail(email);
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+
+        try {
+            if (resultList.get(0).getMid().equals(id) && resultList.get(0).getMemail().equals(email)) {
+                check = 1;
+            }
+        } catch (Exception e) {
+            Log.v("ActivityMemberFindPWD", e.getMessage());
+        }
 
         return check;
     }

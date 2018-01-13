@@ -15,13 +15,6 @@ import java.util.regex.Pattern;
 
 public class MemberCheck {
 
-    private String name;
-    private String pwd;
-    private String pwdCheck;
-    private String id;
-    private char ch;
-    private Context context;
-
     public boolean checkName(String name, Context context) {
         boolean check = false;
 

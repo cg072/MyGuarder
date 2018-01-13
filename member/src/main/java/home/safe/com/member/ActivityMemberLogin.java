@@ -55,21 +55,10 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private final static int ROOT_LOGIN_SUCCESS_CODE = 202;
     private boolean testLoginFlag;
 
-    private final static String LOGIN_ID = "loginID";
-    private final static String LOGIN_PWD = "loginPWD";
-
     private final static int SH_JOB_OK = 200;
 
     private final static int REQUEST_CODE_PHONE = 11;
     private boolean autoLoginCheck;
-
-    final static String TYPE_INSERT = "insert";
-    final static String TYPE_DELETE = "delete";
-    final static String TYPE_UPDATE = "update";
-    final static String TYPE_SELECT_ALL = "selectAll";
-    final static String TYPE_SELECT_CON = "selectPart";
-    final static String TARGET_SERVER = "server";
-    final static String TARGET_DB = "db";
 
     // 기기내 파일 탐색
 
@@ -221,7 +210,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private void testDB(){
         MemberManager memberManager = new MemberManager(getApplicationContext());
         MemberVO memberVO = new MemberVO();
-        memberManager.insert(TARGET_DB, memberVO);
+        memberManager.insert(MemberShareWord.TARGET_DB, memberVO);
     }
 
     // 테스트 로그인 후 ~ (서버디비 완성 후 -> 아래의 두 메소드를 사용(주석처리됨))
@@ -311,25 +300,17 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
         serverList.add(serverMember);
 
-        Log.v("체크값1", memberVO.getMid());
-        Log.v("체크값1", memberVO.getMpwd());
-
         for(MemberVO m : serverList) {
-            Log.v("체크값2", "들어옴?2");
-            Log.v("체크값2", m.getMid());
-            Log.v("체크값2", m.getMpwd());
             if(m.getMid().equals(memberVO.getMid()) && m.getMpwd().equals(memberVO.getMpwd())) {
-                Log.v("체크값3", "들어옴?3");
                 check = 1;
                 if (m.getMid().equals(rootID)) {
-                    testLoginFlag = false;
-                } else {
                     testLoginFlag = true;
+                } else {
+                    testLoginFlag = false;
                 }
                 
             }
         }
-        Log.v("체크값", String.valueOf(check));
         return check;
     }
 
@@ -345,8 +326,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
         MemberVO memberVO = new MemberVO(sendID, sendPWD);
 
         check =testServer(memberVO);
-
-        Log.v("체크값-2", String.valueOf(check));
 
         return check;
 /*        ArrayList<MemberVO> resultList = sendDataForList(TARGET_SERVER, TYPE_SELECT_CON, memberVO);
@@ -366,18 +345,18 @@ public class ActivityMemberLogin extends AppCompatActivity {
     }
 
     // int값으로 반환
-    private int sendDataForCehck (String target, String type, MemberVO memberVO) {
+    private int sendDataForCehck(String target, String type, MemberVO memberVO) {
         // db로 데이터를 보냄
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
         int check = 0;
 
         switch (type) {
-            case TYPE_INSERT :
+            case MemberShareWord.TYPE_INSERT :
                 return memberManager.insert(target, memberVO);
-            case TYPE_DELETE :
+            case MemberShareWord.TYPE_DELETE :
                 return memberManager.delete(target, memberVO);
-            case TYPE_UPDATE :
+            case MemberShareWord.TYPE_UPDATE :
                 return memberManager.update(target, memberVO);
         }
 
@@ -390,21 +369,13 @@ public class ActivityMemberLogin extends AppCompatActivity {
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
         switch (type) {
-            case TYPE_SELECT_ALL :
+            case MemberShareWord.TYPE_SELECT_ALL :
                 return memberManager.select(target, type, memberVO);
-            case TYPE_SELECT_CON:
+            case MemberShareWord.TYPE_SELECT_CON:
                 return memberManager.select(target, type, memberVO);
         }
 
         return null;
-    }
-
-    private Map<String, String> receiveData () {
-        // 데이터를 받아서
-        Map<String, String> map = new HashMap<String, String>();
-        map = (Map)map;  // 여따 캐스팅해서 넣고
-
-        return map;
     }
 
     // 아이디, 비번, 자동 로그인 여부 저장
@@ -507,29 +478,16 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 // 이 어플리케이션에서 네로아에 대한 접근 토큰의 형태를 저장(MAC, Bearer 지원)
                 tokenType = mOAuthLoginModule.getTokenType(mContext);
 
-
-
-                Log.d("myLog", "accessToken  " + accessToken);
-                //AAAAOrQU9DBIXbOIhNTv7FpgDG5KadQGGtIVwmFrtZEyo69xE52Odj70O7+O+aLZsmXvnc5baewQ1x5PdAoS5HyDeHs=
-                Log.d("myLog", "refreshToken  " + refreshToken);
-                //lipPPw1N9Dqipa84eGU5ipHrKQEAy1s67qYprH3rxPahYFj7tre9Oisq3apu2chY7zmppP88sjL4JL6AFanmvvSxjis7hLaqPisSpsGR50ZxrsOvGpn2FfHVBqr1FUWovkiiIhl
-                Log.d("myLog","String.valueOf(expiresAt)  " + String.valueOf(expiresAt));
-                //1512008864
-                Log.d("myLog", "tokenType  " + tokenType);
-                //bearer
-                Log.d("myLog", "mOAuthLoginInstance.getState(mContext).toString()  " + mOAuthLoginModule.getState(mContext).toString());
-
                 new RequestApiTask().execute(); //로그인이 성공하면  네이버에 계정값들을 가져온다.
 
+                // 네이버 로그인 성공시 작성할 메소드
+                Intent intentData = new Intent();
+                setResult(MY_LOGIN_SUCCESS_CODE, intentData);
             } else {
 
                 // 로그인이 실패하면 에러 코드와 에러 메시지를 저장
                 String errorCode = mOAuthLoginModule.getLastErrorCode(mContext).getCode();
                 String errorDesc = mOAuthLoginModule.getLastErrorDesc(mContext);
-
-                // Toast.makeText(mContext, "errorCode:" + errorCode +
-
-                // ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
 
                 Toast.makeText(ActivityMemberLogin.this, "로그인이 취소/실패 하였습니다.!",
                         Toast.LENGTH_SHORT).show();
@@ -712,9 +670,9 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 if(resultCode == SH_JOB_OK) {
                     Toast.makeText(mContext, "인증에 성공하였습니다", Toast.LENGTH_SHORT).show();
                     memberVO.setMphone(data.getStringExtra("phone"));
-                    Intent intent = new Intent(ActivityMemberLogin.this, ActivityMember.class);
-                    startActivity(intent);
-                    finish();
+                    Intent intentData = new Intent();
+                    setResult(MY_LOGIN_SUCCESS_CODE, intentData);
+                    finish();;
                 } else {
                     Toast.makeText(mContext, "인증에 실패하였습니다", Toast.LENGTH_SHORT).show();
                 }
