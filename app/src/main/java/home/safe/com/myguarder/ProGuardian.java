@@ -53,7 +53,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         LocationListener
 {
     //퍼미션
-    final static int MY_PERMISSIONS_FINE_LOCATION = 99;
+    public static final int MY_PERMISSIONS_FINE_LOCATION = 99;
+    public static final int MY_PERMISSION_FINE_SMS_SEND = 100;
     boolean mLocationPermissionGranted = false;
 
     //프레그먼트
@@ -353,7 +354,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                 != PackageManager.PERMISSION_GRANTED)
         {
             // 퍼미션 없음
-            Log.d("getPermissions","in!!!");
+            Log.d("permission","ACCESS_FINE_LOCATION");
 
 
             //ActivityCompat.shouldShowRequestPermissionRationale 재요청인지 확인
@@ -389,6 +390,31 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
             updateLocationUI();
         }
+
+        // SMS 퍼미션 체크
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            // 퍼미션 없음
+            Log.d("permission","SEND_SMS");
+
+
+            //ActivityCompat.shouldShowRequestPermissionRationale 재요청인지 확인
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS))
+            {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSION_FINE_SMS_SEND);
+            }
+            else{   //처음일 경우 퍼미션 요청
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSION_FINE_SMS_SEND);
+            }
+
+        }
+        else
+        {
+            //퍼미션 있음
+        }
     }
 
 /**
@@ -409,12 +435,21 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     mLocationPermissionGranted = true;
+                    Log.d("permission","ACCESS_FINE_LOCATION - permission was granted");
 
                 } else {
                     // permission denied
                 }
                 break;
             }
+            case MY_PERMISSION_FINE_SMS_SEND:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    Log.d("permission","SEND_SMS - permission was granted");
+                } else {
+                    // permission denied
+                }
+                break;
             default:
                 break;
         }

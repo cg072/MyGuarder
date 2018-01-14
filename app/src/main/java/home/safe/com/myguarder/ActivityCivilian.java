@@ -2,10 +2,15 @@ package home.safe.com.myguarder;
 
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -177,6 +182,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         else if(view.getId() == btnEmergency.getId())
         {
             Toast.makeText(this,"긴급버튼",Toast.LENGTH_SHORT).show();
+            sendEmergencySMS("01048031561","긴급문자 테스트 - Civilian");
         }
 
     }
@@ -289,6 +295,39 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         tvTransNameThisCivilian.setText(preferences.getString("TransName","택시(기본값)"));
         tvMemoThisCivilian.setText(preferences.getString("TransMemo","기본값"));
         cycleCivilian = preferences.getInt("cycleCivilian", 10000);
+    }
+
+
+    private void sendEmergencySMS(String smsNumber, String smsText)
+    {
+        PendingIntent sendIntent = PendingIntent.getBroadcast(this, 0 , new Intent("SMS_SENT_ACTION"), 0);
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(ActivityCivilian.this, "전송 완료", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(ActivityCivilian.this, "전송 실패", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(ActivityCivilian.this, "서비스 지역이 아닙니다.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(ActivityCivilian.this, "무선 라디오가 꺼져있습니다.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(ActivityCivilian.this, "PDU Null", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        },new IntentFilter("SMS_SENT_ACTION"));
+
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(smsNumber, null, smsText, sendIntent, null);
     }
 
 }

@@ -9,10 +9,15 @@
        location permissions for the 'MyLocation' functionality.
        도시 블록 1개 정도의 오차로 위치
     -->
+    <!-- 도시 블록 1개 정도의 오차로 위치 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- 최대한 정확한 위치를 판별 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
