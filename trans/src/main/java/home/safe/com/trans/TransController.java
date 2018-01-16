@@ -6,6 +6,7 @@ import android.util.Log;
 import com.safe.home.pgchanger.IProGuardianController;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +41,12 @@ public class TransController implements IProGuardianController{
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
-        return null;
+
+        List<ContentValues> list;
+
+        list = proGuardianDBHelper.search(contentValues);
+
+        return list;
     }
 
     @Override

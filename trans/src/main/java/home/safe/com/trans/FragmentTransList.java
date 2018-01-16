@@ -37,6 +37,8 @@ public class FragmentTransList extends Fragment {
 
     ArrayList<TestListViewDTO> listArrDto = new ArrayList<>();
 
+    ArrayList<TransIntegratedVO> arrayList = new ArrayList<>();
+
     TransManager transManager;
 
     public FragmentTransList(){
@@ -156,6 +158,13 @@ public class FragmentTransList extends Fragment {
     public void setTransManager(TransManager transManager){
         this.transManager = transManager;
     }
+
+    public void setArrList(ArrayList<TransIntegratedVO> list){
+        this.arrayList = list;
+
+    }
+
+
 }
 
 

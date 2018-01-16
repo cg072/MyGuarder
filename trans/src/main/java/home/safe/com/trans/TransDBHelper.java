@@ -34,19 +34,15 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
         //기존 디비가 있으면 onOpen으로 접근함
 
-        /*super.onOpen(db);
+        super.onOpen(db);
 
-        this.db = db;*/
+        this.db = db;
 
         Log.d("transDBHelper", "onOpen");
 
-    }
-
-
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        ///////////////////////오픈에 써봄///////////////////
         Log.d("DBhelper", "oncreate1111");
-        db = sqLiteDatabase;
+        db = getWritableDatabase();
         Log.d("sql시작", "시작");
         String sql = "CREATE TABLE IF NOT EXISTS " +
                 TABLE_NAME + "(" +
@@ -60,6 +56,27 @@ public class TransDBHelper extends ProGuardianDBHelper{
         Log.d("sql문", sql);
 
         db.execSQL(sql);
+
+    }
+
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        /*Log.d("DBhelper", "oncreate1111");
+        db = getWritableDatabase();
+        Log.d("sql시작", "시작");
+        String sql = "CREATE TABLE IF NOT EXISTS " +
+                TABLE_NAME + "(" +
+                transCol[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                transCol[1] + " INTEGER DEFAULT 0," +
+                transCol[2] + " TEXT," +
+                transCol[3] + " TEXT," +
+                transCol[4] + " TEXT," +
+                transCol[5] + " TEXT)";
+
+        Log.d("sql문", sql);
+
+        db.execSQL(sql);*/
 
     }
 
@@ -82,7 +99,8 @@ public class TransDBHelper extends ProGuardianDBHelper{
         db = getWritableDatabase();
 
         ///컨텐트벨류에 모든 값이 세팅이 되어 있어야 함!!!!!
-        int check = (int)db.insert(TABLE_NAME, null, contentValues);
+        //{"tseq", "tlseq", "tid", "ttype", "tmemo", "tday"};
+        int check = (int)db.insert(TABLE_NAME, "tseq, tlseq, tid, ttype, tmemo, tday", contentValues);
 
         Log.d("transdbhelper", "dbhelperinsert22");
 
@@ -108,6 +126,8 @@ public class TransDBHelper extends ProGuardianDBHelper{
         db = getWritableDatabase();
         String sql = "DROP TABLE if exists " + TABLE_NAME;
         db.execSQL(sql);
+
+        //onCreate(db);
 
     }
 

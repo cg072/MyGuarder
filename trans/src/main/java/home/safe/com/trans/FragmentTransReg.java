@@ -267,7 +267,8 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
 
         int check = 0;
 
-        transManager = new TransManager(getContext());
+        TransManager transManager = new TransManager(getContext().getApplicationContext());
+       // transManager = new TransManager(getContext());
 
         regTransIntegratedVO = new TransIntegratedVO();
 

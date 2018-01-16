@@ -31,10 +31,13 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     TransController transController = new TransController();
     TransDBHelper transDBHelper;
 
+    ArrayList<TransIntegratedVO> arrList = new ArrayList<>();
 
-    public AdapterFragTabTrans(FragmentManager fm , Context context) {
+
+    public AdapterFragTabTrans(FragmentManager fm) {
         super(fm);
-       // this.transManager = new TransManager(context);
+        //this.arrList = list;
+        //this.transManager = new TransManager(context);
         //this.transManager = transManager;
     }
 
@@ -51,7 +54,7 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
 
                 fragmentTransReg.setTransManager(transManager);
                 Log.v("regArrDto", "확인2");
-                fragmentTransReg.setFragReg(fragmentTransList);
+                //fragmentTransReg.setFragReg(fragmentTransList);
 
                 return fragmentTransReg;
 
@@ -70,6 +73,14 @@ public class AdapterFragTabTrans extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return 2;
+    }
+
+    public void selectedArrList(ArrayList<TransIntegratedVO> list){
+
+    }
+
+    public void setList(ArrayList<TransIntegratedVO> list){
+        fragmentTransList.setArrList(list);
     }
 
 }

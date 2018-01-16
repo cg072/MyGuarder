@@ -86,6 +86,9 @@ import java.util.ArrayList;
 *
 * ////////////메인액티비티에서 transManager생성 안됌 이렇게 쓰지 말것!!///////////////
 *
+* ///no such table 에러 찾아볼것
+* 안되면 강제로 실행해볼것
+*
 * */
 
 
@@ -100,7 +103,12 @@ public class ActivityTrans extends AppCompatActivity {
     ViewPager vpagerTrans;
 
     TransManager transManager; //= new TransManager(this);
+
+
     TransIntegratedVO integratedVO = new TransIntegratedVO();
+    ArrayList<TransIntegratedVO> selectedList = new ArrayList<>();
+
+    AdapterFragTabTrans adapterFragTabTrans;
 
 
     final private String tag = "이동수단";
@@ -123,17 +131,24 @@ public class ActivityTrans extends AppCompatActivity {
         //transManager = new TransManager(this);
 
         //어댑터세팅
-        vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), this));
+        //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), this));
         //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager(), transManager, this));
-        //vpagerTrans.setAdapter(new AdapterFragTabTrans(getSupportFragmentManager()));
+
+///////////////////////////////
+        adapterFragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
+
+        adapterFragTabTrans.setList(selectedList);
+
+        vpagerTrans.setAdapter(adapterFragTabTrans);
+
+/////////////////////////////////
+
 
         tabbarTrans.addOnTabSelectedListener(tabSelectedListener);
 
         vpagerTrans.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabbarTrans));
 
     }
-
-
 
     TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
 
@@ -153,8 +168,11 @@ public class ActivityTrans extends AppCompatActivity {
             // 리스트페이지로 갈때, 디비헬퍼로 리스트 가져와야 함!!
 
             if(tab.getPosition() == 1){
+                TransManager transManager = new TransManager(getApplicationContext());
 
+                ArrayList<TransIntegratedVO> resultList = new ArrayList<>();
 
+                setList(resultList);
 
             }
         }
@@ -169,5 +187,9 @@ public class ActivityTrans extends AppCompatActivity {
 
         }
     };
+
+    private void setList(ArrayList<TransIntegratedVO> list){
+        adapterFragTabTrans.setList(list);
+    }
 
 }
