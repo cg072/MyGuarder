@@ -1,11 +1,17 @@
 package home.safe.com.myguarder;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.List;
 
 public class ActivityPopupLocationRequest extends Activity implements View.OnClickListener{
 
@@ -21,6 +27,17 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
         btnLocationReqOk = (Button)findViewById(R.id.btnLocationReqOk);
         btnLocationReqNo = (Button)findViewById(R.id.btnLocationReqNo);
 
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> list = am.getRunningAppProcesses();
+
+        String str;
+        for(ActivityManager.RunningAppProcessInfo process : list){
+            if(process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                str = process.processName;
+                Log.d("LocationRequest",str);
+            }
+        }
+
         btnLocationReqOk.setOnClickListener(this);
         btnLocationReqNo.setOnClickListener(this);
 
@@ -31,6 +48,10 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
 
         if(view.getId() == btnLocationReqOk.getId())
         {
+            getServiceData();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
             finish();
         }
         else if(view.getId() == btnLocationReqNo.getId())
@@ -38,5 +59,12 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
             finish();
         }
 
+    }
+
+    public  void getServiceData()
+    {
+        Intent intent = getIntent();
+        String str = intent.getStringExtra("service");
+        Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
     }
 }

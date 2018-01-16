@@ -103,8 +103,8 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
     public ContentValues resetDataToContentValues()
     {
         ContentValues values = new ContentValues();
-        values.put("llat",getLlat());
-        values.put("lday",getLday());
+        values.put("llat",llat);
+        values.put("lday",lday);
 
         return values;
     }
@@ -112,11 +112,11 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
     public ContentValues locationDataToContentValues()
     {
         ContentValues values = new ContentValues();
-        values.put("llat",getLlat());
-        values.put("llong",getLlong());
-        values.put("lday",getLday());
-        values.put("ltime",getLtime());
-        values.put("lid",getLid());
+        values.put("llat",llat);
+        values.put("llong",llong);
+        values.put("lday",lday);
+        values.put("ltime",ltime);
+        values.put("lid",lid);
 
         return values;
     }
@@ -125,12 +125,12 @@ public class MyGuarderVO extends ProGuardianVO implements Serializable{
     public ContentValues convertDataToContentValues() {
 
         ContentValues values = new ContentValues();
-        values.put("lseq",getLseq());
-        values.put("llat",getLlat());
-        values.put("llong",getLlong());
-        values.put("lday",getLday());
-        values.put("ltime",getLtime());
-        values.put("lid",getLid());
+        values.put("lseq",lseq);
+        values.put("llat",llat);
+        values.put("llong",llong);
+        values.put("lday",lday);
+        values.put("ltime",ltime);
+        values.put("lid",lid);
 
         return values;
     }
