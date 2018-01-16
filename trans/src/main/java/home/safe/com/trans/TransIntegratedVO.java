@@ -83,7 +83,7 @@ public class TransIntegratedVO extends ProGuardianVO{
     public ContentValues convertDataToContentValues() {
 
         ContentValues values = new ContentValues();
-        values.put("tseq", getTseq());
+       //values.put("tseq", getTseq());
         values.put("tlseq", getTlseq());
         values.put("tid", getTid());
         values.put("ttype", getTtype());
@@ -96,8 +96,8 @@ public class TransIntegratedVO extends ProGuardianVO{
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {
 
-        setTseq((int)contentValues.get("tseq"));
-        setTlseq((int)contentValues.get("tlseq"));
+        setTseq((int)contentValues.getAsInteger("tseq"));
+        setTlseq((int)contentValues.getAsInteger("tlseq"));
         setTid(contentValues.getAsString("tid"));
         setTtype(contentValues.getAsString("ttype"));
         setTmemo(contentValues.getAsString("tmemo"));

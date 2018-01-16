@@ -38,10 +38,16 @@ public class ListViewItemBasicTrans extends LinearLayout {
 
     }
 
-    public void setText(String seq, String type, String time, String user){
+    /*public void setText(String seq, String type, String time, String user){
         transitemseq.setText(seq);
         transitemtype.setText(type);
         transitemtime.setText(time);
+
+    }*/
+
+    public void setText(String tseq, String ttype){
+        transitemseq.setText(tseq);
+        transitemtype.setText(ttype);
 
     }
 

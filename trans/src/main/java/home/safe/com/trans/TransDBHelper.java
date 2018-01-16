@@ -2,12 +2,15 @@ package home.safe.com.trans;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,10 +43,16 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
         Log.d("transDBHelper", "onOpen");
 
-        ///////////////////////오픈에 써봄///////////////////
+    }
+
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
         Log.d("DBhelper", "oncreate1111");
-        db = getWritableDatabase();
+
         Log.d("sql시작", "시작");
+
         String sql = "CREATE TABLE IF NOT EXISTS " +
                 TABLE_NAME + "(" +
                 transCol[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -56,27 +65,6 @@ public class TransDBHelper extends ProGuardianDBHelper{
         Log.d("sql문", sql);
 
         db.execSQL(sql);
-
-    }
-
-
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        /*Log.d("DBhelper", "oncreate1111");
-        db = getWritableDatabase();
-        Log.d("sql시작", "시작");
-        String sql = "CREATE TABLE IF NOT EXISTS " +
-                TABLE_NAME + "(" +
-                transCol[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                transCol[1] + " INTEGER DEFAULT 0," +
-                transCol[2] + " TEXT," +
-                transCol[3] + " TEXT," +
-                transCol[4] + " TEXT," +
-                transCol[5] + " TEXT)";
-
-        Log.d("sql문", sql);
-
-        db.execSQL(sql);*/
 
     }
 
@@ -99,8 +87,7 @@ public class TransDBHelper extends ProGuardianDBHelper{
         db = getWritableDatabase();
 
         ///컨텐트벨류에 모든 값이 세팅이 되어 있어야 함!!!!!
-        //{"tseq", "tlseq", "tid", "ttype", "tmemo", "tday"};
-        int check = (int)db.insert(TABLE_NAME, "tseq, tlseq, tid, ttype, tmemo, tday", contentValues);
+        int check = (int)db.insert(TABLE_NAME, null, contentValues);
 
         Log.d("transdbhelper", "dbhelperinsert22");
 
@@ -109,7 +96,41 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
-        return null;
+
+        List<ContentValues> conList = new ArrayList<>();
+
+        db = getReadableDatabase();
+
+        SQLiteQueryBuilder sqb = new SQLiteQueryBuilder();
+        sqb.setTables(TABLE_NAME);
+
+        Cursor cursor = sqb.query(db, null, null, null, null, null, null);
+
+        if(cursor != null){
+            //movetoNext를 실행하는 동시에 그 자리로 이동한다고 생각하라
+            while (cursor.moveToNext()){
+                ContentValues values = new ContentValues();
+                for(int i = 0; i < transCol.length; i++){
+                    int index = cursor.getColumnIndex(transCol[i]);
+                    String getVal = cursor.getString(index);
+                    values.put(transCol[i], getVal);
+                }
+                conList.add(values);
+            }
+
+        }
+
+       /*
+
+
+       String sql = "SLECT * FROM " + TABLE_NAME;
+
+
+        db.execSQL(sql);*/
+
+
+
+        return conList;
     }
 
     @Override
@@ -121,6 +142,31 @@ public class TransDBHelper extends ProGuardianDBHelper{
     public int remove(ContentValues contentValues) { return 0;
     }
 
+
+
+    ////////////////////////////////임시로 테이블을 컨트롤/////////////////////////////////////
+
+    //임시로 테이브를 만드는 메소드
+    public void createTable(){
+
+        Log.d("DBhelper", "oncreate1111");
+        db = getWritableDatabase();
+        Log.d("sql시작", "시작");
+        String sql = "CREATE TABLE IF NOT EXISTS " +
+                TABLE_NAME + "(" +
+                transCol[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                transCol[1] + " INTEGER DEFAULT 0," +
+                transCol[2] + " TEXT," +
+                transCol[3] + " TEXT," +
+                transCol[4] + " TEXT," +
+                transCol[5] + " TEXT)";
+
+        Log.d("sql문", sql);
+
+        db.execSQL(sql);
+    }
+
+    //임시로 테이블을 지우는 메소드
     public void removeTable(){
         Log.d("리무브", "리무브실행");
         db = getWritableDatabase();

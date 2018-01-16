@@ -34,9 +34,9 @@ public class FragmentTransList extends Fragment {
     ExpandableListView lvtrans;
 
     TestListViewDTO listDto = new TestListViewDTO();
-
     ArrayList<TestListViewDTO> listArrDto = new ArrayList<>();
 
+    TransIntegratedVO integratedVO = new TransIntegratedVO();
     ArrayList<TransIntegratedVO> arrayList = new ArrayList<>();
 
     TransManager transManager;
@@ -60,7 +60,7 @@ public class FragmentTransList extends Fragment {
 
         lvtrans = (ExpandableListView) rootview.findViewById(R.id.lvtrans);
 
-        //dapter = new AdapterListTrans();
+        //adapter = new AdapterListTrans();
 
         /*adapter.addItem(new TestListViewDTO("1", "택시", "2017.05.1", "jdkd", "대중교통"));
         adapter.addItem(new TestListViewDTO("3", "택시", "2017.05.1", "jdkd", "대중교통"));*/
@@ -130,6 +130,18 @@ public class FragmentTransList extends Fragment {
 
     }
 
+    public void setAddAdapter(TestListViewDTO recvDto){
+        if(adapter == null) {
+            return;
+        }
+        if(recvDto == null) {
+            return;
+        }
+        //adapter.addItem(recvDto);
+        adapter.notifyDataSetChanged();
+    }
+
+
     /*public void setDtoFragList(TestListViewDTO test){
 
         listDto = test;
@@ -144,24 +156,38 @@ public class FragmentTransList extends Fragment {
 
     }*/
 
-    public void setAddAdapter(TestListViewDTO recvDto){
-        if(adapter == null) {
-            return;
-        }
-        if(recvDto == null) {
-            return;
-        }
-        adapter.addItem(recvDto);
-        adapter.notifyDataSetChanged();
-    }
+
+
+    ///////////디비를 통해 세팅해보기//////////////////
 
     public void setTransManager(TransManager transManager){
         this.transManager = transManager;
     }
 
-    public void setArrList(ArrayList<TransIntegratedVO> list){
-        this.arrayList = list;
 
+    public void setArrList(ArrayList<TransIntegratedVO> list){
+
+        this.arrayList = list;
+        adapter.clear();
+
+        for(TransIntegratedVO data : arrayList){
+            setListAdapter(data);
+        }
+
+
+        arrayList.clear();
+
+    }
+
+    public void setListAdapter(TransIntegratedVO data){
+        if(adapter == null) {
+            return;
+        }
+        if(data == null) {
+            return;
+        }
+        adapter.addItem(data);
+        adapter.notifyDataSetChanged();
     }
 
 

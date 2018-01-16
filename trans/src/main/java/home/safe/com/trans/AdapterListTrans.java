@@ -19,13 +19,26 @@ import java.util.HashSet;
  */
 
 public class AdapterListTrans extends BaseExpandableListAdapter{
-    ArrayList<TestListViewDTO> parentItems = new ArrayList<TestListViewDTO>();
-    HashMap<TestListViewDTO, String> childItems = new HashMap<>();
+    //ArrayList<TestListViewDTO> parentItems = new ArrayList<TestListViewDTO>();
+    //HashMap<TestListViewDTO, String> childItems = new HashMap<>();
 
-    public void addItem(TestListViewDTO test){
+    ArrayList<TransIntegratedVO> parentItems = new ArrayList<TransIntegratedVO>();
+    HashMap<TransIntegratedVO, String> childItems = new HashMap<>();
+
+    /*public void addItem(TestListViewDTO test){
 
         parentItems.add(test);
         childItems.put(test, test.getText());
+    }*/
+
+    public void addItem(TransIntegratedVO test){
+
+        parentItems.add(test);
+        childItems.put(test, Integer.toString(test.getTseq()));
+    }
+
+    public void clear() {
+        parentItems.clear();
     }
 
     @Override
@@ -45,7 +58,8 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
 
     @Override
     public Object getChild(int i, int i1) {
-        return parentItems.get(i).getText();
+        //return parentItems.get(i).getText();
+        return  parentItems.get(i).getTseq();
     }
 
     @Override
@@ -69,9 +83,11 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
 
         ListViewItemBasicTrans itemBasic = new ListViewItemBasicTrans(parentContext.getApplicationContext());
 
-        TestListViewDTO parDto = parentItems.get(i);
+        //TestListViewDTO parDto = parentItems.get(i);
+        TransIntegratedVO parDto = parentItems.get(i);
 
-        itemBasic.setText(parDto.getNum(), parDto.getTranName(), parDto.getTime(), parDto.getAuthor());
+        //itemBasic.setText(parDto.getNum(), parDto.getTranName(), parDto.getTime(), parDto.getAuthor());
+        itemBasic.setText(Integer.toString(parDto.getTseq()), parDto.getTtype());
 
         return itemBasic;
     }
@@ -82,8 +98,11 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
 
         ListViewItemTextTrans itemText = new ListViewItemTextTrans(childContext.getApplicationContext());
 
-        TestListViewDTO childDto = parentItems.get(i);
-        itemText.setText(childDto.getText());
+        //TestListViewDTO childDto = parentItems.get(i);
+        TransIntegratedVO childDto = parentItems.get(i);
+
+        //itemText.setText(childDto.getText());
+        itemText.setText(childDto.getTmemo());
 
         return itemText;
     }
@@ -92,4 +111,6 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
     public boolean isChildSelectable(int i, int i1) {
         return false;
     }
+
+
 }

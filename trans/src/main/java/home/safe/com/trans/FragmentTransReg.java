@@ -53,6 +53,10 @@ preferences.getString("TransMemo","기본값");
 
 6. 메모는 100자 한정으로 한다!!!!!
 
+
+!!!!!!!!!!!! 이동수단 내역에서 수정 버튼을 추가하고 수정이 되게 만들기
+필드변수 줄이기 !!!!!
+
 */
 
 
@@ -280,11 +284,12 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         //regArrTransIntegratedVO.add(regTransIntegratedVO);
 
         check = transManager.insert(regTransIntegratedVO);
-        Log.d("들어갑니까?", "확인2222");
 
-        if(check != 0){
-            Log.d("성공여부", Integer.toString(check));
-        }
+        Log.d("들어갑니까?", "확인2222");
+        Log.d("성공여부", Integer.toString(check));
+        Log.d("값확인1", regTransIntegratedVO.getTtype());
+        Log.d("값확인2", regTransIntegratedVO.getTmemo());
+        Log.d("값확인3", Integer.toString(regTransIntegratedVO.getTseq()));
 
 
     }

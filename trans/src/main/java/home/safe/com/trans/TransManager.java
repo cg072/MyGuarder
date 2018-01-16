@@ -8,6 +8,7 @@ import android.util.Log;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by plupin724 on 2018-01-07.
@@ -51,7 +52,6 @@ public class TransManager {
 
         this.integratedVO = integratedVO;
 
-
         ContentValues values = integratedVO.convertDataToContentValues();
 
         //{"tseq", "tlseq", "tid", "ttype", "tmemo", "tday"};
@@ -66,14 +66,32 @@ public class TransManager {
 
         check = controller.insert(values);
 
+        Log.d("매니저 값확인", integratedVO.getTtype());
+        Log.d("매니저 값확인2", integratedVO.getTmemo());
+        Log.d("매니저 값확인3", Integer.toString(integratedVO.getTseq()));
+
         return check;
 
     }
 
-    /*public ArrayList<TransIntegratedVO> selectAll(ArrayList<TransIntegratedVO> transIntegratedVOS){
+    public ArrayList<TransIntegratedVO> select(){
+
+        List<ContentValues> resultList;
+        ArrayList<TransIntegratedVO> retList = new ArrayList<>();
+
+        ContentValues values = integratedVO.convertDataToContentValues();
+
+        resultList = controller.search(values);
+
+        for(int i = 0; i < resultList.size(); i++){
+            TransIntegratedVO vo = new TransIntegratedVO();
+            vo.convertContentValuesToData(resultList.get(i));
+            retList.add(vo);
+        }
 
 
-    }*/
+        return retList;
 
+    }
 
 }

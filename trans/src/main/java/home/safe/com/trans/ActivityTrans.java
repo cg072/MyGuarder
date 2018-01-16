@@ -102,7 +102,7 @@ public class ActivityTrans extends AppCompatActivity {
     TabLayout tabbarTrans;
     ViewPager vpagerTrans;
 
-    TransManager transManager; //= new TransManager(this);
+    //TransManager transManager = new TransManager(this);
 
 
     TransIntegratedVO integratedVO = new TransIntegratedVO();
@@ -137,7 +137,7 @@ public class ActivityTrans extends AppCompatActivity {
 ///////////////////////////////
         adapterFragTabTrans = new AdapterFragTabTrans(getSupportFragmentManager());
 
-        adapterFragTabTrans.setList(selectedList);
+        //adapterFragTabTrans.setFragList(selectedList);
 
         vpagerTrans.setAdapter(adapterFragTabTrans);
 
@@ -164,16 +164,17 @@ public class ActivityTrans extends AppCompatActivity {
             vpagerTrans.setCurrentItem(tab.getPosition());
             Log.v("탭포지션", Integer.toString(tab.getPosition()));
 
-
             // 리스트페이지로 갈때, 디비헬퍼로 리스트 가져와야 함!!
 
             if(tab.getPosition() == 1){
+
                 TransManager transManager = new TransManager(getApplicationContext());
 
-                ArrayList<TransIntegratedVO> resultList = new ArrayList<>();
+                ArrayList<TransIntegratedVO> resultList = new ArrayList<TransIntegratedVO>();
+
+                resultList = transManager.select();
 
                 setList(resultList);
-
             }
         }
 
@@ -189,7 +190,7 @@ public class ActivityTrans extends AppCompatActivity {
     };
 
     private void setList(ArrayList<TransIntegratedVO> list){
-        adapterFragTabTrans.setList(list);
+        adapterFragTabTrans.setToFragList(list);
     }
 
 }
