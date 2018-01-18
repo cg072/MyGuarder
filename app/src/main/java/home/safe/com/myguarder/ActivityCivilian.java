@@ -297,6 +297,14 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         cycleCivilian = preferences.getInt("cycleCivilian", 10000);
     }
 
+    private void saveStateData(boolean isActivityState )
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("ActivityState",isActivityState);
+        editor.commit();
+    }
+
 
     private void sendEmergencySMS(String smsNumber, String smsText)
     {

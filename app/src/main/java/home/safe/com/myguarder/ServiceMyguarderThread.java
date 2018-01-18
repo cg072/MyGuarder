@@ -10,13 +10,13 @@ import android.os.Message;
  * @text 서비스에 실행할 스레드
  * @since 2018-01-12 오후 10:47
 **/
-public class ServiceThread extends Thread{
+public class ServiceMyguarderThread extends Thread{
 
     Handler handler;
     boolean isRun = true;
 //    boolean isExecuteDialog = false;
 
-    public ServiceThread(Handler handler)
+    public ServiceMyguarderThread(Handler handler)
     {
         this.handler = handler;
     }

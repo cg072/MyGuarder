@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 
 /**
  *
@@ -16,7 +17,7 @@ import android.os.Message;
 **/
 public class ServiceMyguarder extends Service {
 
-    ServiceThread thread;
+    ServiceMyguarderThread thread;
 
     public ServiceMyguarder() {
     }
@@ -35,7 +36,7 @@ public class ServiceMyguarder extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         HandlerServiceMyguarder handler = new HandlerServiceMyguarder();
-        thread = new ServiceThread(handler);
+        thread = new ServiceMyguarderThread(handler);
         thread.start();
 
         return START_STICKY;
@@ -47,6 +48,12 @@ public class ServiceMyguarder extends Service {
         thread = null;  //쓰레기 값을 넣어줘야 빨리 회수한다.
     }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        Log.d("ServiceMyguarder","onTaskRemoved");
+    }
+
     /**
      *
      * @author 경창현
@@ -56,8 +63,11 @@ public class ServiceMyguarder extends Service {
     **/
     class HandlerServiceMyguarder extends Handler
     {
+
         @Override
         public void handleMessage(Message msg) {
+
+
             Intent intent = new Intent(ServiceMyguarder.this, ActivityPopupLocationRequest.class);
             intent.putExtra("service","지킴이이름");
             intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);

@@ -226,6 +226,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         alert.setNegativeButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
                 Intent intentData = new Intent();
                 setResult(MY_END_CODE, intentData);
                 finish();
@@ -902,12 +903,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @author 경창현
      * @version 1.0.0
      * @text
-     * 1. 방법
+     * 1. 방법 -> SharedPreferences로 로그인, 위치 상태 저장 -> 시작할때 확인 및 전송
      * 1) 위치정보가 켜져있을때 -> 확인 눌렀을때 위치가 켜져있는지 확인 -> 켜져있으면 위치정보 전송
      * 2) 위치정보가 꺼져있을때 -> 확인 눌렀을때 위치가 꺼져있는지 확인 -> 커져있으면 위치정보 켜달라는 요청 후 화면 이동
      * -> 위치 온 -> 화면 돌아왔을때 체크후 전송
      * 3) 취소일 경우
      * - 로그인, 위치 정보 허용 체크, 위치 요청 체크
+     *
      * 2. 피지킴이 목록  -> 지킴이 SELETE를 사용해서 목록 가져와서 피지킴이 이름 뿌리기
      * 3. 서버 개발
      * @since 2018-01-16 오후 2:50

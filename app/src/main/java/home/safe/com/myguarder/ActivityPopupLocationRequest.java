@@ -3,6 +3,7 @@ package home.safe.com.myguarder;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,9 +35,12 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
         for(ActivityManager.RunningAppProcessInfo process : list){
             if(process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
                 str = process.processName;
-                Log.d("LocationRequest",str);
+                Log.d("LocationRequest()",str);
             }
         }
+
+        Log.d("LocationRequest()"," ");
+
 
         btnLocationReqOk.setOnClickListener(this);
         btnLocationReqNo.setOnClickListener(this);
@@ -66,5 +70,13 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
         Intent intent = getIntent();
         String str = intent.getStringExtra("service");
         Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+//        tvTransNameThisCivilian.setText(preferences.getString("TransName","택시(기본값)"));
+//        tvMemoThisCivilian.setText(preferences.getString("TransMemo","기본값"));
+//        cycleCivilian = preferences.getInt("cycleCivilian", 10000);
     }
 }
