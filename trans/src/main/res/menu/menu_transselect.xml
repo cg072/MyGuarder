@@ -11,7 +11,7 @@
         android:title="택시"/>
     <item
         android:id="@+id/transSub"
-        android:title="지하철"/>
+        android:title="전철"/>
     <item
         android:id="@+id/transEtc"
         android:title="기타"/>

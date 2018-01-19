@@ -120,15 +120,6 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
         }
 
-       /*
-
-
-       String sql = "SLECT * FROM " + TABLE_NAME;
-
-
-        db.execSQL(sql);*/
-
-
 
         return conList;
     }

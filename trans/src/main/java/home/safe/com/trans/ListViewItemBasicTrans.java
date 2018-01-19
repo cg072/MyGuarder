@@ -1,21 +1,26 @@
 package home.safe.com.trans;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by plupin724 on 2017-12-21.
  */
 
-public class ListViewItemBasicTrans extends LinearLayout {
+public class ListViewItemBasicTrans extends LinearLayout{
 
     TextView transitemseq;
     TextView transitemtype;
     TextView transitemtime;
+
 
     public ListViewItemBasicTrans(Context context) {
         super(context);
@@ -26,6 +31,7 @@ public class ListViewItemBasicTrans extends LinearLayout {
         super(context, attrs);
     }
 
+
     public void init(Context context){
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -35,6 +41,7 @@ public class ListViewItemBasicTrans extends LinearLayout {
         transitemseq = (TextView)findViewById(R.id.transitemseq);
         transitemtype = (TextView)findViewById(R.id.transitemtype);
         transitemtime = (TextView)findViewById(R.id.transitemtime);
+
 
     }
 
@@ -50,6 +57,5 @@ public class ListViewItemBasicTrans extends LinearLayout {
         transitemtype.setText(ttype);
 
     }
-
 
 }

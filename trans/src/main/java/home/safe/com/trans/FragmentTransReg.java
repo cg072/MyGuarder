@@ -162,7 +162,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                         tvtranskind.setText("택시");
 
                     } else if (i == R.id.transSub) {
-                        tvtranskind.setText("지하철");
+                        tvtranskind.setText("전철");
 
                     } else if (i == R.id.transEtc) {
                         tvtranskind.setText("기타");

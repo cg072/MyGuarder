@@ -25,6 +25,9 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
     ArrayList<TransIntegratedVO> parentItems = new ArrayList<TransIntegratedVO>();
     HashMap<TransIntegratedVO, String> childItems = new HashMap<>();
 
+    String tseq;
+    String ttype;
+
     /*public void addItem(TestListViewDTO test){
 
         parentItems.add(test);
@@ -88,9 +91,12 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
 
         //itemBasic.setText(parDto.getNum(), parDto.getTranName(), parDto.getTime(), parDto.getAuthor());
         itemBasic.setText(Integer.toString(parDto.getTseq()), parDto.getTtype());
+        passToCheckData(Integer.toString(parDto.getTseq()), parDto.getTtype());
 
         return itemBasic;
     }
+
+
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
@@ -103,8 +109,15 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
 
         //itemText.setText(childDto.getText());
         itemText.setText(childDto.getTmemo());
+        itemText.getText(tseq, ttype);
 
         return itemText;
+    }
+
+    public void passToCheckData(String tseq, String ttype){
+        this.tseq = tseq;
+        this.ttype = ttype;
+
     }
 
     @Override

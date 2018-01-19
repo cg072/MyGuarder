@@ -2,6 +2,7 @@ package home.safe.com.trans;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.BinderThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 //최초 실행시 서버에서 정보를 받아 안드로이드 디비에 저장
 //아이디를 가져와서 화면에 표시해주는 것까지 완성 해야 한다
 
-public class FragmentTransList extends Fragment {
+public class FragmentTransList extends Fragment{
 
     AdapterListTrans adapter = new AdapterListTrans();
 
@@ -59,6 +61,8 @@ public class FragmentTransList extends Fragment {
 
 
         lvtrans = (ExpandableListView) rootview.findViewById(R.id.lvtrans);
+
+
 
         //adapter = new AdapterListTrans();
 
@@ -173,7 +177,6 @@ public class FragmentTransList extends Fragment {
         for(TransIntegratedVO data : arrayList){
             setListAdapter(data);
         }
-
 
         arrayList.clear();
 

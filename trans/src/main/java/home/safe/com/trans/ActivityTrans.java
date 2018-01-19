@@ -166,6 +166,8 @@ public class ActivityTrans extends AppCompatActivity {
 
             // 리스트페이지로 갈때, 디비헬퍼로 리스트 가져와야 함!!
 
+
+
             if(tab.getPosition() == 1){
 
                 TransManager transManager = new TransManager(getApplicationContext());
@@ -187,6 +189,8 @@ public class ActivityTrans extends AppCompatActivity {
         public void onTabReselected(TabLayout.Tab tab) {
 
         }
+
+
     };
 
     private void setList(ArrayList<TransIntegratedVO> list){
