@@ -21,24 +21,40 @@ public class MemberManager {
     SQLiteDatabase db;
     MemberController controller;
 
+    // 테스트
+    MemberServerHelper serverHelper;
+    SQLiteDatabase server;
+
+
     public MemberManager(Context context) {
         this.context = context;
 
         createDB();
         createController();
+
     }
 
     public void createController()
     {
         controller = new MemberController();
-        controller.setDBHelper(dbHelper);
+
+        //controller.setDBHelper(dbHelper);
+
+        // 테스트
+        controller.setHelper(dbHelper, serverHelper);
     }
 
     public void createDB()
     {
         dbHelper =
-                new MemberDBHelper(context, ProGuardianDBHelper.DB_NAME,null,ProGuardianDBHelper.DB_VERSION,MemberDBHelper.PG_GUARDER);
+                new MemberDBHelper(context, ProGuardianDBHelper.DB_NAME,null,ProGuardianDBHelper.DB_VERSION,MemberDBHelper.PG_MEMBER);
         db = dbHelper.getWritableDatabase();
+
+        //테스트
+        serverHelper = new MemberServerHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION,
+                MemberServerHelper.PG_MEMBER);
+        server = serverHelper.getWritableDatabase();
+        //테스트
 
     }
 
@@ -85,8 +101,8 @@ public class MemberManager {
     }
 
     public ArrayList<MemberVO> select(String target, String type, MemberVO data) {
-        List<ContentValues> resultList;
-        ContentValues contentValues = new ContentValues();
+        List<ContentValues> resultList = null;
+        ContentValues contentValues = data.convertDataToContentValues();
         contentValues.put(MemberShareWord.SELECT_TYPE, type);
 
         switch (target) {
@@ -95,8 +111,6 @@ public class MemberManager {
             case MemberShareWord.TARGET_SERVER :
                 resultList = controller.searchServer(contentValues);
         }
-
-        resultList = controller.search(contentValues);
 
         MemberVO memberVO;
         ArrayList<MemberVO> memberList = new ArrayList<MemberVO>();

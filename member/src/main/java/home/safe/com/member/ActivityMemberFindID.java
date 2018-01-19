@@ -53,21 +53,9 @@ public class ActivityMemberFindID extends AppCompatActivity {
         memberVO.setMemail(email);
         memberVO.setMphone(phone);
 
-        MemberManager memberManager = new MemberManager(getApplicationContext());
+        MemberCheck memberCheck = new MemberCheck();
 
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
-
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
-
-        try {
-            if (resultList.get(0).getMemail().equals(email) && resultList.get(0).getMphone().equals(phone)) {
-                check = 1;
-            }
-        } catch (Exception e) {
-            Log.v("ActivityMemberFindID", e.getMessage());
-        }
-
-        return check;
+        return memberCheck.checkExistence(memberVO, getApplicationContext());
     }
 
 }

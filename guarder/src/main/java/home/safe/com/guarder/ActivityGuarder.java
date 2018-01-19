@@ -78,7 +78,7 @@ public class ActivityGuarder extends AppCompatActivity {
                 fragmentAdapter.resetAddGuarderVOInFmSearch();
                 fragmentAdapter.setGuarderListInFmSearch(fragmentAdapter.getGuarderListInFmGuarder());
             } else if (tab.getPosition() == 1){
-                fragmentAdapter.setAddGuarderListInFmGuarder(fragmentAdapter.getAddGuarderListInFmSearch());
+                fragmentAdapter.updateGuarderListInFmGuarder();
             }
         }
 

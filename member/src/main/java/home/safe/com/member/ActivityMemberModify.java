@@ -3,6 +3,7 @@ package home.safe.com.member;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class ActivityMemberModify extends AppCompatActivity implements View.OnClickListener{
 
@@ -49,12 +52,19 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
 
     ActivityMemberCertDialog certDialog = null;
 
+    String sns;
+    String id;
+
     MemberCheck memberCheck = new MemberCheck();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_signup);
+
+        Intent intent = getIntent();
+        sns = intent.getStringExtra("sns");
+        id = intent.getStringExtra("id");
 
         tvTitle = (TextView) findViewById(R.id.tvTitle);
 
@@ -76,15 +86,25 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         btnModify = (Button)findViewById(R.id.btnSignup);
         btnDuplicationID = (Button) findViewById(R.id.btnDuplicationID);
 
+        if(sns != null && sns.equals("sns")) {
+            etPWD.setText("SNS 계정은 지원하지 않는 기능입니다.");
+            etPWD.setInputType(0);
+            etPWD.setEnabled(false);
+            etCheckPWD.setText("SNS 계정은 지원하지 않는 기능입니다.");
+            etCheckPWD.setInputType(0);
+            etCheckPWD.setEnabled(false);
+        }
         // 사전 셋팅(사전에 셋팅해야할 서버로부터 받은 정보 등을 받고 셋팅)
         changeViewContents();
 
         // 기기에서 번호 가져오기
-        getMemberPhone();
+        MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this, tvPhone);
 
         btnModify.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                int check = 0;
 
                 String pwd = etPWD.getText().toString().trim();
                 String checkPWD = etCheckPWD.getText().toString().trim();
@@ -92,17 +112,26 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 String birth    = etBirth.getText().toString().trim();
                 String email    = etEMail.getText().toString().trim();
 
-                if(memberCheck.checkPWD(pwd, checkPWD, view.getContext())      == true &&
+                if(sns != null && sns.equals("sns")) {
+                    check = 1;
+                } else {
+                    if(memberCheck.checkPWD(pwd, checkPWD, view.getContext()) == true) {
+                        check = 1;
+                    }
+                }
+                if(check                                                        == 1    &&
                    memberCheck.checkName(name, view.getContext())              == true &&
                    memberCheck.checkBirth(birth, view.getContext())            == true &&
                    memberCheck.checkEmail(email, view.getContext())            == true ) {
 
-                    MemberVO memberVO = new MemberVO();
-                    memberVO = setMemberVO();
-
-                    Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                    if(updateInfomation() == 1) {
+                        Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(ActivityMemberModify.this, "수정이 오류", Toast.LENGTH_SHORT).show();
+                    }
                     // 서버로 memberVO를 보냄(update)
-                    finish();
+
                 }
             }
         });
@@ -122,7 +151,9 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
     }
 
     private void setID() {
-        etID.setText("아이디 셋팅");
+        MemberVO memberVO = new MemberVO();
+
+        etID.setText(id);
         etID.setEnabled(false);
 
         // 버튼 셋팅
@@ -144,7 +175,7 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         */
     }
 
-    private int sendDataToServer() {
+    private int updateInfomation() {
 
         int check = 0;
 
@@ -219,116 +250,34 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         return requestCode;
     }
 
-    /*
-    *  date     : 2017.11.12
-    *  author   : Kim Jong-ha
-    *  title    : checkPermission 메소드 생성
-    *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
-    *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
-    * */
-    private void checkPermission()
-    {
-        Log.v(TAG, "checkPermission들어옴");
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            //퍼미션이 없는 경우
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
-                //퍼미션을 재요청 하는 경우 - 왜 이 퍼미션이 필요한지등을 대화창에 넣어서 사용자를 설득할 수 있다.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+    private void setInformation(String id) {
+        MemberManager memberManager = new MemberManager(getApplicationContext());
 
-            } else {
-                //처음 퍼미션을 요청하는 경우
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
-            }
-        } else {
-            //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
-            checkPermission = true;
+        MemberVO memberVO = new MemberVO();
+        memberVO.setMid(id);
 
-            Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
-        }
-    }
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
 
-    /*
-    *  date     : 2017.11.12
-    *  author   : Kim Jong-ha
-    *  title    : onRequestPermissionResult 메소드 불러옴
-    *  comment  : 권한 사용or거부 요청창을 띄워 사용자가 권한을 동의, 비동의 때의 Perform을 둠
-    * */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1: //
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //사용자가 동의했을때
-                    Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
-                    checkPermission = true;
-                    getMemberPhone();
-                } else {
-                    //사용자가 거부 했을때
-                    Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                return;
-        }
-    }
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
 
-    /*
-    *  date     : 2017.11.12
-    *  author   : Kim Jong-ha
-    *  title    : getMemnerPhone 메소드 생성
-    *  comment  : 권한이 부여가 되어있다면 User의 기기에서 PhoneNumber을 불러옴
-    * */
-    private void getMemberPhone()
-    {
-        checkPermission();
-
-        TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
-
-        if(checkPermission == true) {
-            String phoneNum = telephonyManager.getLine1Number();
-
-            TelephonyManager mgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-            try {
-                myNumber = mgr.getLine1Number();
-                myNumber = myNumber.replace("+82", "0");
-                Toast.makeText(this, myNumber, Toast.LENGTH_SHORT).show();
-                tvPhone.setText(addHyphen(myNumber));
-            } catch (Exception e) {
-                Toast.makeText(this, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
+        if(resultList.size() == 1) {
+            memberVO = resultList.get(0);
+            etName.setText(memberVO.getMname());
+            etBirth.setText(memberVO.getMbirth());
+            etEMail.setText(memberVO.getMemail());
+            switch (memberVO.getMgender()) {
+                case "m" :
+                    rbMale.setChecked(true);
+                    break;
+                case "f" :
+                    rbFemale.setChecked(true);
+                    break;
+                case "u" :
+                    rbUndefine.setChecked(true);
+                    break;
             }
         }
     }
-
-    /*
-     *  date     : 2017.11.22
-     *  author   : Kim Jong-ha
-     *  title    : addHyphen() 메소드 생성
-     *  comment  : 전화 번호 사이의 '-' 를 추가한다
-     *  return   : String 형태
-     * */
-    private String addHyphen(String phone) {
-
-        String resultString = phone;
-
-        switch(resultString.length()) {
-            case 10 :
-                resultString =  resultString.substring(0,3) + "-" +
-                        resultString.substring(3,6) + "-" +
-                        resultString.substring(6,10);
-                break;
-
-            case 11 :
-                resultString =  resultString.substring(0,3) + "-" +
-                        resultString.substring(3,7) + "-" +
-                        resultString.substring(7,11);
-                break;
-            default :
-                resultString = "Not Mobile";
-        }
-        return resultString;
-    }
-
 
     /*
      *  date     : 2017.11.22

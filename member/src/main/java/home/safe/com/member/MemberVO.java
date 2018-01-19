@@ -1,6 +1,7 @@
 package home.safe.com.member;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianVO;
 
@@ -11,18 +12,18 @@ import java.io.Serializable;
  */
 
 public class MemberVO extends ProGuardianVO implements Serializable {
-    private int mseq;
-    private String mname = "ff";
-    private String mphone = "ff";
-    private String mid = "ff";
-    private String mpwd = "ff";
-    private String mcertday = "ff";
-    private String mbirth = "ff";
-    private String memail = "ff";
-    private String mgender = "ff";
-    private String msns = "ff";
-    private String msnsid = "ff";
-    private String mregday = "ff";  //12
+    private int mseq = 0;
+    private String mname;
+    private String mphone;
+    private String mid;
+    private String mpwd;
+    private String mcertday;
+    private String mbirth;
+    private String memail;
+    private String mgender;
+    private String msns;
+    private String msnsid;
+    private String mregday;  // 12개의 변수
 
     public MemberVO() {}
 
@@ -149,8 +150,8 @@ public class MemberVO extends ProGuardianVO implements Serializable {
 
     public ContentValues convertDataToContentValuesSendDB() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("mname", getMname());
-        contentValues.put("mphone", getMphone());
+        contentValues.put("mname", mname);
+        contentValues.put("mphone", mphone);
 
         return contentValues;
     }
@@ -158,18 +159,45 @@ public class MemberVO extends ProGuardianVO implements Serializable {
     @Override
     public ContentValues convertDataToContentValues() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("mseq", getMseq());
-        contentValues.put("mname", getMname());
-        contentValues.put("mphone", getMphone());
-        contentValues.put("mid", getMid());
-        contentValues.put("mpwd", getMpwd());
-        contentValues.put("mcertday", getMcertday());
-        contentValues.put("mbirth", getMbirth());
-        contentValues.put("memail", getMemail());
-        contentValues.put("mgender", getMgender());
-        contentValues.put("msns", getMsns());
-        contentValues.put("msnsid", getMsnsid());
-        contentValues.put("mregday", getMregday());
+
+        // 체크 메소드 http://mainichibenkyo.tistory.com/339
+
+        /*if(mseq != 0) {
+            contentValues.put("mseq", mseq);
+        }*/
+        if(mname != null) {
+            contentValues.put("mname", mname);
+        }
+        if(mphone != null) {
+            contentValues.put("mphone", mphone);
+        }
+        if(mid != null) {
+            contentValues.put("mid", mid);
+        }
+        if(mpwd != null) {
+            contentValues.put("mpwd", mpwd);
+        }
+        if(mcertday != null) {
+            contentValues.put("mcertday", mcertday);
+        }
+        if(mbirth != null) {
+            contentValues.put("mbirth", mbirth);
+        }
+        if(memail != null) {
+            contentValues.put("memail", memail);
+        }
+        if( mgender != null) {
+            contentValues.put("mgender", mgender);
+        }
+        if(msns != null) {
+            contentValues.put("msns", msns);
+        }
+        if(msnsid != null) {
+            contentValues.put("msnsid", msnsid);
+        }
+        if(mregday != null) {
+            contentValues.put("mregday", mregday);
+        }
 
         return contentValues;
     }

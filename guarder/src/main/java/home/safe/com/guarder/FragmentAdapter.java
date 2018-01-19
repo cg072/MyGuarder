@@ -59,9 +59,8 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         fragmentSearch.setGuarderList(list);
     }
 
-    // FragmentGuarder에서 추가된 지킴이들을 담은 리스트를 셋팅(액티비티에서 작업)
-    public void setAddGuarderListInFmGuarder(ArrayList<GuarderVO> list){
-        fragmentGuarders.addGuarderList(list);
+    public void updateGuarderListInFmGuarder() {
+        fragmentGuarders.updateGuarderList();
     }
 
     // FragmentGuarder로부터 지킴이 리스트를 가져옴(액티비티에서 작업)

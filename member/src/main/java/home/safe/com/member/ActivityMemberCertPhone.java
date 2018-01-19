@@ -10,10 +10,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class ActivityMemberCertPhone extends AppCompatActivity implements View.OnClickListener{
 
@@ -26,6 +29,9 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
     private boolean checkPermission = false;
     private ActivityMemberCertDialog certDialog;
 
+    private String id;
+    private MemberVO memberVO = new MemberVO();
+
     // 예제용
     private String settingCode = "200";
 
@@ -33,6 +39,11 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_cert_phone);
+
+        Intent intent = getIntent();
+        Log.v("로그", "여기오냐");
+        id = intent.getStringExtra("id");
+        //Log.v("로그", id);
 
         tvPhone = (TextView) findViewById(R.id.tvPhone);
         btnCert = (Button) findViewById(R.id.btnCert);
@@ -60,6 +71,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
                 public void onDismiss(DialogInterface dialogInterface) {
                     if(settingCode.equals(certDialog.getSendCode()))
                     {
+                        updatePhone();
                         //Toast.makeText(ActivityMemberCertPhone.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
                         checkCert = true;
                     }
@@ -90,6 +102,20 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
         requestCode = memberManager.requestCode();
 
         return requestCode;
+    }
+
+    private int updatePhone(){
+        Log.v("로그", "폰넘버 업데이트");
+        int check = 0;
+
+        MemberVO memberVO = new MemberVO();
+        memberVO.setMid(id);
+        memberVO.setMphone(myNumber);
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+        check = memberManager.update(MemberShareWord.TARGET_SERVER, memberVO);
+
+        return check;
     }
 
     /*

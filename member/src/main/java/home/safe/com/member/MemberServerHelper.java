@@ -15,16 +15,31 @@ import java.util.List;
  * Created by hotki on 2017-12-26.
  */
 
-public class MemberDBHelper extends PreTestDBHelper {
+public class MemberServerHelper extends PreTestDBHelper {
 
     SQLiteDatabase sqLiteDB;
-    final static private String TABLE_NAME = "memberlist";
+    final static private String TABLE_NAME = "testServer";
+
+    int mseq;
+    String mname;
+    String mphone;
+    String mid;
+    String mpwd;
+    String mcertday;
+    String mbirth;
+    String memail;
+    String mgender;
+    String msns;
+    String msnsid;
+    String mregday;
+
+    String data[] = new String[12];
 
     final static String[] MEMBER_COL = {   "mseq"     , "mname" , "mphone", "mid"     , "mpwd",
-                                             "mcertday", "mbirth", "memail", "mgender" , "msns",
-                                             "msnsid"    ,"mregday" };
+            "mcertday", "mbirth", "memail", "mgender" , "msns",
+            "msnsid"    ,"mregday" };
 
-    public MemberDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
+    public MemberServerHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
     }
 
@@ -67,16 +82,34 @@ public class MemberDBHelper extends PreTestDBHelper {
         ContentValues cv;
 
         String sqlSearch = "SELECT * FROM " + TABLE_NAME ;
-
-        switch (contentValues.get("type").toString()) {
+        switch (contentValues.get(MemberShareWord.SELECT_TYPE).toString()) {
 
             case MemberShareWord.TYPE_SELECT_ALL:
                 break;
             case MemberShareWord.TYPE_SELECT_CON:
-                // 아직 미구현 내용(부분 검색)
-                sqlSearch +=  " WHERE "; // 이후 코드에서는 조건문을 써야한다.
+                sqlSearch = sqlSearch +  " WHERE ";
+
+                setString(contentValues);
+
+                for(int i = 1 ; i < MEMBER_COL.length ; i ++) {
+                    if(data[i] != null) {
+                        sqlSearch = sqlSearch + MEMBER_COL[i] + " = '" + data[i] + "' ";
+
+                        if(i != MEMBER_COL.length - 1) {
+                            for (int j = i + 1; j < MEMBER_COL.length; j++) {
+                                if (data[j] != null) {
+                                    sqlSearch += " and ";
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 break;
         }
+
+        Log.v("서버", sqlSearch);
 
         Cursor cursor = sqLiteDB.rawQuery(sqlSearch, null);
         while (cursor.moveToNext()) {
@@ -95,21 +128,25 @@ public class MemberDBHelper extends PreTestDBHelper {
     @Override
     public int update(ContentValues contentValues) {
         sqLiteDB = getWritableDatabase();
-        String name = String.valueOf(contentValues.get(MEMBER_COL[1]));
-        String phone = String.valueOf(contentValues.get(MEMBER_COL[2]));
+
+        setString(contentValues);
+
+        String id = String.valueOf(contentValues.get(MEMBER_COL[3]));
         int check = sqLiteDB.update(
                 TABLE_NAME,
                 contentValues,
-                MEMBER_COL[1] + "= ? and " + MEMBER_COL[2] + " = ?",
-                new String[]{name, phone});
-        return 0;
+                MEMBER_COL[3] + " = ?",
+                new String[]{id});
+        return check;
     }
 
     @Override
     public int remove(ContentValues contentValues) {
         sqLiteDB = getWritableDatabase();
-        String name = contentValues.getAsString(MEMBER_COL[1]);
-        String phone = contentValues.getAsString(MEMBER_COL[2]);
+
+
+        String name = String.valueOf(contentValues.get(MEMBER_COL[1]));
+        String phone = String.valueOf(contentValues.get(MEMBER_COL[2]));
         int check = sqLiteDB.delete(
                 TABLE_NAME,
                 MEMBER_COL[1] + "= ? and " + MEMBER_COL[2] + " = ?",
@@ -133,6 +170,29 @@ public class MemberDBHelper extends PreTestDBHelper {
                 MEMBER_COL[10] + " TEXT," +
                 MEMBER_COL[11] + " TEXT);";
 
-        sqLiteDB.execSQL(sqlCreate);
+            sqLiteDB.execSQL(sqlCreate);
+
+    }
+
+    private void setString(ContentValues contentValues){
+
+        for(int i = 1 ; i < MEMBER_COL.length ; i++) {
+            if(contentValues.getAsString(MEMBER_COL[i]) != null)
+            data[i] = contentValues.getAsString(MEMBER_COL[i]);
+        }
+
+/*        mseq = contentValues.getAsInteger(MEMBER_COL[0]);
+        mname = contentValues.getAsString(MEMBER_COL[1]);
+        mphone = contentValues.getAsString(MEMBER_COL[2]);
+        mid = contentValues.getAsString(MEMBER_COL[3]);
+        mpwd = contentValues.getAsString(MEMBER_COL[4]);
+        mcertday = contentValues.getAsString(MEMBER_COL[5]);
+        mbirth = contentValues.getAsString(MEMBER_COL[6]);
+        memail = contentValues.getAsString(MEMBER_COL[7]);
+        mgender = contentValues.getAsString(MEMBER_COL[8]);
+        msns = contentValues.getAsString(MEMBER_COL[9]);
+        msnsid = contentValues.getAsString(MEMBER_COL[10]);
+        mregday = contentValues.getAsString(MEMBER_COL[11]);*/
+
     }
 }

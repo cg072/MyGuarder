@@ -2,10 +2,12 @@ package home.safe.com.member;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,8 +113,6 @@ public class MemberCheck {
     private long toHex(char ch) {
         String hexStr = Integer.toHexString(ch);
 
-        Log.v("스트링",String.valueOf(hexStr));
-
         long hexLong = Long.parseLong(hexStr, 16);
 
         return hexLong;
@@ -176,5 +176,82 @@ public class MemberCheck {
         }
 
         return check;
+    }
+
+    /*
+    *  date     : 2017.01.18
+    *  author   : Kim Jong-ha
+    *  title    : checkMember 생성
+    *  comment  : Naver, Google, 일반회원 3가지의 경우 id로 판단
+    *             phone이 없다면 인증이 되지 않은 회원이므로 회원이므로 인증창으로 이동
+    *  return   : int형으로 0(회원아님), 1(회원이고 phone인증됨), 2(회원이지만 phone인증안됨) 을 리턴
+    * */
+    // 서버로 회원인지 아닌지의 여부를 판단함(구글, 네이버, 일반 3가지의 경우 모두 아이디로 판단한다)
+    public int checkMember(MemberVO memberVO, Context context) {
+        int checkMember = 0;
+
+        MemberManager memberManager = new MemberManager(context);
+
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+
+        int checkID = 0;
+        int checkPhone = 0;
+
+        //Log.v("체크",memberVO.getMphone());
+
+        for(MemberVO m : resultList) {
+            if(memberVO.getMid().equals(m.getMid())) {
+                checkID = 1;
+            }
+            if(m.getMphone() != null){
+                checkPhone = 1;
+            }
+        }
+
+        if(checkID == 1 || checkSNS(memberVO) == true) {
+            checkMember = 1;
+        } else {
+            Toast.makeText(context, "가입되지 않은 회원입니다.", Toast.LENGTH_SHORT).show();
+        }
+
+        if(checkMember == 1 && checkPhone != 1) {
+            checkMember = 2;
+            Toast.makeText(context, "전화번호가 인증되지 않은 회원입니다.", Toast.LENGTH_SHORT).show();
+        }
+
+        // 회원이 아니면 false로 간다.
+        return checkMember;
+    }
+
+    private boolean checkSNS(MemberVO memberVO) {
+        boolean checkSNS = false;
+
+        if(memberVO.getMsns().equals("naver") || memberVO.getMsns().equals("google")) {
+            checkSNS = true;
+        }
+
+        return checkSNS;
+    }
+
+    public boolean checkSNSID(MemberVO memberVO, Context context) {
+        boolean checkSNSID = false;
+
+        if(memberVO.getMsns() != null && memberVO.getMsnsid() != null) {
+            checkSNSID = true;
+        }
+
+        return checkSNSID;
+    }
+
+    public int checkExistence (MemberVO memberVO, Context context) {
+
+        MemberManager memberManager = new MemberManager(context);
+
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+
+        return resultList.size();
     }
 }

@@ -54,20 +54,8 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
         memberVO.setMid(id);
         memberVO.setMemail(email);
 
-        MemberManager memberManager = new MemberManager(getApplicationContext());
+        MemberCheck memberCheck = new MemberCheck();
 
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
-
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
-
-        try {
-            if (resultList.get(0).getMid().equals(id) && resultList.get(0).getMemail().equals(email)) {
-                check = 1;
-            }
-        } catch (Exception e) {
-            Log.v("ActivityMemberFindPWD", e.getMessage());
-        }
-
-        return check;
+        return memberCheck.checkExistence(memberVO, getApplicationContext());
     }
 }

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        Log.v("크레이트뷰","왔냐");
+
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_guarders, container, false);
 
         tvGuarderName = rootView.findViewById(R.id.tvGuarderName);
@@ -59,6 +62,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
         if(loadGuarderListFromDB() != null) {
             changeGurderList(loadGuarderListFromDB());
+            lvAdapterGuarders.notifyDataSetChanged();
         }
 
         return rootView;
@@ -79,7 +83,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
 
         GuarderVO guarderVO = new GuarderVO(1);
-        resultList = guarderManager.select("con", guarderVO);      // 현재 모든 지킴이들을 "해제" 시키기위한 셋팅
+        resultList = guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_CON, guarderVO);      // 현재 모든 지킴이들을 "해제" 시키기위한 셋팅
 
         GuarderVO saveGuarderVO = null;
 
@@ -125,21 +129,21 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         }
     }
 
-    /*
+/*    *//*
     *  date     : 2017.12.15
     *  author   : Kim Jong-ha
     *  title    : addGuarder 메소드 생성
     *  comment  : 외부로부터 GuarderVO를 받아
     *            1. DB에 추가
     *            2. 리스트에 추가
-    * */
+    * *//*
     public void addGuarderList(ArrayList<GuarderVO> list){
         if(list != null) {
             for(GuarderVO guarderVO : list) {
 
                 int check = 0;
 
-                check = guarderManager.insert(guarderVO);                                           // guarderManager로 전송
+                check = guarderManager.insert(GuarderShareWord.TARGET_DB,guarderVO);                                           // guarderManager로 전송
 
                 if (check != 0) {                                                                    // 결과값이 성공적이라면 ( 0 이 아니라면)
                     guarderList.add(guarderVO);                                                     // 지킴이 리스트에 추가
@@ -148,7 +152,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                 }
             }
         }
-    }
+    }*/
 
     /*
     *  date     : 2017.01.03
@@ -158,7 +162,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *             현재 지킴이 상태를 나타내는 메소드 사용(setNowGuarder)
     * */
     private ArrayList<GuarderVO> loadGuarderListFromDB() {                                                // DB로 부터 초기 목록화면을 가져온다.
-        ArrayList<GuarderVO> resultList = guarderManager.select("all", new GuarderVO());    // DB selectAll을 위한 매니저로 전송
+        ArrayList<GuarderVO> resultList = guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_ALL, new GuarderVO());    // DB selectAll을 위한 매니저로 전송
         for (GuarderVO gv : resultList) {                                                           // 리스트중 현재 지킴이 상태인 회원을 뽑는다.
             if(gv.getGstate() == 1) {
                 nowGuarderName = gv.getGmcname();
@@ -169,6 +173,11 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         return resultList;
     }
 
+    public void updateGuarderList() {
+        changeGurderList(loadGuarderListFromDB());
+        lvAdapterGuarders.notifyDataSetChanged();
+    }
+
     /*
     *  date     : 2017.01.05
     *  author   : Kim Jong-ha
@@ -176,7 +185,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *  comment  : 외부로 지킴이 리스트 전송( FragmentSearch에서 중복 제거를 위해 사용중)
     * */
     public ArrayList<GuarderVO> getGuarderList() {
-        changeGurderList(guarderManager.select("all", new GuarderVO()));  // 지킴이 목록 업데이트
+        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", new GuarderVO()));  // 지킴이 목록 업데이트
         return guarderList;
     }
 
@@ -203,7 +212,6 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     private void changeGurderList(ArrayList<GuarderVO> list) {
         guarderList.clear();
         guarderList.addAll(list);
-        lvAdapterGuarders.notifyDataSetChanged();
     }
 
     /*
@@ -214,6 +222,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     * */
     public void setList(ArrayList<GuarderVO> list){
         changeGurderList(list);
+        lvAdapterGuarders.notifyDataSetChanged();
     }
 
     // GuarderManager 를 셋팅해주어야, creatView 전에 이루어지는 db작업이 가능
@@ -245,7 +254,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(dialogSaveGuarderVO != null) {
-                            preCheck = guarderManager.update(dialogSaveGuarderVO);            // 모든 지킴이 해제
+                            preCheck = guarderManager.update(GuarderShareWord.TARGET_DB,dialogSaveGuarderVO);            // 모든 지킴이 해제
                         }
 
                         nowGuarderName = "";
@@ -253,9 +262,10 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                         setNowGuarder(nowGuarderName, nowGuarderPhone);                        // 현재 지킴이 정보 삭제
 
                         dialogGuarderVO.setGstate(0);
-                        postCheck = guarderManager.update(dialogGuarderVO);                   // 해당 포지션 업데이트
+                        postCheck = guarderManager.update(GuarderShareWord.TARGET_DB,dialogGuarderVO);                   // 해당 포지션 업데이트
 
-                        changeGurderList(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        lvAdapterGuarders.notifyDataSetChanged();
         }
     });
                 break;
@@ -265,7 +275,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(dialogSaveGuarderVO != null) {
-                            preCheck = guarderManager.update(dialogSaveGuarderVO);          // 모든 지킴이 해제
+                            preCheck = guarderManager.update(GuarderShareWord.TARGET_DB, dialogSaveGuarderVO);          // 모든 지킴이 해제
                         }
 
                         nowGuarderName = dialogGuarderVO.getGmcname();
@@ -273,9 +283,10 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                         setNowGuarder(nowGuarderName, nowGuarderPhone);                      // 현재 지킴이 정보 등록
 
                         dialogGuarderVO.setGstate(1);
-                        postCheck = guarderManager.update(dialogGuarderVO);                 // 해당 포지션 업데이트
+                        postCheck = guarderManager.update(GuarderShareWord.TARGET_DB,dialogGuarderVO);                 // 해당 포지션 업데이트
 
-                        changeGurderList(guarderManager.select("all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        lvAdapterGuarders.notifyDataSetChanged();
                         Toast.makeText(getContext(), nowGuarderName + " " + nowGuarderPhone, Toast.LENGTH_SHORT).show();
                     }
                 });

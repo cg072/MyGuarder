@@ -58,40 +58,74 @@ public class GuarderManager {
         dbHelper.close();
     }
 
-    public int insert(GuarderVO guarderVO) {
+    public int insert(String target, GuarderVO guarderVO) {
         int check = 0;
 
         ContentValues sendCV = guarderVO.convertDataToContentValuesSendDB();
 
-        check = controller.insert(sendCV);
+        switch (target) {
+            case GuarderShareWord.TARGET_DB :
+                check = controller.insert(sendCV);
+                break;
+            case GuarderShareWord.TARGET_SERVER:
+                check = controller.insertServer(sendCV);
+                break;
+        }
 
         return check;
     }
 
-    public int delete(GuarderVO guarderVO) {
-        int check = 0;
-        return check;
-    }
-
-    public int update(GuarderVO guarderVO) {
+    public int delete(String target, GuarderVO guarderVO) {
         int check = 0;
 
         ContentValues sendCV = guarderVO.convertDataToContentValuesSendDB();
 
-        check = controller.update(sendCV);
+        switch (target) {
+            case GuarderShareWord.TARGET_DB :
+                check = controller.remove(sendCV);
+                break;
+            case GuarderShareWord.TARGET_SERVER:
+                check = controller.removeServer(sendCV);
+                break;
+        }
 
         return check;
     }
 
-    public ArrayList<GuarderVO> select(String type, GuarderVO data) {
-        List<ContentValues> resultList;
+    public int update(String target, GuarderVO guarderVO) {
+        int check = 0;
+
+        ContentValues sendCV = guarderVO.convertDataToContentValuesSendDB();
+        switch (target) {
+            case GuarderShareWord.TARGET_DB :
+                check = controller.update(sendCV);
+                break;
+            case GuarderShareWord.TARGET_SERVER:
+                check = controller.updateServer(sendCV);
+                break;
+        }
+
+        return check;
+    }
+
+    public ArrayList<GuarderVO> select(String target, String type, GuarderVO data) {
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(TYPE, type);
         if(type.equals(TYPE_SELECT_CON)) {
             contentValues.put("gstate", data.getGstate());
         }
 
-        resultList = controller.search(contentValues);
+        List<ContentValues> resultList = null;
+
+        switch (target) {
+            case GuarderShareWord.TARGET_DB :
+                resultList = controller.search(contentValues);
+                break;
+            case GuarderShareWord.TARGET_SERVER:
+                resultList = controller.searchServer(contentValues);
+                break;
+        }
 
         GuarderVO guarderVO;
         ArrayList<GuarderVO> guaderList = new ArrayList<GuarderVO>();

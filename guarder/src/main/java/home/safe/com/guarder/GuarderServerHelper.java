@@ -1,9 +1,9 @@
 package home.safe.com.guarder;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
@@ -11,42 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by hotki on 2017-12-26.
+ * Created by hotki on 2018-01-16.
  */
 
-public class GuarderDBHelper extends ProGuardianDBHelper {
+public class GuarderServerHelper extends ProGuardianDBHelper {
 
-    final static String TAG = "DBHelpler";
+    final static String TAG = "ServerHelpler";
 
     SQLiteDatabase sqLiteDB;
-    final static private String TABLE_NAME = "guarderlist";
+    final static private String TABLE_NAME = "serverlist";
     final static private String SEQ = "gseq";
     final static private String NAME = "gmcname";
     final static private String PHONE = "gmcphone";
     final static private String USE = "gstate";
 
-    public GuarderDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
+    public GuarderServerHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        super.onCreate(sqLiteDatabase);
-        createTableGuarder(sqLiteDatabase);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        super.onUpgrade(sqLiteDatabase, oldVersion, newVersion);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);         // 기존의 테이블 삭제 후
-        onCreate(sqLiteDatabase);                                              // 새 디비를 만들어준다.
-        // 데이터 백업은 따로 짜야하는듯?
-    }
-
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-        createTableGuarder(db);
     }
 
     @Override
@@ -92,9 +72,9 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
     public int update(ContentValues contentValues) {
         sqLiteDB = getWritableDatabase();
 
-        String name = contentValues.getAsString(NAME);
-        String phone = contentValues.getAsString(PHONE);
-        String use = contentValues.getAsString(USE);
+        String name = String.valueOf(contentValues.get(NAME));
+        String phone = String.valueOf(contentValues.get(PHONE));
+        String use = String.valueOf(contentValues.get(USE));
         int check = sqLiteDB.update(
                 TABLE_NAME,
                 contentValues,
@@ -107,23 +87,43 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
     public int remove(ContentValues contentValues) {
         sqLiteDB = getWritableDatabase();
 
-        String name = contentValues.getAsString(NAME);
-        String phone = contentValues.getAsString(PHONE);
+        String name = String.valueOf(contentValues.get(NAME));
+        String phone = String.valueOf(contentValues.get(PHONE));
 
         int check = sqLiteDB.delete(TABLE_NAME, "gmcname = ?", new String[]{name});
 
         return check;
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        super.onCreate(sqLiteDatabase);
+        createTableGuarder(sqLiteDatabase);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        super.onUpgrade(sqLiteDatabase, oldVersion, newVersion);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);         // 기존의 테이블 삭제 후
+        onCreate(sqLiteDatabase);                                              // 새 디비를 만들어준다.
+        // 데이터 백업은 따로 짜야하는듯?
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        createTableGuarder(db);
+    }
+
     private void createTableGuarder(SQLiteDatabase db) {
         this.sqLiteDB = db;
 
-        String sqlCreate = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
+        String SQL_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
                 SEQ+" INTEGER PRIMARY KEY AUTOINCREMENT," +
                 NAME + " TEXT," +
                 PHONE + " TEXT," +
                 USE + " INTEGER );";
 
-        sqLiteDB.execSQL(sqlCreate);
+        sqLiteDB.execSQL(SQL_CREATE);
     }
 }

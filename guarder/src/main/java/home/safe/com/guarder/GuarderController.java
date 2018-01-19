@@ -16,6 +16,10 @@ public class GuarderController implements IProGuardianController {
 
     private ProGuardianDBHelper proGuardianDBHelper;
 
+    // 테스트용
+    private ProGuardianDBHelper proGuardianServerHelper;
+    // 테스트용
+
     @Override
     public int insert(ContentValues contentValues) {
         return proGuardianDBHelper.insert(contentValues);
@@ -66,6 +70,10 @@ public class GuarderController implements IProGuardianController {
     @Override
     public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper) {
         this.proGuardianDBHelper = proGuardianDBHelper;
+
+        // 테스트용
+        this.proGuardianServerHelper = proGuardianDBHelper;
+        // 테스트용
     }
 
     @Override

@@ -1,20 +1,15 @@
 package home.safe.com.member;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -42,8 +37,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class ActivityMemberLogin extends AppCompatActivity {
@@ -78,7 +71,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private MemberVO memberVO = new MemberVO();
 
     // 구글 로그인 변수들
-    //private static final int RESOLVE_CONNECTION_REQUEST_CODE = 1;
     private static final int REQUEST_CODE_GOOGLE = 1;
     private GoogleApiClient mGoogleApiClient;
     private String google = "google";
@@ -96,16 +88,14 @@ public class ActivityMemberLogin extends AppCompatActivity {
     OAuthLogin mOAuthLoginModule;
     OAuthLoginButton authLoginButton;
     Context mContext;
-    // 네이버 로그인 변수들
 
-    // memberVO에 필요 없는 변수들
-    private String nickname;                 // nickname        = f_array[0];
-    private String enc_id;                   // enc_id          = f_array[1];
-    private String profile_image;           // 프로필 이미지   = f_array[2];
-    private String age; ;                    // 나이대          = f_array[3]
-    private String id;                       // 고유 ID         = f_array[5];
+    private String sns;
+    private String snsid;
 
     private boolean checkLoadInfo = false;
+
+    // 체크에 필요한 메소드들
+    MemberCheck memberCheck = new MemberCheck();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,19 +117,24 @@ public class ActivityMemberLogin extends AppCompatActivity {
         callNaverLogin();
         callGoogleLogin();
 
-        loadSharePreData();
-
-
+        loadNomalData();
+        test();
         // 자동로그인 체크
         if(cboxCheck.isChecked() == true) {
-            if(sendLogInfoToServer() == 1) {
-                goMainTest();
+            if(searchForID() == 1) {
+                moveToMain();
+            } else if(sns != null && snsid != null) {
+                MemberVO sendMemberVO = new MemberVO();
+                sendMemberVO.setMsns(sns);
+                sendMemberVO.setMsnsid(snsid);
+                Log.v(sns,snsid);
+                if(memberCheck.checkExistence(sendMemberVO, getApplicationContext()) == 1) {
+                    moveToMain();
+                }
             } else {
                 Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
-        
-
 
         // 구글 로그인 버튼 리스너
         googleLogin.setOnClickListener(new LinearLayout.OnClickListener() {
@@ -166,10 +161,9 @@ public class ActivityMemberLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.v("로그인 버튼", "눌림");
-                saveData();
-                //testDB();
-                if(sendLogInfoToServer() == 1) {
-                    goMainTest();
+                saveNomalData();
+                if(searchForID() == 1) {
+                    moveToMain();
                 } else {
                     Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -202,20 +196,35 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
-    // 테스트 로그인
-    private void testDB(){
+    private int  searchForID() {
+
         MemberManager memberManager = new MemberManager(getApplicationContext());
-        MemberVO memberVO = new MemberVO();
-        memberManager.insert(MemberShareWord.TARGET_DB, memberVO);
+
+        String id = etID.getText().toString().trim();
+        String pwd = etPWD.getText().toString().trim();
+
+        MemberVO sendMemberVO = new MemberVO(id, pwd);
+
+        int check = memberCheck.checkExistence(sendMemberVO, getApplicationContext());
+
+
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, sendMemberVO);
+        for(MemberVO m : resultList) {
+            if (m.getMid().equals("test")) {
+                testLoginFlag = false;
+            } else {
+                testLoginFlag = true;
+            }
+        }
+
+        return check;
     }
 
     // 테스트 로그인 후 ~ (서버디비 완성 후 -> 아래의 두 메소드를 사용(주석처리됨))
-    private void goMainTest() {
-        Log.v("로그인", "가즈아");
+    private void moveToMain() {
         // 회원일 경우이므로, 메인액티비티를 띄워준다.
         Intent intentData = new Intent();
         if(testLoginFlag == true) {
@@ -225,178 +234,100 @@ public class ActivityMemberLogin extends AppCompatActivity {
         }
         finish();
     }
-    
-    private int checkLogInfo() {
-        int check = 0;
-        if(sendLogInfoToServer() == 1) {
-            check = 1;
-        }
-        
-        return check;
-    }
 
-/*    private int sendToServer() {
+    // 구글, 네이버 회원은 가입 즉시, 전화번호 인증이 되어있지 않으므로, 전화번호 인증창으로 이동
+    private void certPhone() {
 
-        int check = 0;
-
-        return check;
-    }
-
-   private void moveToMain(){
-        switch(sendToServer()){
+        switch (memberCheck.checkMember(memberVO, getApplicationContext())) {
             case 0 :
-                Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
                 break;
             case 1 :
-                Intent intentData = new Intent();
-                if(testLoginFlag == true) {
-                    setResult(MY_LOGIN_SUCCESS_CODE, intentData);       // 테스터 로그인(회원)
-                } else {
-                    setResult(ROOT_LOGIN_SUCCESS_CODE, intentData);     // 운영자 로그인
-                }
-                finish();
+                moveToMain();
+                break;
+            case 2 :
+                // 핸드폰 인증이 안된 상태이므로 전화번호 인증창으로 이동
+                Intent intent = new Intent(ActivityMemberLogin.this, ActivityMemberCertPhone.class);
+                intent.putExtra("id", memberVO.getMid());
+                startActivityForResult(intent, REQUEST_CODE_PHONE);
                 break;
         }
-    }*/
+    }
 
-/*    // 테스트용 아이디 세팅(서버 역활중)
-    private boolean setTestLogin() {
-        testLoginFlag = false;
-        String rootID = "root";
-        String rootPWD = "11111";
-        String testID = "test";
-        String testPWD = "11111";
+    private int signupSNSID(){
 
-        if((etID.getText().toString().equals(rootID) && etPWD.getText().toString().equals(rootPWD)) ||
-                (etID.getText().toString().equals(testID) && etPWD.getText().toString().equals(testPWD))) {
-            if(etID.getText().toString().equals(rootID)) {
-                testLoginFlag = true;
-            }
-            return true;
-        }
-        return false;
-    }*/
+        MemberManager memberManager = new MemberManager(getApplicationContext());
 
-    private int testServer(MemberVO memberVO){
-        int check = 0;
-        ArrayList<MemberVO> serverList = new ArrayList<MemberVO>();
-        MemberVO serverMember = new MemberVO();
+        int check = 0 ;
 
-        String rootID = "root";
-        String rootPWD = "11111";
-        
-        serverMember.setMid(rootID);
-        serverMember.setMpwd(rootPWD);
-
-        serverList.add(serverMember);
-
-        serverMember = new MemberVO();
-
-        String testID = "test";
-        String testPWD = "11111";
-
-        serverMember.setMid(testID);
-        serverMember.setMpwd(testPWD);
-
-        serverList.add(serverMember);
-
-        for(MemberVO m : serverList) {
-            if(m.getMid().equals(memberVO.getMid()) && m.getMpwd().equals(memberVO.getMpwd())) {
+        // memberCheck 안의 checkExistence 메소드를 사용하여 서버의 DB에 아이디가 있는지 확인한다.
+        switch (memberCheck.checkExistence(memberVO, getApplicationContext())) {
+            case 0 :    // 아이디 없음
+                check = memberManager.insert(MemberShareWord.TARGET_SERVER, memberVO);
+                if(check != 0 ) {
+                    check = 1;
+                }
+                break;
+            case 1 :    // 아이디 1개 있음
                 check = 1;
-                if (m.getMid().equals(rootID)) {
-                    testLoginFlag = true;
-                } else {
-                    testLoginFlag = false;
-                }
-                
-            }
-        }
-        return check;
-    }
-
-    private int sendLogInfoToServer() {
-
-        int check = 0;
-
-        String sendID = etID.getText().toString().trim();
-        String sendPWD = etPWD.getText().toString().trim();
-        String recvID = "";
-        String recvPWD = "";
-        int checkLog = 0;
-        MemberVO memberVO = new MemberVO(sendID, sendPWD);
-
-        check =testServer(memberVO);
-
-        return check;
-/*        ArrayList<MemberVO> resultList = sendDataForList(TARGET_SERVER, TYPE_SELECT_CON, memberVO);
-        if(resultList != null) {
-            int check = 0;
-            for(MemberVO m : resultList) {
-                check++;
-                if(sendID.equals(m.getMid()) && sendPWD.equals(m.getMpwd())) {
-                    checkLog = 1;
-                }
-            }
-            if(check != 1) {
-                checkLog = 0;
-            }
-        }
-        return checkLog; */
-    }
-
-    // int값으로 반환
-    private int sendDataForCehck(String target, String type, MemberVO memberVO) {
-        // db로 데이터를 보냄
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        int check = 0;
-
-        switch (type) {
-            case MemberShareWord.TYPE_INSERT :
-                return memberManager.insert(target, memberVO);
-            case MemberShareWord.TYPE_DELETE :
-                return memberManager.delete(target, memberVO);
-            case MemberShareWord.TYPE_UPDATE :
-                return memberManager.update(target, memberVO);
+                break;
+            default:    // 아이디 2개 이상 존재
         }
 
         return check;
     }
 
-    // 리스트 형식으로 반환
-    private ArrayList<MemberVO> sendDataForList(String target, String type, MemberVO memberVO) {
-
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        switch (type) {
-            case MemberShareWord.TYPE_SELECT_ALL :
-                return memberManager.select(target, type, memberVO);
-            case MemberShareWord.TYPE_SELECT_CON:
-                return memberManager.select(target, type, memberVO);
+    // SNS같은 경우에는 첫 로그인시, insert가 되어주어야한다. 첫 로그인 후, 폰 인증 창으로 간다.
+    private void checkFirstLogin () {
+        // 로그인 성공 -> sharePreference 저장하기
+        saveSNSData();
+        Toast.makeText(mContext, memberVO.getMname() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
+        // 첫 로그인인지, 아닌지(첫 로그인이면 서버로 insert 후에 폰인증으로감
+        // SNS 아이디로 로그인 한 것인지 확인
+        if(memberCheck.checkSNSID(memberVO, getApplicationContext()) == true) {
+            // 서버의 DB에 아이디가 존재하는지 확인
+            if (signupSNSID() == 1) {
+                // 폰 인증창
+                certPhone();
+            }
         }
-
-        return null;
     }
 
     // 아이디, 비번, 자동 로그인 여부 저장
-    private void saveData()
-    {
+    private void saveNomalData() {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("MemberID",etID.getText().toString().trim());
         editor.putString("MemberPWD",etPWD.getText().toString().trim());
         editor.putBoolean("MemberAuto",cboxCheck.isChecked());
+
         editor.commit();
     }
 
     // 아이디, 비번 불러옴
-    private void loadSharePreData()
-    {
+    private void loadNomalData() {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        etID.setText(preferences.getString("MemberID","root"));
-        etPWD.setText(preferences.getString("MemberPWD","11111"));
+        etID.setText(preferences.getString("MemberID",null));
+        etPWD.setText(preferences.getString("MemberPWD",null));
         autoLoginCheck = preferences.getBoolean("MemberAuto", false);
+        sns = preferences.getString("MemberSNS",null);
+        snsid = preferences.getString("MemberSNSID",null);
+        if(sns != null) {
+            etID.setText("");
+            etPWD.setText("");
+        }
+
         cboxCheck.setChecked(autoLoginCheck);
+    }
+
+    private void saveSNSData(){
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("MemberID", memberVO.getMid());
+        editor.putString("MemberSNS", memberVO.getMsns());
+        editor.putString("MemberSNSID",memberVO.getMsnsid());
+        editor.putBoolean("MemberAuto",cboxCheck.isChecked());
+
+        editor.commit();
     }
 
     /*
@@ -416,7 +347,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 .enableAutoManage( ActivityMemberLogin.this, new GoogleApiClient.OnConnectionFailedListener( ) {
                     @Override public void onConnectionFailed( @NonNull ConnectionResult connectionResult )
                     {
-                        // 연결에 실패했을 경우 실행되는 메서드입니다.
+                        // 연결에 실패했을 경우 실행되는 메소드
                     }
                 })
                 // 필요한 api가 있으면 아래에 추가
@@ -495,26 +426,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
         };
     };
 
-    private void certPhone() {
-        if(checkMember() == true) {
-            goMainTest();
-        } else {
-            // 회원이 아니었는데, 가입한 경우 이므로 전화번호 인증 창으로 간다.
-            Intent intent = new Intent(ActivityMemberLogin.this, ActivityMemberCertPhone.class);
-            startActivityForResult(intent, REQUEST_CODE_PHONE);
-        }
-    }
-
-    private boolean checkMember() {
-        boolean cheeckMember = false;
-        // 회원인지 여부 판단후에 회원이면
-        //checkMember = true;
-
-        // 회원이 아니면 false로 간다.
-
-        return cheeckMember;
-    }
-
     /*
     *  date     : 2017.11.29
     *  author   : Kim Jong-ha
@@ -535,7 +446,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
 
             String url = "https://openapi.naver.com/v1/nid/getUserProfile.xml";
-            //String url = "https://openapi.naver.com/v1/nid/me";
             String at = mOAuthLoginModule.getAccessToken(mContext);
 
             // 정보를 넘기고 API대한 정보를 요청한다.
@@ -548,10 +458,9 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
             // infoLoad가 ture일 경우..(모든 정보가 있을 경우)
             if ( checkLoadInfo == true ) {
-                Toast.makeText(getBaseContext(), memberVO.getMname()+"님 환영합니다.", Toast.LENGTH_LONG).show();
+                // 첫 로그인인지, 아닌지(첫 로그인이면 서버로 insert 후에 폰인증으로감
+                checkFirstLogin();
 
-                certPhone();
-                //finish();
                 // infoLoad가 false일 경우..(이름과 이메일을 받아오지 못할 경우를 포함해서, 정보가 없을 경우)
             } else {
                 Toast.makeText(ActivityMemberLogin.this,
@@ -583,7 +492,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
                 String tag;
                 boolean inText = false;
-                boolean lastMatTag = false;
 
                 int colIdx = 0;
 
@@ -631,13 +539,15 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 Log.e("dd", "Error in network call", e);
             }
 
-            nickname = f_array[0];                  // 닉네임
-            enc_id = f_array[1];                    // enc_id
-            profile_image = f_array[2];            // 프로필 이미지
-            age = f_array[3];                       // 나이대
-            id = f_array[5];                        // 고유 id (숫자)
-
-            MemberVO naverMemberVO = new MemberVO(f_array[4], f_array[6], f_array[7], f_array[8], naver);   // 성별, 이름, 이메일, 생일
+            // 받은 값을 member에 셋팅
+            MemberVO naverMemberVO = new MemberVO();
+            naverMemberVO.setMid(f_array[7]);
+            naverMemberVO.setMgender(f_array[4]);   // 성별
+            naverMemberVO.setMname(f_array[6]);     // 이름
+            naverMemberVO.setMemail(f_array[7]);    // 이메일
+            naverMemberVO.setMbirth(f_array[8]);    // 생일
+            naverMemberVO.setMsns("naver");
+            naverMemberVO.setMsnsid(separateSNSID(f_array[7]));
             memberVO = naverMemberVO;
 
             for(int i = 0 ; i < 9 ; i++) {
@@ -651,21 +561,25 @@ public class ActivityMemberLogin extends AppCompatActivity {
         }
     }
 
-    // 구글 로그인 시, 반환되는 결과값들
+
+    // 구글 로그인 반환코드, 폰인증 반환코드를 다룬다.
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         switch ( requestCode ) {
+            // 구글 로그인이 성공하였을 경우의 requestCode
             case REQUEST_CODE_GOOGLE:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent( data );
                 if ( result.isSuccess( ) ) { GoogleSignInAccount acct = result.getSignInAccount( );
-                    memberVO.setMemail(acct.getEmail());
+                    // 구글 로그인 시, 반환되는 결과값들(email, name(이름 or 별명))
                     memberVO.setMid(acct.getEmail());
                     memberVO.setMname(acct.getDisplayName());
                     memberVO.setMsns(google);
-                    Toast.makeText(mContext, acct.getDisplayName() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
-                    certPhone();
+                    memberVO.setMsnsid(separateSNSID(acct.getEmail()));
+
+                    checkFirstLogin();
                 }
                 break;
+            // 전화번호 인증 후, 성공이었을 경우의 requestCode
             case REQUEST_CODE_PHONE:
                 if(resultCode == SH_JOB_OK) {
                     Toast.makeText(mContext, "인증에 성공하였습니다", Toast.LENGTH_SHORT).show();
@@ -685,71 +599,28 @@ public class ActivityMemberLogin extends AppCompatActivity {
     /*
     *  date     : 2017.11.12
     *  author   : Kim Jong-ha
-    *  title    : checkPermission 메소드 생성
-    *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
-    *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
-    * */
-    private void checkPermission()
-    {
-        Log.v(TAG, "checkPermission들어옴");
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            //퍼미션이 없는 경우
-            //최초로 퍼미션을 요청하는 것인지 사용자가 취소되었던것을 다시 요청하려는건지 체크
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
-                //퍼미션을 재요청 하는 경우 - 왜 이 퍼미션이 필요한지등을 대화창에 넣어서 사용자를 설득할 수 있다.
-                //대화상자에 '다시 묻지 않기' 체크박스가 자동으로 추가된다.
-                Log.v(TAG, "퍼미션을 재요청 합니다.");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+    *  title    : separateSNSID 메소드 생성
+    *  comment  : '구글'이나 '네이버' 로그인시, 받아온 E-Mail에서 snsid 를 분리한다
+    */
+    private String separateSNSID (String email) {
+        String temp[] = email.split("@");
+        String snsid = temp[0];
 
-            } else {
-                //처음 퍼미션을 요청하는 경우
-                Log.v(TAG, "첫 퍼미션 요청입니다.");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
-            }
-        } else {
-            //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
-            checkPermission = true;
-
-            Log.v(TAG, "Permission is granted");
-            Toast.makeText(this, "\"이미 퍼미션이 허용되었습니다.\"", Toast.LENGTH_SHORT).show();
-        }
-        Log.v(TAG, "checkPermission나감");
+        return snsid;
     }
 
-    /*
-    *  date     : 2017.11.12
-    *  author   : Kim Jong-ha
-    *  title    : onRequestPermissionResult 메소드 불러옴
-    *  comment  : 권한 사용or거부 요청창을 띄워 사용자가 권한을 동의, 비동의 때의 Perform을 둠
-    * */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1: //
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //사용자가 동의했을때
-                    Toast.makeText(this, "퍼미션 동의", Toast.LENGTH_SHORT).show();
-                    checkPermission = true;
-                } else {
-                    //사용자가 거부 했을때
-                    Toast.makeText(this, "거부 - 동의해야 사용가능합니다.", Toast.LENGTH_SHORT).show();
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 2000);
-                }
-                return;
-        }
-    }
     @Override
     public void onBackPressed() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage("어플을 종료하시겠습니까?");
-        alert.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intentData = new Intent();
@@ -758,16 +629,43 @@ public class ActivityMemberLogin extends AppCompatActivity {
             }
         });
 
-        alert.setPositiveButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
         AlertDialog alertDialog = alert.create();
         alertDialog.show();
 
+    }
+
+    // 테스트
+    private void test() {
+        int check = 0;
+        MemberVO serverMember = new MemberVO();
+
+        String rootID = "root";
+        String rootPWD = "11111";
+
+        serverMember.setMid(rootID);
+        serverMember.setMpwd(rootPWD);
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        Log.v(rootID, rootPWD);
+        Log.v(serverMember.getMid(), serverMember.getMpwd());
+
+        if(memberCheck.checkExistence(serverMember, getApplicationContext()) == 0 ) {
+            check = memberManager.insert(MemberShareWord.TARGET_SERVER, serverMember);
+        }
+
+        serverMember = new MemberVO();
+
+        String testID = "test";
+        String testPWD = "11111";
+
+        serverMember.setMid(testID);
+        serverMember.setMpwd(testPWD);
+
+
+        if(memberCheck.checkExistence(serverMember, getApplicationContext()) == 0 ) {
+            check = memberManager.insert(MemberShareWord.TARGET_SERVER, serverMember);
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 package home.safe.com.member;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import com.safe.home.pgchanger.IProGuardianController;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
@@ -12,6 +13,10 @@ import java.util.List;
  */
 
 public class MemberController implements IProGuardianController {
+
+    // 테스트용
+    ProGuardianDBHelper proGuardianServerHelper;
+    // 테스트용
 
     ProGuardianDBHelper proGuardianDBHelper;
 
@@ -37,22 +42,22 @@ public class MemberController implements IProGuardianController {
 
     @Override
     public int insertServer(ContentValues contentValues) {
-        return 0;
+        return proGuardianServerHelper.insert(contentValues);
     }
 
     @Override
     public int updateServer(ContentValues contentValues) {
-        return 0;
+        return proGuardianServerHelper.update(contentValues);
     }
 
     @Override
     public int removeServer(ContentValues contentValues) {
-        return 0;
+        return proGuardianServerHelper.remove(contentValues);
     }
 
     @Override
     public List<ContentValues> searchServer(ContentValues contentValues) {
-        return null;
+        return proGuardianServerHelper.search(contentValues);
     }
 
     @Override
@@ -60,8 +65,16 @@ public class MemberController implements IProGuardianController {
         this.proGuardianDBHelper = proGuardianDBHelper;
     }
 
+    // 테스트
+    public void setHelper(ProGuardianDBHelper proGuardianDBHelper, ProGuardianDBHelper proGuardianServerHelper) {
+        this.proGuardianDBHelper = proGuardianDBHelper;
+
+        this.proGuardianServerHelper = proGuardianServerHelper;
+    }
+
     @Override
     public ProGuardianDBHelper getDBHelper() {
         return this.proGuardianDBHelper;
     }
+
 }

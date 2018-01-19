@@ -1,8 +1,11 @@
 package home.safe.com.guarder;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -33,6 +37,8 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     private ArrayList<GuarderVO> addGuarderList = new ArrayList<GuarderVO>();
     GuarderManager guarderManager;
     GuarderVO addGuarderVO = null;
+    int getpostion;
+    GuarderVO getGuarderVO;
 
     @Nullable
     @Override
@@ -58,21 +64,85 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     @Override
     public void onSearchListBtnClick(int position) {
 
-        allList.remove(resultSearchList.get(position));      // 전체 관리 리스트에서 삭제
-
         String name = resultSearchList.get(position).getGmcname();       // 삭제 전, 보낼 내용 저장
         String phone = resultSearchList.get(position).getGmcphone();
 
-        GuarderVO guarderVO = new GuarderVO(name, phone, 0);
+        getGuarderVO = new GuarderVO(name, phone, 0);
 
-        // 서버로 전화번호를 보내서, 승인 받았을 경우 addGuarderVO 에 넣는다.
-        addGuarderList.add(guarderVO);
+        getpostion = position;
 
-        resultSearchList.remove(position);                    // 결과 관리 리스트에서 삭제
-
-        changefinalSearchList(resultSearchList);                        // 전달 관리 리스트 갱신
-        lvAdapterSearch.notifyDataSetChanged();             // 어댑터 갱신
+        AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());  // 다이얼로그 생성
+        setDialog(regAlert);        // 다이얼로그 셋팅
+        regAlert.create();          // 해당 정보로 다이얼로그 생성
+        regAlert.show();            // 해당 정보로 다이얼로그 보여줌
     }
+
+    private void setDialog(AlertDialog.Builder regAlert) {
+
+        regAlert.setTitle("지킴이 추가");
+        regAlert.setMessage("이름: " + getGuarderVO.getGmcname() + "\n" +
+                "전화번호: " + getGuarderVO.getGmcphone() + "\n" + "\n" + "해당 정보로 지킴이 목록에 추가하시겠습니까?");
+
+        // 지킴이 추가
+        regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                // 서버로 전화번호를 보내서, 승인 받았을 경우 addGuarderVO 에 넣는다.
+                if(sendDataToServerForSearch(getGuarderVO) == 1) {
+                    int returnDB = 0;
+
+                    GuarderManager guarderManager = new GuarderManager(getContext());
+
+                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, getGuarderVO);
+
+                    if(returnDB != 0) {
+                        addGuarderList.add(getGuarderVO);                       // 지킴이 목록 관리 리스트에 추가
+
+                        allList.remove(resultSearchList.get(getpostion));      // 전체 관리 리스트에서 삭제
+
+                        resultSearchList.remove(getpostion);                    // 결과 관리 리스트에서 삭제
+
+                        changefinalSearchList(resultSearchList);                 // 전달 관리 리스트 갱신
+                        lvAdapterSearch.notifyDataSetChanged();                  // 어댑터 갱신
+
+                        Toast.makeText(getContext(), getGuarderVO.getGmcname() + " 님을 지킴이 목록에 추가하였습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        regAlert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 취소를 누를땐 별 다른 내용이 없다.
+            }
+        });
+    }
+
+    private int sendDataToServerForSearch(GuarderVO guarderVO) {
+        int check = 0;
+
+        GuarderManager guarderManager = new GuarderManager(getContext());
+
+        ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
+
+        resultList = guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderManager.TYPE_SELECT_CON, getGuarderVO);
+
+        for(GuarderVO g : resultList) {
+            if(g.getGmcname().equals(guarderVO.getGmcname()) && g.getGmcphone().equals(guarderVO.getGmcphone())) {
+                check = 1;
+            }
+        }
+
+        //서버에 다녀온 후, 결과가 옳다면 insert(삭제 요망)
+        check = 1;
+        // 서버로 다녀온 리턴값(check)이 1이면 서버 체크 성공, 0이면 실패
+
+        return check;
+    }
+
+
 
     @Override
     public void onClick(View view) {
@@ -178,6 +248,4 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     public void resetAddGuarderList(){
         addGuarderList.clear();
     }
-
-
 }
