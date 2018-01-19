@@ -1,10 +1,12 @@
 package home.safe.com.myguarder;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
@@ -223,20 +225,20 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onBackPressed() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage("어플을 종료하시겠습니까?");
-        alert.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                Intent intentData = new Intent();
-                setResult(MY_END_CODE, intentData);
-                finish();
+
             }
         });
 
-        alert.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                Intent intentData = new Intent();
+                setResult(MY_END_CODE, intentData);
+                finish();
             }
         });
 
@@ -302,6 +304,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
          **/
 
             reDrawPolyline();
+
+            //맵을 불러왔는지 상태
+            saveMapStateData(true);
 
 
     }
@@ -730,6 +735,14 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
+    public void saveMapStateData(boolean isMapState )
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("MapState",isMapState);
+        editor.commit();
+    }
+
     /**
     *
     * @author 경창현
@@ -913,6 +926,16 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 2. 피지킴이 목록  -> 지킴이 SELETE를 사용해서 목록 가져와서 피지킴이 이름 뿌리기
      * 3. 서버 개발
      * @since 2018-01-16 오후 2:50
+    **/
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. 맵에서 요청 마지막 체크 후 다이얼로그 확인 누르면 요청정보 보냄
+     * 2. 다이얼로그를 노티비케이션으로 변경 중
+     * @since 2018-01-19 오후 3:18
     **/
     
     

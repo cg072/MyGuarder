@@ -19,6 +19,10 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
     Button btnLocationReqOk;
     Button btnLocationReqNo;
 
+    boolean activityState;
+    boolean mapState;
+    boolean loginState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,18 +32,12 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
         btnLocationReqOk = (Button)findViewById(R.id.btnLocationReqOk);
         btnLocationReqNo = (Button)findViewById(R.id.btnLocationReqNo);
 
-        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> list = am.getRunningAppProcesses();
+        loadData();
 
-        String str;
-        for(ActivityManager.RunningAppProcessInfo process : list){
-            if(process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                str = process.processName;
-                Log.d("LocationRequest()",str);
-            }
-        }
 
-        Log.d("LocationRequest()"," ");
+        Log.d("LocationRequest()"," "+activityState);
+        Log.d("LocationRequest()"," "+mapState);
+        Log.d("LocationRequest()"," "+loginState);
 
 
         btnLocationReqOk.setOnClickListener(this);
@@ -52,9 +50,18 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
 
         if(view.getId() == btnLocationReqOk.getId())
         {
+
             getServiceData();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+
+            if(!activityState) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
+            else
+            {
+                //로그인, 엑티비티, 맵 체크 후
+                //위치 요청 수락 및 정보 보내기
+            }
 
             finish();
         }
@@ -75,8 +82,8 @@ public class ActivityPopupLocationRequest extends Activity implements View.OnCli
     private void loadData()
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-//        tvTransNameThisCivilian.setText(preferences.getString("TransName","택시(기본값)"));
-//        tvMemoThisCivilian.setText(preferences.getString("TransMemo","기본값"));
-//        cycleCivilian = preferences.getInt("cycleCivilian", 10000);
+        activityState = preferences.getBoolean("ActivityState",false);
+        mapState = preferences.getBoolean("MapState", false);
+        loginState = preferences.getBoolean("loginState", false);
     }
 }

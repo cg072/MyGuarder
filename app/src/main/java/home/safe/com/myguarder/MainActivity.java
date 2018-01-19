@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -52,14 +53,8 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         btnTransChanger = (Button)findViewById(R.id.btnTransChanger);
         btnMainChangerStop = (Button)findViewById(R.id.btnMainChangerStop);
 
-
-        btnTest.setOnClickListener(this);
-        btnMainChanger.setOnClickListener(this);
-        btnMemberChanger.setOnClickListener(this);
-        btnNoticeChanger.setOnClickListener(this);
-        btnGuarderChanger.setOnClickListener(this);
-        btnTransChanger.setOnClickListener(this);
-        btnMainChangerStop.setOnClickListener(this);
+        saveStateData(true);
+        StateChecker stateChecker = new StateChecker(getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE));
 
 
         Intent intent = new Intent(MainActivity.this, ActivityMemberLogin.class);
@@ -77,7 +72,24 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
 //            }
 //        }, 200);
 
+        btnTest.setOnClickListener(this);
+        btnMainChanger.setOnClickListener(this);
+        btnMemberChanger.setOnClickListener(this);
+        btnNoticeChanger.setOnClickListener(this);
+        btnGuarderChanger.setOnClickListener(this);
+        btnTransChanger.setOnClickListener(this);
+        btnMainChangerStop.setOnClickListener(this);
+
     }
+
+    private void saveStateData(boolean isActivityState )
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("ActivityState",isActivityState);
+        editor.commit();
+    }
+
 
     @Override
     protected void onResume() {
@@ -89,7 +101,6 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
     protected void onDestroy() {
         super.onDestroy();
         Log.d("MainActivity","onDestroy");
-        bAppRunned = false;
     }
 
     @Override

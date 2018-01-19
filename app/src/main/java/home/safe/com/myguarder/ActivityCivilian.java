@@ -25,7 +25,6 @@ import com.google.android.gms.maps.model.Polyline;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class ActivityCivilian extends ProGuardian implements View.OnClickListener{
@@ -58,6 +57,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         setContentView(R.layout.activity_civilian);
 
         first = System.currentTimeMillis();
+
+        saveActivityStateData(true);
 
         //로그인시 DB생성 및 연결
         locationManage = new LocationManage(getApplicationContext());
@@ -139,6 +140,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        saveMapStateData(false);
+        saveActivityStateData(false);
         Log.d("onDestroy","in");
     }
 
@@ -258,7 +261,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         {
             if(date.equals(fList.getLday()))
             {
-                Log.d("asd",""+fList.getLlat());
+                Log.d("runCheck",""+fList.getLlat());
                 LastLocationList.add(new LatLng(Double.parseDouble(fList.getLlat()) ,Double.parseDouble(fList.getLlong())));
             }
         }
@@ -297,7 +300,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         cycleCivilian = preferences.getInt("cycleCivilian", 10000);
     }
 
-    private void saveStateData(boolean isActivityState )
+    private void saveActivityStateData(boolean isActivityState )
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
