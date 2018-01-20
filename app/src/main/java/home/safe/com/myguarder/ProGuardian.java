@@ -934,6 +934,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @version 1.0.0
      * @text
      * 1. 맵에서 요청 마지막 체크 후 다이얼로그 확인 누르면 요청정보 보냄
+     * 1) Notification으로 띄우기 ok
+     * 2) 메인에서 요청 확인 및 State 세팅
      * 2. 다이얼로그를 노티비케이션으로 변경 중
      * @since 2018-01-19 오후 3:18
     **/

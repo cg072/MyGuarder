@@ -140,6 +140,9 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        locationManage.closeDB();
+
         saveMapStateData(false);
         saveActivityStateData(false);
         Log.d("onDestroy","in");
