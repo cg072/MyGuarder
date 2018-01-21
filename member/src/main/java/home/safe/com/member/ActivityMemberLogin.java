@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -28,20 +27,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.nhn.android.naverlogin.OAuthLogin;
-import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 
 public class ActivityMemberLogin extends AppCompatActivity {
 
     final String TAG = "로그인";
+
+    private final static int REQUEST_CODE_GOOGLE = 1;
 
     private final static int MY_LOGIN_SUCCESS_CODE = 201;
     private final static int MY_END_CODE = 100;
@@ -70,24 +65,10 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private TextView tvNaver;
     private MemberVO memberVO = new MemberVO();
 
-    // 구글 로그인 변수들
+/*    // 구글 로그인 변수들
     private static final int REQUEST_CODE_GOOGLE = 1;
     private GoogleApiClient mGoogleApiClient;
-    private String google = "google";
-
-    // 네이버 로그인 변수들
-    private static String OAUTH_CLIENT_ID = "W3ENfk_vTn1YQaVsG3n_";  // 1)에서 받아온 값들을 넣어좁니다
-    private static String OAUTH_CLIENT_SECRET = "q3B35mxCBe";
-    private static String OAUTH_CLIENT_NAME = "Cooljj";
-    private String naver = "naver";
-
-    String accessToken = "";
-
-    String tokenType;
-
-    OAuthLogin mOAuthLoginModule;
-    OAuthLoginButton authLoginButton;
-    Context mContext;
+    private String google = "google";*/
 
     private String sns;
     private String snsid;
@@ -97,10 +78,14 @@ public class ActivityMemberLogin extends AppCompatActivity {
     // 체크에 필요한 메소드들
     MemberCheck memberCheck = new MemberCheck();
 
+    ActivityMemberLogin activityMemberLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_login);
+
+        activityMemberLogin = this;
 
         // 변수에 아이디 연동
         etID = (EditText)findViewById(R.id.etID);
@@ -114,10 +99,14 @@ public class ActivityMemberLogin extends AppCompatActivity {
         naverLogin = (RelativeLayout) findViewById(R.id.btnNaverLogin);
         tvNaver = (TextView)findViewById(R.id.tvNaver);
 
-        callNaverLogin();
-        callGoogleLogin();
+        Typeface type = Typeface.createFromAsset(this.getAssets(), "NanumBarunGothic_Bold(subset).otf"); // asset 폴더에 넣은 폰트 파일 명
+        tvNaver.setTypeface(type);
+
+        btnNaver = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
+        btnNaver.setBgResourceId(R.drawable.naver_login);
 
         loadNomalData();
+        //테스트
         test();
         // 자동로그인 체크
         if(cboxCheck.isChecked() == true) {
@@ -132,7 +121,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
                     moveToMain();
                 }
             } else {
-                Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -141,8 +130,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 구글 로그인 화면을 출력합니다. 화면이 닫힌 후 onActivityResult가 실행됩니다.
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent( mGoogleApiClient );
-                startActivityForResult( signInIntent, REQUEST_CODE_GOOGLE );
+                Intent intent = new Intent(ActivityMemberLogin.this, MemberGoogleLogin.class);
+                startActivityForResult(intent, REQUEST_CODE_GOOGLE);
             }
         });
 
@@ -150,9 +139,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
         naverLogin.setOnClickListener(new LinearLayout.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 클릭시 OAuthLogin의 생성자를 담은 것에서 네로아 액티비티를 시작한다. (인자 : 액티비티, 핸들러)
-                mOAuthLoginModule.startOauthLoginActivity(ActivityMemberLogin.this,
-                        mOAuthLoginHandler);
+                MemberNaverLogin memberNaverLogin = new MemberNaverLogin(activityMemberLogin);
             }
         });
 
@@ -160,12 +147,11 @@ public class ActivityMemberLogin extends AppCompatActivity {
         btnLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("로그인 버튼", "눌림");
                 saveNomalData();
                 if(searchForID() == 1) {
                     moveToMain();
                 } else {
-                    Toast.makeText(mContext, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -223,6 +209,10 @@ public class ActivityMemberLogin extends AppCompatActivity {
         return check;
     }
 
+    public void setMemberVO(MemberVO memberVO){
+        this.memberVO = memberVO;
+    }
+
     // 테스트 로그인 후 ~ (서버디비 완성 후 -> 아래의 두 메소드를 사용(주석처리됨))
     private void moveToMain() {
         // 회원일 경우이므로, 메인액티비티를 띄워준다.
@@ -277,10 +267,10 @@ public class ActivityMemberLogin extends AppCompatActivity {
     }
 
     // SNS같은 경우에는 첫 로그인시, insert가 되어주어야한다. 첫 로그인 후, 폰 인증 창으로 간다.
-    private void checkFirstLogin () {
+    public void checkFirstLogin () {
         // 로그인 성공 -> sharePreference 저장하기
         saveSNSData();
-        Toast.makeText(mContext, memberVO.getMname() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, memberVO.getMname() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
         // 첫 로그인인지, 아닌지(첫 로그인이면 서버로 insert 후에 폰인증으로감
         // SNS 아이디로 로그인 한 것인지 확인
         if(memberCheck.checkSNSID(memberVO, getApplicationContext()) == true) {
@@ -330,283 +320,29 @@ public class ActivityMemberLogin extends AppCompatActivity {
         editor.commit();
     }
 
-    /*
-    *  date     : 2017.12.03
-    *  author   : Kim Jong-ha
-    *  title    : callGoogleLogin 메소드 생성
-    *  comment  : Google 로그인에 필요한 것들
-    * */
-    private void callGoogleLogin() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder( GoogleSignInOptions.DEFAULT_SIGN_IN )
-                // 필요한 항목이 있으면 아래에 추가
-                .requestEmail( )
-                .requestProfile( )
-                .build( );
-
-        mGoogleApiClient = new GoogleApiClient.Builder( ActivityMemberLogin.this )
-                .enableAutoManage( ActivityMemberLogin.this, new GoogleApiClient.OnConnectionFailedListener( ) {
-                    @Override public void onConnectionFailed( @NonNull ConnectionResult connectionResult )
-                    {
-                        // 연결에 실패했을 경우 실행되는 메소드
-                    }
-                })
-                // 필요한 api가 있으면 아래에 추가
-                .addApi( Auth.GOOGLE_SIGN_IN_API, gso )
-                .build( );
-        googleLogin = ( RelativeLayout ) findViewById( R.id.btnGoogleLogin );
-    }
-
-    /*
-    *  date     : 2017.11.29
-    *  author   : Kim Jong-ha
-    *  title    : callNaverLogin 메소드 생성
-    *  comment  : Naver 로그인에 필요한 것들 세팅
-    * */
-    private void callNaverLogin() {
-
-        Typeface type = Typeface.createFromAsset(this.getAssets(), "NanumBarunGothic_Bold(subset).otf"); // asset 폴더에 넣은 폰트 파일 명
-        tvNaver.setTypeface(type);
-
-        // 현재 어플리케이션의 life사이클에 해당하는 Context를 mContext에 담는다.
-        mContext = getApplicationContext();
-
-        // OAuthLogin를 getInstance()를 사용해서 m0AuthLoginModule에 넣는다. [싱글톤패턴]
-        mOAuthLoginModule = OAuthLogin.getInstance();
-
-        mOAuthLoginModule.init(mContext,                 // 어플리케이션 정보
-                OAUTH_CLIENT_ID,            // 네아로에 등록된 접근 아이디
-                OAUTH_CLIENT_SECRET,        // 네아로에 등록된 접근 비번
-                OAUTH_CLIENT_NAME);         // 네이버 앱의 로그인 화면에 표시할 애플리케이션 이름. 모바일 웹의 로그인 화면을 사용할 때는 서버에 저장된 애플리케이션 이름이 표시됩니다.
-
-        // 네아로 버튼을 resource와 연동
-        btnNaver = (OAuthLoginButton) findViewById(R.id.buttonOAuthLoginImg);
-        //btnNaver.setOAuthLoginHandler(mOAuthLoginHandler);
-        btnNaver.setBgResourceId(R.drawable.naver_login);
-    }
-
-    /*
-    *  date     : 2017.11.29
-    *  author   : Kim Jong-ha
-    *  title    : OAuthLoginHandler 생성
-    *  comment  : Naver 로그인 핸들러
-    * */
-    private OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
-
-        @Override
-        public void run(boolean success) {
-
-            if (success) {
-                // String Type
-                // 이 어플리케이션에서 네로아에 대한 접근 토큰을 저장
-                accessToken = mOAuthLoginModule.getAccessToken(mContext);
-
-                // 이 어플리케이션에서 네로아에 대한 갱신 토큰을 저장
-                String refreshToken = mOAuthLoginModule.getRefreshToken(mContext);
-
-                // 이 어플리케이션에서 네로아에 대한 접근 토큰 만료기간을 저장
-                long expiresAt = mOAuthLoginModule.getExpiresAt(mContext);
-
-                // 이 어플리케이션에서 네로아에 대한 접근 토큰의 형태를 저장(MAC, Bearer 지원)
-                tokenType = mOAuthLoginModule.getTokenType(mContext);
-
-                new RequestApiTask().execute(); //로그인이 성공하면  네이버에 계정값들을 가져온다.
-
-                // 네이버 로그인 성공시 작성할 메소드
-                Intent intentData = new Intent();
-                setResult(MY_LOGIN_SUCCESS_CODE, intentData);
-            } else {
-
-                // 로그인이 실패하면 에러 코드와 에러 메시지를 저장
-                String errorCode = mOAuthLoginModule.getLastErrorCode(mContext).getCode();
-                String errorDesc = mOAuthLoginModule.getLastErrorDesc(mContext);
-
-                Toast.makeText(ActivityMemberLogin.this, "로그인이 취소/실패 하였습니다.!",
-                        Toast.LENGTH_SHORT).show();
-            }
-        };
-    };
-
-    /*
-    *  date     : 2017.11.29
-    *  author   : Kim Jong-ha
-    *  title    : callGoogleLogin 메소드 생성
-    *  comment  : Naver 로그인 API 작업에 필요한 부분
-    * */
-    // API 요청 작업
-    private class RequestApiTask extends AsyncTask<Void, Void, Void> {
-
-        // 메인 쓰레드에서 onPreExecute가 작동되고 -> dolnBackground등 의 작업 후에 onPostExecute로 결과값을 반환한다
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        //
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            String url = "https://openapi.naver.com/v1/nid/getUserProfile.xml";
-            String at = mOAuthLoginModule.getAccessToken(mContext);
-
-            // 정보를 넘기고 API대한 정보를 요청한다.
-            Pasingversiondata(mOAuthLoginModule.requestApi(mContext, at, url));
-
-            return null;
-        }
-
-        protected void onPostExecute(Void content) {
-
-            // infoLoad가 ture일 경우..(모든 정보가 있을 경우)
-            if ( checkLoadInfo == true ) {
-                // 첫 로그인인지, 아닌지(첫 로그인이면 서버로 insert 후에 폰인증으로감
-                checkFirstLogin();
-
-                // infoLoad가 false일 경우..(이름과 이메일을 받아오지 못할 경우를 포함해서, 정보가 없을 경우)
-            } else {
-                Toast.makeText(ActivityMemberLogin.this,
-                        "로그인 실패하였습니다.  잠시후 다시 시도해 주세요!!", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        private void Pasingversiondata(String data) { // xml 파싱
-
-            String f_array[] = new String[9];
-
-            try {
-
-                // <XML을 분석하는 코드>
-                // 1. XmlPullParserFactory의 인스턴스 얻기
-                XmlPullParserFactory parserCreator = XmlPullParserFactory.newInstance();
-
-                // 얘가 주인공
-                XmlPullParser parser = parserCreator.newPullParser();
-
-                // XmlPullParser인스턴스의 분석하고 싶은 XML을 셋팅한다
-                InputStream input = new ByteArrayInputStream(data.getBytes("UTF-8"));
-
-                // 읽은 내용(InputStream)을 parser에게 전달. 파일의 인코딩 타입을 지정해 주어야 함
-                parser.setInput(input, "UTF-8");
-
-                // 읽고 있는 태그의 종류 (문서의 시작, 문서의 끝, 시작태그, 끝태그)
-                int parserEvent = parser.getEventType();
-
-                String tag;
-                boolean inText = false;
-
-                int colIdx = 0;
-
-                // 파싱 처리를 위한 반복 시작(태그의 끝이 아닌 문서의 끝)
-                while (parserEvent != XmlPullParser.END_DOCUMENT) {
-                    // 읽은 태그의 이름
-                    tag = parser.getName();
-                    if(tag != null) {Log.v("태그"+colIdx, tag) ;}
-                    // 현재 읽고 있는 태그의 종류별로 분기
-                    switch (parserEvent) {
-                        // XmlPullParser.START_TAG 와  XmlPullParser.END_TAG 이벤트에서는 getName() 메소드를 사용한다. getText()사용시 null반환
-                        case XmlPullParser.START_TAG:
-                            // 원하는 종류의 시작 태그를 만났을 떄, 값을 추출
-                            // 태그의 이름이 "~~~" 과 완전히 같다면
-                            if (tag.compareTo("xml") == 0)              { inText = false;
-                            } else if (tag.compareTo("data") == 0)     { inText = false;
-                            } else if (tag.compareTo("result") == 0)   { inText = false;
-                            } else if (tag.compareTo("resultcode") == 0) { inText = false;
-                            } else if (tag.compareTo("message") == 0)   { inText = false;
-                            } else if (tag.compareTo("response") == 0)  { inText = false;
-                            } else { inText = true; } // xml. data, result, resultcode, message, response 를 거치고 TEXT이벤트로 간다.
-                            break;
-
-                        // TEXT 이벤트에서 임시변수에 저장된 문자열을 확인하여 적절한 객체에 저장
-                        // TEXT 이벤트에서는 getName()을 쓰지말고(null을 반환) getText를 써야한다.
-                        case XmlPullParser.TEXT:
-                            if (inText) {
-                                if (parser.getText() == null) {
-                                    f_array[colIdx] = "";
-                                } else {
-                                    f_array[colIdx] = parser.getText().trim();
-                                    colIdx++;
-                                }
-                            }
-                            inText = false;
-                            break;
-
-                        case XmlPullParser.END_TAG:
-                            inText = false;
-                            break;
-                    }
-                    parserEvent = parser.next();
-                }
-            } catch (Exception e) {
-                Log.e("dd", "Error in network call", e);
-            }
-
-            // 받은 값을 member에 셋팅
-            MemberVO naverMemberVO = new MemberVO();
-            naverMemberVO.setMid(f_array[7]);
-            naverMemberVO.setMgender(f_array[4]);   // 성별
-            naverMemberVO.setMname(f_array[6]);     // 이름
-            naverMemberVO.setMemail(f_array[7]);    // 이메일
-            naverMemberVO.setMbirth(f_array[8]);    // 생일
-            naverMemberVO.setMsns("naver");
-            naverMemberVO.setMsnsid(separateSNSID(f_array[7]));
-            memberVO = naverMemberVO;
-
-            for(int i = 0 ; i < 9 ; i++) {
-                if(f_array[i] == null) {
-                    checkLoadInfo = false;
-                    break;
-                } else {
-                    checkLoadInfo = true;
-                }
-            }
-        }
-    }
-
-
     // 구글 로그인 반환코드, 폰인증 반환코드를 다룬다.
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data ) {
         switch ( requestCode ) {
-            // 구글 로그인이 성공하였을 경우의 requestCode
             case REQUEST_CODE_GOOGLE:
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent( data );
-                if ( result.isSuccess( ) ) { GoogleSignInAccount acct = result.getSignInAccount( );
-                    // 구글 로그인 시, 반환되는 결과값들(email, name(이름 or 별명))
-                    memberVO.setMid(acct.getEmail());
-                    memberVO.setMname(acct.getDisplayName());
-                    memberVO.setMsns(google);
-                    memberVO.setMsnsid(separateSNSID(acct.getEmail()));
-
-                    checkFirstLogin();
-                }
+                memberVO = (MemberVO)data.getSerializableExtra("data");
+                checkFirstLogin();
                 break;
             // 전화번호 인증 후, 성공이었을 경우의 requestCode
             case REQUEST_CODE_PHONE:
                 if(resultCode == SH_JOB_OK) {
-                    Toast.makeText(mContext, "인증에 성공하였습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "인증에 성공하였습니다", Toast.LENGTH_SHORT).show();
                     memberVO.setMphone(data.getStringExtra("phone"));
                     Intent intentData = new Intent();
                     setResult(MY_LOGIN_SUCCESS_CODE, intentData);
                     finish();;
                 } else {
-                    Toast.makeText(mContext, "인증에 실패하였습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "인증에 실패하였습니다", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
                 super.onActivityResult( requestCode, resultCode, data );
         }
-    }
-
-    /*
-    *  date     : 2017.11.12
-    *  author   : Kim Jong-ha
-    *  title    : separateSNSID 메소드 생성
-    *  comment  : '구글'이나 '네이버' 로그인시, 받아온 E-Mail에서 snsid 를 분리한다
-    */
-    private String separateSNSID (String email) {
-        String temp[] = email.split("@");
-        String snsid = temp[0];
-
-        return snsid;
     }
 
     @Override
