@@ -152,6 +152,7 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                 public boolean onMenuItemClick(MenuItem menuItem) {
 
                     int i = menuItem.getItemId();
+
                     if (i == R.id.transWalk) {
                         tvtranskind.setText("도보");
 

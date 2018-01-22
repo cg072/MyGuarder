@@ -84,7 +84,7 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         Context parentContext = viewGroup.getContext();
 
-        ListViewItemBasicTrans itemBasic = new ListViewItemBasicTrans(parentContext.getApplicationContext());
+        ListViewItemBasicTrans itemBasic = new ListViewItemBasicTrans(parentContext);
 
         //TestListViewDTO parDto = parentItems.get(i);
         TransIntegratedVO parDto = parentItems.get(i);
@@ -96,13 +96,11 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
         return itemBasic;
     }
 
-
-
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         Context childContext = viewGroup.getContext();
 
-        ListViewItemTextTrans itemText = new ListViewItemTextTrans(childContext.getApplicationContext());
+        ListViewItemTextTrans itemText = new ListViewItemTextTrans(childContext);
 
         //TestListViewDTO childDto = parentItems.get(i);
         TransIntegratedVO childDto = parentItems.get(i);
@@ -117,7 +115,6 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
     public void passToCheckData(String tseq, String ttype){
         this.tseq = tseq;
         this.ttype = ttype;
-
     }
 
     @Override

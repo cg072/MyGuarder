@@ -23,6 +23,8 @@ public class TransDBHelper extends ProGuardianDBHelper{
     final static private String TABLE_NAME = "transportation";
     private String transCol[] = {"tseq", "tlseq", "tid", "ttype", "tmemo", "tday"};
 
+
+
     public TransDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
         Log.d("디비헬퍼확인", Integer.toString(table));
@@ -33,23 +35,9 @@ public class TransDBHelper extends ProGuardianDBHelper{
     }
 
     @Override
-    public void onOpen(SQLiteDatabase db) {
-
-        //기존 디비가 있으면 onOpen으로 접근함
-
-        super.onOpen(db);
-
-        this.db = db;
-
-        Log.d("transDBHelper", "onOpen");
-
-    }
-
-
-    @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        Log.d("DBhelper", "oncreate1111");
+        /*Log.d("DBhelper", "oncreate1111");
 
         Log.d("sql시작", "시작");
 
@@ -64,9 +52,52 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
         Log.d("sql문", sql);
 
+        db.execSQL(sql);*/
+
+        ////////////////////////////////////////////////////
+
+        super.onCreate(db);
+        this.db = sqLiteDatabase;
+
+        String sql = "CREATE TABLE IF NOT EXISTS " +
+                TABLE_NAME + "(" +
+                transCol[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                transCol[1] + " INTEGER DEFAULT 0," +
+                transCol[2] + " TEXT," +
+                transCol[3] + " TEXT," +
+                transCol[4] + " TEXT," +
+                transCol[5] + " TEXT)";
+
         db.execSQL(sql);
 
     }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+
+        //기존 디비가 있으면 onOpen으로 접근함
+
+        super.onOpen(db);
+
+        this.db = db;
+
+        String sql = "CREATE TABLE IF NOT EXISTS " +
+                TABLE_NAME + "(" +
+                transCol[0] + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                transCol[1] + " INTEGER DEFAULT 0," +
+                transCol[2] + " TEXT," +
+                transCol[3] + " TEXT," +
+                transCol[4] + " TEXT," +
+                transCol[5] + " TEXT)";
+
+        db.execSQL(sql);
+
+        Log.d("transDBHelper", "onOpen");
+
+    }
+
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
@@ -119,8 +150,6 @@ public class TransDBHelper extends ProGuardianDBHelper{
             }
 
         }
-
-
         return conList;
     }
 

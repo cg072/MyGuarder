@@ -1,17 +1,27 @@
 package home.safe.com.trans;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.zip.Inflater;
 
 /**
  * Created by plupin724 on 2017-12-21.
@@ -23,17 +33,22 @@ public class ListViewItemTextTrans extends LinearLayout implements View.OnClickL
 
     String recvTseq;
     String recvTtype;
+    String setTmemo;
+
+    FragmentTransList fragmentTransList;
 
     Context context;
 
     public ListViewItemTextTrans(Context context) {
         super(context);
-        this.context = context;
         init(context);
+        this.context = context;
     }
 
     public ListViewItemTextTrans(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init(context);
+        this.context = context;
     }
 
     public void init(Context context){
@@ -44,12 +59,14 @@ public class ListViewItemTextTrans extends LinearLayout implements View.OnClickL
         transitemtext = (TextView)findViewById(R.id.transitemtext);
 
         transBtnMotify = (Button)findViewById(R.id.transBtnModify);
+
         transBtnMotify.setOnClickListener(this);
 
 
     }
 
     public void setText(String text){
+        this.setTmemo = text;
         if(text.equals("")){
             transitemtext.setText("입력된 내용이 없습니다");
         }else{
@@ -58,8 +75,8 @@ public class ListViewItemTextTrans extends LinearLayout implements View.OnClickL
 
     }
 
-    public void getText(String tteq, String ttype){
-        this.recvTseq = tteq;
+    public void getText(String tseq, String ttype){
+        this.recvTseq = tseq;
         this.recvTtype = ttype;
     }
 
@@ -83,22 +100,22 @@ public class ListViewItemTextTrans extends LinearLayout implements View.OnClickL
      *
      * 혹은,
      * 길게 누르면 컨텍스트 메뉴를 띄우기
-    *
-    * */
+     *
+     * 선택된, 정보 혹은, 전체를 화면에 다시 표시해준다!!!
+     *
+     * */
 
     @Override
     public void onClick(View view) {
         if(view == transBtnMotify){
 
-            /*DialogTransModify dialog = new DialogTransModify(getContext().getApplicationContext());
+            DialogTransModify dialog = new DialogTransModify(context, recvTtype, setTmemo);
+            dialog.show();
 
 
-            dialog.show();*/
+           /* String b = transitemtext.getText().toString();
 
-
-            String b = transitemtext.getText().toString();
-
-            Toast.makeText(getContext().getApplicationContext(), recvTseq+recvTtype+b, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext().getApplicationContext(), recvTseq+recvTtype+b, Toast.LENGTH_LONG).show();*/
         }
 
     }
