@@ -124,8 +124,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     long first;
     long now;
 
-
-
     //MVC
     LocationManage locationManage;
     MyGuarderVO vo;
@@ -133,6 +131,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     //db
     private SQLiteOpenHelper sqLiteOpenHelper;
     public static boolean loginCheck;
+
+    //State
+    boolean RequestState;
 
 
     @Override
@@ -228,8 +229,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
-
+                dialogInterface.cancel();
             }
         });
 
@@ -273,19 +273,65 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         if(mCameraPosition !=  null)
         {
-            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
             Log.d("onMapReady","mCameraPosition not null");
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
         }
         else if(mCurrentLocation != null)
         {
-            showCamera();
             Log.d("onMapReady","mCurrentLocation not null");
+            showCamera();
+
+            // 위치가 켜져있고 위치를 받은 상태
+            loadRequestStateData();
+            Log.d("onMapReady","RequestState - "+RequestState);
+
+            if(RequestState) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setMessage("위치요청을 수락하시겠습니까?");
+
+                alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //서버로 현재위치 피지킴이,지킴이 아이디 전송
+
+                        dialogInterface.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = alert.create();
+                alertDialog.show();
+
+                //위치요청 처리 후 요청플레그 false로 초기화
+                saveRequestStateData(false);
+            }
+
         }
         else
         {
+            Log.d("onMapReady","null");
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.566535, 126.97796919999996), 16));
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            Log.d("onMapReady","null");
+
+            //GPS 상태 ON 요청
+            final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("위치정보를 켜주세요");
+
+            alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+
+            AlertDialog alertDialog = alert.create();
+            alertDialog.show();
         }
 
         updateLocationUI();
@@ -304,10 +350,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
          **/
 
             reDrawPolyline();
-
-            //맵을 불러왔는지 상태
-            saveMapStateData(true);
-
 
     }
 
@@ -544,7 +586,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.d("onConnectionSuspended","Suspended");
     }
 
     @Override
@@ -743,6 +785,23 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         editor.commit();
     }
 
+    //RequestState
+    private void saveRequestStateData(boolean isRequestState )
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("RequestState",isRequestState);
+        editor.commit();
+    }
+
+    public void loadRequestStateData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        RequestState = preferences.getBoolean("RequestState",false);
+    }
+
+
+
     /**
     *
     * @author 경창현
@@ -933,10 +992,13 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @author 경창현
      * @version 1.0.0
      * @text
-     * 1. 맵에서 요청 마지막 체크 후 다이얼로그 확인 누르면 요청정보 보냄
+     * 1. 맵에서 요청 마지막 체크 후 다이얼로그 확인 누르면 요청정보 보냄  ok
      * 1) Notification으로 띄우기 ok
-     * 2) 메인에서 요청 확인 및 State 세팅
-     * 2. 다이얼로그를 노티비케이션으로 변경 중
+     * 2) 메인에서 요청 확인 및 State 세팅 ok
+     * 2. 다이얼로그를 노티비케이션으로 변경 중 ok
+     * 3. 로그인 화면 로그인 요청 다이얼로그 안보냄
+     * -> 무조건 로그인화면으로 갈것이고 피지킴이 화면이 떠야 위치를 받음
+     * 그렇기 때문에 로그인 화면으로 이동
      * @since 2018-01-19 오후 3:18
     **/
     

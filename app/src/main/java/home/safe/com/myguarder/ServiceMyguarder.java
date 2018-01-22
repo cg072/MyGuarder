@@ -25,6 +25,7 @@ public class ServiceMyguarder extends Service {
     ServiceMyguarderThread thread;
     int mNotificationId = 1234;
     boolean activityState;
+    boolean requestState;
 
     public ServiceMyguarder() {
     }
@@ -96,8 +97,10 @@ public class ServiceMyguarder extends Service {
             NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
             manager.notify(mNotificationId, noti.build());
 
+            saveRequestStateData(true);
 
-
+            loadRequestStateData();
+            Log.d("ServiceMyguarder","requestState - "+requestState);
 
 //            Intent intent = new Intent(ServiceMyguarder.this, ActivityPopupLocationRequest.class);
 //            intent.putExtra("service","지킴이이름");
@@ -119,4 +122,20 @@ public class ServiceMyguarder extends Service {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         activityState = preferences.getBoolean("ActivityState",false);
     }
+
+    //RequestState
+    private void saveRequestStateData(boolean isRequestState )
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("RequestState",isRequestState);
+        editor.commit();
+    }
+    private void loadRequestStateData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        requestState = preferences.getBoolean("RequestState",false);
+    }
+
+
 }

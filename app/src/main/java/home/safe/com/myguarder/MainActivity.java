@@ -54,7 +54,8 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
         btnMainChangerStop = (Button)findViewById(R.id.btnMainChangerStop);
 
         saveStateData(true);
-        StateChecker stateChecker = new StateChecker(getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE));
+
+//        StateChecker stateChecker = new StateChecker(getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE));
 
 
         Intent intent = new Intent(MainActivity.this, ActivityMemberLogin.class);

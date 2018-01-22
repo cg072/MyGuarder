@@ -26,10 +26,12 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
             mCurrentLocation = savedInstanceState.getParcelable(LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(CAMERA_POSITION);
         }
-
         setContentView(R.layout.activity_myguarder);
 
         first = System.currentTimeMillis();
+
+        //로그인시 DB생성 및 연결
+        locationManage = new LocationManage(getApplicationContext());
 
 //        btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
         btnCivilianList = (Button)findViewById(R.id.btnCivilianList);
@@ -89,7 +91,10 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationManage.closeDB();
+
         Log.d("onDestroy","in");
+
     }
 
     @Override
@@ -102,6 +107,8 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
 //        }
         if(view.getId() == btnCivilianList.getId())
         {
+            //LocationManage
+
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);
             startActivityForResult(intent, MYGUARDER_REQUEST_CIVILIAN_LIST_CODE);
 

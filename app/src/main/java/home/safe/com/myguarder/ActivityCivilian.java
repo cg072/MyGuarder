@@ -143,7 +143,6 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
         locationManage.closeDB();
 
-        saveMapStateData(false);
         saveActivityStateData(false);
         Log.d("onDestroy","in");
     }
@@ -161,7 +160,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
             //지난 위치 보기 목록 가져오기
 //            vo = new MyGuarderVO();
 
-            //LocationManage ( ContentValues를 사용형태로 바꿔야하는가)
+            //LocationManage
             list = locationManage.search(new ContentValues());
             Log.d("MainActivity", "controller.search - "+list.size());
 

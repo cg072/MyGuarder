@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 public class LocationManage extends ProGuardian{
-//모듈명매니져 LocationManage
+    //모듈명매니져 LocationManage
     Context context;
     MyGuarderDBHelper dbHelper;
     SQLiteDatabase db;
@@ -90,5 +90,30 @@ public class LocationManage extends ProGuardian{
         return alMyGuarderVOList;
     }
 
+    public int insertServer(ContentValues contentValues) {
+        result = controller.insertServer(contentValues);
+        return result;
+    }
+
+    public int updateServer(ContentValues contentValues) {
+        result = controller.updateServer(contentValues);
+        return result;
+    }
+
+    public int removeServer(ContentValues contentValues) {
+        result = controller.removeServer(contentValues);
+        return result;
+    }
+
+    public ArrayList<MyGuarderVO> searchServer(ContentValues contentValues) {
+        //SELECT ALL
+        List<ContentValues> list;
+
+        String str = "qwe";
+
+
+        list = controller.searchServer(contentValues);
+        return null;
+    }
 
 }

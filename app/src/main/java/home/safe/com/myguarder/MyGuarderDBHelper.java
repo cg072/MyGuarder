@@ -43,6 +43,19 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
         super.onOpen(db);
         Log.d("MyGuarderDBHelper", "onOpen");
         this.db = db;
+
+        //없어져야할 부분 ****
+        String sql = "CREATE TABLE IF NOT EXISTS " +
+                TABLE_NAME + "(" +
+                myGuarderCol[0] +" INTEGER PRIMARY KEY AUTOINCREMENT," +
+                myGuarderCol[1] +" TEXT DEFAULT 000.0000000," +
+                myGuarderCol[2] +" TEXT DEFAULT 000.0000000," +
+                myGuarderCol[3] +" TEXT DEFAULT 000," +
+                myGuarderCol[4] +" TEXT DEFAULT 00000," +
+                myGuarderCol[5] +" TEXT NOT NULL)";
+        //datetime, now() 없음
+
+        db.execSQL(sql);
     }
 
     @Override
