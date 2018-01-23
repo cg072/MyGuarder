@@ -1,5 +1,6 @@
 package home.safe.com.myguarder;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +12,15 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
+import home.safe.com.guarder.GuarderManager;
+
 public class ActivityMyGuarder extends ProGuardian implements View.OnClickListener{
 
 //    Button btnGuarderLog;
     Button btnCivilianList;
     Button btnLocation;
+
+    GuarderManager guarderManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         first = System.currentTimeMillis();
 
         //로그인시 DB생성 및 연결
-        locationManage = new LocationManage(getApplicationContext());
+        guarderManager = new GuarderManager(getApplicationContext());
 
 //        btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
         btnCivilianList = (Button)findViewById(R.id.btnCivilianList);
@@ -107,8 +112,10 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
 //        }
         if(view.getId() == btnCivilianList.getId())
         {
-            //LocationManage
+            //피지킴이 목록 불러오기
+//            guarderManager.select()
 
+            //피지킴이 팝업
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);
             startActivityForResult(intent, MYGUARDER_REQUEST_CIVILIAN_LIST_CODE);
 

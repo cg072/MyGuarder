@@ -85,6 +85,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     //polyline 요청위치
     List<Polyline> polylinesRequestLocation = new ArrayList<>();
 
+    boolean isStartPLLocation = false;  //startPL 값이 들어왔는지 확인
     private LatLng startPL = new LatLng(0, 0);        //polyline 시작점
     private LatLng endPL = new LatLng(0, 0);        //polyline 끝점
 
@@ -280,38 +281,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         {
             Log.d("onMapReady","mCurrentLocation not null");
             showCamera();
-
-            // 위치가 켜져있고 위치를 받은 상태
-            loadRequestStateData();
-            Log.d("onMapReady","RequestState - "+RequestState);
-
-            if(RequestState) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setMessage("위치요청을 수락하시겠습니까?");
-
-                alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-
-                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //서버로 현재위치 피지킴이,지킴이 아이디 전송
-
-                        dialogInterface.cancel();
-                    }
-                });
-
-                AlertDialog alertDialog = alert.create();
-                alertDialog.show();
-
-                //위치요청 처리 후 요청플레그 false로 초기화
-                saveRequestStateData(false);
-            }
-
         }
         else
         {
@@ -427,14 +396,6 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             //현재위치 정보 세팅
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-            if(mCurrentLocation != null) {
-                //처음 시작 라인
-                startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-                Log.d("startPL", "!!!!");
-                Log.d("getLatitude ", "" + mCurrentLocation.getLatitude());
-                Log.d("getLongitude ", "" + mCurrentLocation.getLongitude());
-            }
 
             updateLocationUI();
         }
@@ -609,6 +570,23 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
 
+
+        if(!isStartPLLocation)
+        {
+            //문제가 된 부분
+            if(mCurrentLocation != null) {
+                //처음 시작 라인
+                startPL = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                Log.d("startPL", "!!!!");
+                Log.d("getLatitude ", "" + mCurrentLocation.getLatitude());
+                Log.d("getLongitude ", "" + mCurrentLocation.getLongitude());
+            }
+
+            isStartPLLocation = true;
+        }
+
+        requestCivilianLocation();
+
         now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -633,7 +611,47 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             Log.d("ProGuardian", "controller.insert - "+res);
 
 
-            printThisLocation();
+            drawThisLocation();
+        }
+    }
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text 위치요청 다이얼로그 호출
+     * @since 2018-01-23 오후 4:12
+    **/
+    public void requestCivilianLocation() {
+        // 위치가 켜져있고 위치를 받은 상태
+        loadRequestStateData();
+        Log.d("onMapReady","RequestState - "+RequestState);
+
+        if(RequestState) {
+            final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("위치요청을 수락하시겠습니까?");
+
+            alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+
+            alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //서버로 현재위치 피지킴이,지킴이 아이디 전송
+
+                    dialogInterface.cancel();
+                }
+            });
+
+            AlertDialog alertDialog = alert.create();
+            alertDialog.show();
+
+            //위치요청 처리 후 요청플레그 false로 초기화
+            saveRequestStateData(false);
         }
     }
 
@@ -644,9 +662,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     * @text 현재위치 위도,경도 출력
     * @since 2017-11-22 오후 4:23
     **/
-    public void printThisLocation()
+    public void drawThisLocation()
     {
-        Log.d("printThisLocation",""+mCurrentLocation.getLatitude()+" , "+mCurrentLocation.getLongitude());
+        Log.d("drawThisLocation",""+mCurrentLocation.getLatitude()+" , "+mCurrentLocation.getLongitude());
 
         if(now - first > cycleCivilian )
         {
@@ -1001,6 +1019,18 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * 그렇기 때문에 로그인 화면으로 이동
      * @since 2018-01-19 오후 3:18
     **/
-    
+
+    /**
+     *
+     * @author 경창현
+     * @version 1.0.0
+     * @text
+     * 1. 중간에 위치켜면 작동문제 ok
+     * 2. 카메라 이후 요청이 되게 ok
+     * 3. 피지킴이 목록 불러오기
+     * 4. 권한 모아서 실행하기
+     * 5. 웹공부
+     * @since 2018-01-23 오후 2:13
+    **/
     
 }
