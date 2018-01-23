@@ -24,6 +24,7 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
     final static private String NAME = "gmcname";
     final static private String PHONE = "gmcphone";
     final static private String USE = "gstate";
+    String data[] = new String[4];
 
     public GuarderDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
@@ -125,5 +126,9 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
                 USE + " INTEGER );";
 
         sqLiteDB.execSQL(sqlCreate);
+    }
+
+    private void setString(ContentValues contentValues) {
+
     }
 }

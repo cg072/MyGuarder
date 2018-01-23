@@ -16,13 +16,13 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     final static private String SEQ = "gseq";
     final static private String NAME = "gmcname";
     final static private String PHONE = "gmcphone";
-    final static private String USE = "gstate";
-    final static private String MID = "gmid";
-    final static private String MCID = "gmcid";
+    final static private String USE = "gstate";         // 0일경우 비등록, 1일 경우 등록된
+    final static private String MID = "gmid";           // 피지킴이 아이디
+    final static private String MCID = "gmcid";         // 지킴이 아이디
     final static private String REGDAY = "gregday";
 
     private int gseq;
-    private int gstate;
+    private int gstate = 0;
     private String gmcname;
     private String gmcphone;
     private String gmid;
@@ -108,26 +108,44 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     public ContentValues convertDataToContentValues() {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(NAME, getGmcname());
-        contentValues.put(PHONE, getGmcphone());
-        contentValues.put(USE, getGstate());
-        contentValues.put(SEQ, getGseq());
-        contentValues.put(MID, getGmid());
-        contentValues.put(MCID, getGmcid());
-        contentValues.put(REGDAY, getGregday());
+
+        /*if(gseq != null) {
+            contentValues.put(SEQ, this.gseq);
+        }*/
+
+        if(gmcname != null){
+            contentValues.put(NAME, this.gmcname);
+        }
+
+        if(gmcphone != null) {
+            contentValues.put(PHONE, this.gmcphone);
+        }
+        if(gstate != -1) {
+            contentValues.put(USE, this.gstate);
+        }
+
+        if(gmid != null){
+            contentValues.put(MID, this.gmid);
+        }
+        if(gmcid != null) {
+            contentValues.put(MCID, this.gmcid);
+        }
+        if(gregday != null){
+            contentValues.put(REGDAY, this.gregday);
+        }
 
         return contentValues;
     }
 
     @Override
     public void convertContentValuesToData(ContentValues contentValues) {
-        setGseq(contentValues.getAsInteger(SEQ));
-        setGmcname(contentValues.getAsString(NAME));
-        setGmcphone(contentValues.getAsString(PHONE));
-        setGstate(contentValues.getAsInteger(USE));
-        setGmid(contentValues.getAsString(MID));
-        setGmcid(contentValues.getAsString(MCID));
-        setGregday(contentValues.getAsString(REGDAY));
+        this.gseq = contentValues.getAsInteger(SEQ);
+        this.gmcname = contentValues.getAsString(NAME);
+        this.gmcphone = contentValues.getAsString(PHONE);
+        this.gstate = contentValues.getAsInteger(USE);
+        this.gmid = contentValues.getAsString(MID);
+        this.gmcid = contentValues.getAsString(MCID);
+        this.gregday = contentValues.getAsString(REGDAY);
     }
 
     public ContentValues convertDataToContentValuesSendDB() {
@@ -145,6 +163,7 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
         setGmcphone(contentValues.getAsString(PHONE));
         setGstate(contentValues.getAsInteger(USE));
     }
+
 
     @Override
     public String getDetails() {

@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ActivityMemberModify extends AppCompatActivity implements View.OnClickListener{
+public class ActivityMemberModify extends AppCompatActivity {
 
 
     final static String settingCode = "200";
@@ -55,12 +55,14 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
     String sns;
     String id;
 
-    MemberCheck memberCheck = new MemberCheck();
+    MemberCheck memberCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_signup);
+
+        memberCheck = new MemberCheck(getApplicationContext());
 
         Intent intent = getIntent();
         sns = intent.getStringExtra("sns");
@@ -82,7 +84,6 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         rbMale = (RadioButton)findViewById(R.id.rbMale);
 
         btnCertificationPhone = (Button)findViewById(R.id.btnCertificationPhone);
-        btnCertificationPhone.setOnClickListener(this);
         btnModify = (Button)findViewById(R.id.btnSignup);
         btnDuplicationID = (Button) findViewById(R.id.btnDuplicationID);
 
@@ -100,6 +101,14 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         // 기기에서 번호 가져오기
         MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this, tvPhone);
 
+        btnCertificationPhone.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCertDialog();
+                certDialog.show();
+            }
+        });
+
         btnModify.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,17 +121,20 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
                 String birth    = etBirth.getText().toString().trim();
                 String email    = etEMail.getText().toString().trim();
 
+                MemberVO memberVO = new MemberVO();
+
                 if(sns != null && sns.equals("sns")) {
                     check = 1;
                 } else {
-                    if(memberCheck.checkPWD(pwd, checkPWD, view.getContext()) == true) {
+                    if(memberCheck.checkPWD(pwd, checkPWD) == true) {
                         check = 1;
+                        memberVO.setMpwd(pwd);
                     }
                 }
                 if(check                                                        == 1    &&
-                   memberCheck.checkName(name, view.getContext())              == true &&
-                   memberCheck.checkBirth(birth, view.getContext())            == true &&
-                   memberCheck.checkEmail(email, view.getContext())            == true ) {
+                   memberCheck.checkName(name)              == true &&
+                   memberCheck.checkBirth(birth)            == true &&
+                   memberCheck.checkEmail(email)            == true ) {
 
                     if(updateInfomation() == 1) {
                         Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
@@ -210,34 +222,31 @@ public class ActivityMemberModify extends AppCompatActivity implements View.OnCl
         return memberVO;
     }
 
-    @Override
-    public void onClick(View view) {
-        if(view.getId() == R.id.btnCertificationPhone) {
-            certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
-            certDialog.setCancelable(false);
-            certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
-                    certDialog.setRecvCode(settingCode);
+    private void setCertDialog() {
+        certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
+        certDialog.setCancelable(false);
+        certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
+                certDialog.setRecvCode(settingCode);
+            }
+        }));
+        certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (settingCode.equals(certDialog.getSendCode())) {
+                    Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                    //tvPhone.setEnabled(false);
+                    btnCertificationPhone.setEnabled(false);
+                    btnModify.setEnabled(true);
+                } else {
+                    Toast.makeText(ActivityMemberModify.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 }
-            }));
-            certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    if (settingCode.equals(certDialog.getSendCode())) {
-                        Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                        //tvPhone.setEnabled(false);
-                        btnCertificationPhone.setEnabled(false);
-                        btnModify.setEnabled(true);
-                    } else {
-                        Toast.makeText(ActivityMemberModify.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            certDialog.show();
-        }
+            }
+        });
     }
+
 
     // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
     private String recvCodeFromServer() {

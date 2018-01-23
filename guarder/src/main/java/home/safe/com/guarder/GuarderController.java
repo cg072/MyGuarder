@@ -45,36 +45,37 @@ public class GuarderController implements IProGuardianController {
 
     @Override
     public int insertServer(ContentValues contentValues) {
-        int check = 0;
-        return check;
+        return proGuardianServerHelper.insert(contentValues);
     }
 
     @Override
     public int updateServer(ContentValues contentValues) {
-        int check = 0;
-        return check;
+        return proGuardianServerHelper.update(contentValues);
     }
 
     @Override
     public int removeServer(ContentValues contentValues) {
-        int check = 0;
-        return check;
+        return proGuardianServerHelper.remove(contentValues);
     }
 
     @Override
     public List<ContentValues> searchServer(ContentValues contentValues) {
-        List<ContentValues> list = new ArrayList<ContentValues>();
-        return list;
+        return proGuardianServerHelper.search(contentValues);
     }
 
     @Override
     public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper) {
         this.proGuardianDBHelper = proGuardianDBHelper;
 
-        // 테스트용
-        this.proGuardianServerHelper = proGuardianDBHelper;
-        // 테스트용
     }
+
+    // 테스트
+    public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper, ProGuardianDBHelper proGuardianServerHelper) {
+        this.proGuardianDBHelper = proGuardianDBHelper;
+
+        this.proGuardianServerHelper = proGuardianServerHelper;
+    }
+    // 테스트
 
     @Override
     public ProGuardianDBHelper getDBHelper() {

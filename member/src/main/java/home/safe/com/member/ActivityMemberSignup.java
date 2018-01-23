@@ -21,9 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class ActivityMemberSignup extends AppCompatActivity implements View.OnClickListener{
-
-    private static final String TAG = "ActivityMemberSignup";
+public class ActivityMemberSignup extends AppCompatActivity {
 
     private static final String settingCode = "200";
 
@@ -45,21 +43,16 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
     private Button btnCertificationPhone;
     private Button btnSignup;
 
-    private String myNumber = "";
-    private Boolean checkPermission = false;
-
-    private MemberVO memberVO = new MemberVO();
-
     private ActivityMemberCertDialog certDialog = null;
 
-    MemberCheck memberCheck = new MemberCheck();
-
-    final String testID = "kkkk1111";
+    MemberCheck memberCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_signup);
+
+        memberCheck = new MemberCheck(getApplicationContext());
 
         etID = (EditText)findViewById(R.id.etID);
         etPWD = (EditText)findViewById(R.id.etPWD);
@@ -75,7 +68,9 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         btnDuplicationID = (Button) findViewById(R.id.btnDuplicationID);
         btnSignup = (Button)findViewById(R.id.btnSignup);
         btnCertificationPhone = (Button)findViewById(R.id.btnCertificationPhone);
-        btnCertificationPhone.setOnClickListener(this);
+
+        // 기기의 PhoneNumber 정보 가져오기
+        MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this, tvPhone);
 
         // 중복체크
         btnDuplicationID.setOnClickListener(new Button.OnClickListener() {
@@ -83,9 +78,11 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
             public void onClick(View view) {
 
                 String id = etID.getText().toString().trim();
+                MemberVO memberVO = new MemberVO();
+                memberVO.setMid(id);
 
-                if( memberCheck.checkID(id, view.getContext()) &&      // 아이디 조건에 적합하고
-                    !id.equals(testID)                            ) {   // 중복이 아니라면
+                if( memberCheck.checkID(id)                         &&  // 아이디 조건에 적합하고
+                    memberCheck.checkExistence(memberVO) == 0 ) { // 중복이 아니라면
 
                     etID.setEnabled(false);
                     btnDuplicationID.setEnabled(false);
@@ -98,78 +95,56 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
             }
         });
 
+        btnCertificationPhone.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCertDialog();
+                certDialog.show();
+            }
+        });
+
         btnSignup.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String pwd      = etPWD.getText().toString().trim();
-                String checkPWD = etCheckPWD.getText().toString().trim();
-                String name     = etName.getText().toString().trim();
-                boolean btnDupli    = btnDuplicationID.isEnabled();
-                boolean btnCert    = btnDuplicationID.isEnabled();
-                String birth    = etBirth.getText().toString().trim();
-                String email    = etEMail.getText().toString().trim();
+                MemberVO memberVO = setMemberVO();      // View 안의 모든 데이터를 member에 담는다.
 
-                if (memberCheck.checkBtn(typeDuplication, btnDupli, view.getContext())   == true &&  // 중복 버튼이 비활성화 되어있고
-                    memberCheck.checkPWD(pwd, checkPWD, view.getContext())                 == true &&  // 비번이 형식이 맞고
-                    memberCheck.checkName(name , view.getContext())                        == true &&  // 이름이 기입되어있다면
-                    memberCheck.checkBtn(typeCertification, btnDupli, view.getContext()) == true &&  // 인증 버튼이 비활성화 되어있고
-                    memberCheck.checkBirth(birth, view.getContext())                       == true &&  // 생년월일 체크가 되어있고(빈칸가능)
-                    memberCheck.checkEmail(email, view.getContext())                       == true  ) {// 이메일 체크가 되었다면(빈칸가능)
+                if(checkData(memberVO) == true) {      // 형식에 알맞은 데이터들인지 체크한다.
+                    if (sendDataForInsertToServer(memberVO) != 0) {     // 서버에 삽입 요청
 
-                    memberVO.setMid(etID.getText().toString().trim());
-                    memberVO.setMpwd(pwd);
-                    memberVO.setMname(name);
-                    memberVO.setMphone(removeHyphen(tvPhone.getText().toString().trim()));  // 하이픈 제거해서 세팅
-                    memberVO.setMbirth(birth);
-                    memberVO.setMemail(email);
-
-                    // 성별 판단 f,m,u
-                    if (rbFemale.isChecked()) {
-                        memberVO.setMgender("f");
-                    } else if (rbMale.isChecked()) {
-                        memberVO.setMgender("m");
-                    } else if (rbUndefine.isChecked()) {
-                        memberVO.setMgender("u");
+                        Toast.makeText(ActivityMemberSignup.this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                        // 서버로 memberVO를 보냄(update)
+                    } else {                                            // 서버에 삽입 실패
+                        Toast.makeText(ActivityMemberSignup.this, "가입 불가. 관리자에게 문의하십시오", Toast.LENGTH_SHORT).show();
                     }
-
-                    Toast.makeText(ActivityMemberSignup.this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                    // 서버로 memberVO를 보냄(update)
-                    finish();
                 }
             }
         });
-
-        MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this, tvPhone);
-        setTestSignup();
     }
 
-    @Override
-    public void onClick(View view) {
-        if(view.getId() == R.id.btnCertificationPhone) {
-            certDialog = new ActivityMemberCertDialog(ActivityMemberSignup.this);
-            certDialog.setCancelable(false);
-            certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(DialogInterface dialogInterface) {
-                    // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
-                    certDialog.setRecvCode(settingCode);
+
+    private void setCertDialog() {
+        certDialog = new ActivityMemberCertDialog(ActivityMemberSignup.this);
+        certDialog.setCancelable(false);
+        certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
+                certDialog.setRecvCode(settingCode);
+            }
+        }));
+        certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (settingCode.equals(certDialog.getSendCode())) {
+                    Toast.makeText(ActivityMemberSignup.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                    btnCertificationPhone.setEnabled(false);
+                    btnSignup.setEnabled(true);
+                } else {
+                    Toast.makeText(ActivityMemberSignup.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 }
-            }));
-            certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    if (settingCode.equals(certDialog.getSendCode())) {
-                        Toast.makeText(ActivityMemberSignup.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                        btnCertificationPhone.setEnabled(false);
-                        btnSignup.setEnabled(true);
-                    } else {
-                        Toast.makeText(ActivityMemberSignup.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            certDialog.show();
-        }
+            }
+        });
     }
 
     // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
@@ -190,23 +165,14 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
 
         MemberVO memberVO = new MemberVO();
         memberVO.setMid(id);
-        MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
-
-        if(resultList == null) {
-            check = 1;
-        }
-
-        return check;
+        return memberCheck.checkExistence(memberVO);
     }
 
-    private int sendDataForInsertToServer() {
+    private int sendDataForInsertToServer(MemberVO memberVO) {
 
         int check = 0;
 
-        MemberVO memberVO = setMemberVO();
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
         check = memberManager.insert(MemberShareWord.TARGET_SERVER, memberVO);
@@ -235,6 +201,27 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         MemberVO memberVO = new MemberVO(id, pwd, name, phone, birth, email, gender);
 
         return memberVO;
+    }
+
+    private boolean checkData(MemberVO memberVO) {
+        boolean check = false;
+
+        String checkPWD     = etCheckPWD.getText().toString().trim();
+        boolean btnDupli   = btnDuplicationID.isEnabled();
+        boolean btnCert    = btnDuplicationID.isEnabled();
+
+        if (memberCheck.checkBtn(typeDuplication, btnDupli)        == true &&  // 중복 버튼이 비활성화 되어있고
+                memberCheck.checkPWD(memberVO.getMpwd(), checkPWD)   == true &&  // 비번이 형식이 맞고
+                memberCheck.checkName(memberVO.getMname() )          == true &&  // 이름이 기입되어있다면
+                memberCheck.checkBtn(typeCertification, btnCert)   == true &&  // 인증 버튼이 비활성화 되어있고
+                memberCheck.checkBirth(memberVO.getMbirth())         == true &&  // 생년월일 체크가 되어있고(빈칸가능)
+                memberCheck.checkEmail(memberVO.getMemail())         == true  ) {// 이메일 체크가 되었다면(빈칸가능)
+
+            check = true;
+
+            finish();
+        }
+        return check;
     }
 
     /*
@@ -268,15 +255,4 @@ public class ActivityMemberSignup extends AppCompatActivity implements View.OnCl
         }
         return resultPhone;
     }
-
-    // 테스트용
-    private void setTestSignup() {
-        etID.setText("abcd123");
-        etPWD.setText("aAbBcC11");
-        etCheckPWD.setText("aAbBcC11");
-        etName.setText("김종핰");
-        etBirth.setText("");
-        etEMail.setText("sdf@fds.com");
-    }
-
 }

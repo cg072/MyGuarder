@@ -17,7 +17,15 @@ import java.util.regex.Pattern;
 
 public class MemberCheck {
 
-    public boolean checkName(String name, Context context) {
+    Context context;
+    MemberManager memberManager;
+
+    public MemberCheck(Context context) {
+        this.context = context;
+        memberManager = new MemberManager(this.context);
+    }
+
+    public boolean checkName(String name) {
         boolean check = false;
 
         if( name.length() > 0 ) {
@@ -29,7 +37,7 @@ public class MemberCheck {
         return  check;
     }
 
-    public boolean checkPWD(String pwd, String pwdCheck, Context context) {
+    public boolean checkPWD(String pwd, String pwdCheck) {
         boolean check = false;
         int checkNum = 0;
         int checkChar = 0;
@@ -64,7 +72,7 @@ public class MemberCheck {
         return check;
     }
 
-    public boolean checkID(String id, Context context) {
+    public boolean checkID(String id) {
         boolean check = false;
         int checkStr = 0;
 
@@ -125,7 +133,7 @@ public class MemberCheck {
     }
 
     // 중복 버튼이 비활성화 되어있는가를 확인하는 메소드
-    public boolean checkBtn(String type, boolean check, Context context) {
+    public boolean checkBtn(String type, boolean check) {
         boolean btnCheck = check;
 
         if(btnCheck == true) {
@@ -137,7 +145,7 @@ public class MemberCheck {
         return btnCheck;
     }
 
-    public boolean checkBirth (String birth, Context context) {
+    public boolean checkBirth (String birth) {
         boolean check = false;
         if(birth.length() == 0) {
             check = true;
@@ -158,7 +166,7 @@ public class MemberCheck {
         return check;
     }
 
-    public boolean checkEmail(String email, Context context) {
+    public boolean checkEmail(String email) {
         boolean check = false;
 
         // 한개이상 + @ +  한개이상 + 해석금지. + 두개이상
@@ -182,23 +190,18 @@ public class MemberCheck {
     *  date     : 2017.01.18
     *  author   : Kim Jong-ha
     *  title    : checkMember 생성
-    *  comment  : Naver, Google, 일반회원 3가지의 경우 id로 판단
-    *             phone이 없다면 인증이 되지 않은 회원이므로 회원이므로 인증창으로 이동
+    *  comment  : Naver, Google, 일반회원 3가지의 경우 id로 검색 후, 회원인지 판단
+    *             phone이 없다면 인증이 되지 않은 회원이므로 회원값(2)을 리턴
     *  return   : int형으로 0(회원아님), 1(회원이고 phone인증됨), 2(회원이지만 phone인증안됨) 을 리턴
     * */
-    // 서버로 회원인지 아닌지의 여부를 판단함(구글, 네이버, 일반 3가지의 경우 모두 아이디로 판단한다)
-    public int checkMember(MemberVO memberVO, Context context) {
+    public int checkMember(MemberVO memberVO) {
         int checkMember = 0;
-
-        MemberManager memberManager = new MemberManager(context);
 
         ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
         resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
 
         int checkID = 0;
         int checkPhone = 0;
-
-        //Log.v("체크",memberVO.getMphone());
 
         for(MemberVO m : resultList) {
             if(memberVO.getMid().equals(m.getMid())) {
@@ -234,7 +237,35 @@ public class MemberCheck {
         return checkSNS;
     }
 
-    public boolean checkSNSID(MemberVO memberVO, Context context) {
+    public int checkExistence (MemberVO memberVO) {
+
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+
+        Log.v("인서트결과", "ㅇ" + resultList.size());
+
+        return resultList.size();
+    }
+
+    // SNS같은 경우에는 첫 로그인시, insert가 되어주어야한다. 첫 로그인 후, 폰 인증 창으로 간다.
+    public boolean checkFirstLogin (MemberVO memberVO) {
+
+        boolean checkFirstLogin = false;
+
+        // 첫 로그인인지, 아닌지(첫 로그인이면 서버로 insert 후에 폰인증으로감
+        // SNS 아이디로 로그인 한 것인지 확인
+        if(checkSNSID(memberVO) == true) {
+            // 서버의 DB에 아이디가 존재하는지 확인
+            if (signupSNSID(memberVO) == 0) {
+                // 폰 인증창
+                checkFirstLogin = true;
+            }
+        }
+        return  checkFirstLogin;
+    }
+
+    public boolean checkSNSID(MemberVO memberVO) {
         boolean checkSNSID = false;
 
         if(memberVO.getMsns() != null && memberVO.getMsnsid() != null) {
@@ -244,14 +275,29 @@ public class MemberCheck {
         return checkSNSID;
     }
 
-    public int checkExistence (MemberVO memberVO, Context context) {
+    private int signupSNSID(MemberVO memberVO){
 
-        MemberManager memberManager = new MemberManager(context);
+        int check = 0 ;
 
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+        // memberCheck 안의 checkExistence 메소드를 사용하여 서버의 DB에 아이디가 있는지 확인한다.
+        Log.v("인서트전", "ㅇㅇ");
+        //Log.v("인서트전", memberVO.getMpwd());
+        switch (checkExistence(memberVO)) {
+            case 0 :    // 아이디 없음
+                check = memberManager.insert(MemberShareWord.TARGET_SERVER, memberVO);
+                if(check != 0 ) {
+                    check = 1;
+                }
+                break;
+            case 1 :    // 아이디 1개 있음
+                check = 1;
+                break;
+            default:    // 아이디 2개 이상 존재
+        }
 
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+        Log.v("인서트결과", "응" + check);
 
-        return resultList.size();
+        return check;
     }
+
 }

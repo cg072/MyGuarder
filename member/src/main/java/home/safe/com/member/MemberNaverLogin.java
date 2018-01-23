@@ -1,15 +1,15 @@
 package home.safe.com.member;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
-import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -17,16 +17,17 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static com.nhn.android.naverlogin.OAuthLogin.mOAuthLoginHandler;
-
 /**
  * Created by hotki on 2018-01-19.
  */
 
 public class MemberNaverLogin extends Activity {
 
+    private final static int REQUEST_CODE_LOGIN_SUCCESS = 1;
+    private final static int REQUEST_CODE_LOGIN_FAIL = 0;
     private final static int MY_LOGIN_SUCCESS_CODE = 201;
     private final static int ROOT_LOGIN_SUCCESS_CODE = 202;
+    private final static String USER_INFO = "data";
 
     // 네이버 로그인 변수들
     private static String OAUTH_CLIENT_ID = "W3ENfk_vTn1YQaVsG3n_";  // 1)에서 받아온 값들을 넣어좁니다
@@ -40,25 +41,28 @@ public class MemberNaverLogin extends Activity {
     String tokenType;
 
     OAuthLogin mOAuthLoginModule;
-    Context mContext;
-    ActivityMemberLogin activity;
 
-    public MemberNaverLogin(ActivityMemberLogin activity) {
+    MemberVO memberVO = new MemberVO();
+    MemberNaverLogin memberNaverLogin;
 
-        this.activity = activity;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         // 현재 어플리케이션의 life사이클에 해당하는 Context를 mContext에 담는다.
-        mContext = activity.getApplicationContext();
+        memberNaverLogin = this;
 
         // OAuthLogin를 getInstance()를 사용해서 m0AuthLoginModule에 넣는다. [싱글톤패턴]
         mOAuthLoginModule = OAuthLogin.getInstance();
 
-        mOAuthLoginModule.init(mContext,                 // 어플리케이션 정보
+        mOAuthLoginModule.init(getApplicationContext(),                 // 어플리케이션 정보
                 OAUTH_CLIENT_ID,            // 네아로에 등록된 접근 아이디
                 OAUTH_CLIENT_SECRET,        // 네아로에 등록된 접근 비번
                 OAUTH_CLIENT_NAME);         // 네이버 앱의 로그인 화면에 표시할 애플리케이션 이름. 모바일 웹의 로그인 화면을 사용할 때는 서버에 저장된 애플리케이션 이름이 표시됩니다.
 
         // 클릭시 OAuthLogin의 생성자를 담은 것에서 네로아 액티비티를 시작한다. (인자 : 액티비티, 핸들러)
-        mOAuthLoginModule.startOauthLoginActivity(this.activity, mOAuthLoginHandler);
+        mOAuthLoginModule.startOauthLoginActivity(this, mOAuthLoginHandler);
     }
 
     /*
@@ -75,18 +79,17 @@ public class MemberNaverLogin extends Activity {
             if (success) {
                 // String Type
                 // 이 어플리케이션에서 네로아에 대한 접근 토큰을 저장
-                accessToken = mOAuthLoginModule.getAccessToken(mContext);
+                accessToken = mOAuthLoginModule.getAccessToken(getApplicationContext());
 
                 // 이 어플리케이션에서 네로아에 대한 갱신 토큰을 저장
-                String refreshToken = mOAuthLoginModule.getRefreshToken(mContext);
+                String refreshToken = mOAuthLoginModule.getRefreshToken(getApplicationContext());
 
                 // 이 어플리케이션에서 네로아에 대한 접근 토큰 만료기간을 저장
-                long expiresAt = mOAuthLoginModule.getExpiresAt(mContext);
+                long expiresAt = mOAuthLoginModule.getExpiresAt(getApplicationContext());
 
                 // 이 어플리케이션에서 네로아에 대한 접근 토큰의 형태를 저장(MAC, Bearer 지원)
-                tokenType = mOAuthLoginModule.getTokenType(mContext);
+                tokenType = mOAuthLoginModule.getTokenType(getApplicationContext());
 
-                //new ActivityMemberLogin.RequestApiTask().execute(); //로그인이 성공하면  네이버에 계정값들을 가져온다.
                 new RequestApiTask().execute(); //로그인이 성공하면  네이버에 계정값들을 가져온다.
                 // 네이버 로그인 성공시 작성할 메소드
                 Intent intentData = new Intent();
@@ -94,11 +97,12 @@ public class MemberNaverLogin extends Activity {
             } else {
 
                 // 로그인이 실패하면 에러 코드와 에러 메시지를 저장
-                String errorCode = mOAuthLoginModule.getLastErrorCode(mContext).getCode();
-                String errorDesc = mOAuthLoginModule.getLastErrorDesc(mContext);
+                String errorCode = mOAuthLoginModule.getLastErrorCode(getApplicationContext()).getCode();
+                String errorDesc = mOAuthLoginModule.getLastErrorDesc(getApplicationContext());
 
-                Toast.makeText(activity, "로그인이 취소/실패 하였습니다.!",
+                Toast.makeText(getApplicationContext(), "로그인이 취소/실패 하였습니다.!",
                         Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
 
@@ -125,10 +129,10 @@ public class MemberNaverLogin extends Activity {
         protected Void doInBackground(Void... params) {
 
             String url = "https://openapi.naver.com/v1/nid/getUserProfile.xml";
-            String at = mOAuthLoginModule.getAccessToken(mContext);
+            String at = mOAuthLoginModule.getAccessToken(getApplicationContext());
 
             // 정보를 넘기고 API대한 정보를 요청한다.
-            Pasingversiondata(mOAuthLoginModule.requestApi(mContext, at, url));
+            Pasingversiondata(mOAuthLoginModule.requestApi(getApplicationContext(), at, url));
 
             return null;
         }
@@ -137,12 +141,15 @@ public class MemberNaverLogin extends Activity {
 
             // infoLoad가 ture일 경우..(모든 정보가 있을 경우)
             if ( checkLoadInfo == true ) { // 첫 로그인인지, 아닌지(첫 로그인이면 서버로 insert 후에 폰인증으로감
-                activity.checkFirstLogin();
-
+                Intent intentData = new Intent();
+                intentData.putExtra(USER_INFO, memberVO);
+                setResult(REQUEST_CODE_LOGIN_SUCCESS, intentData);
+                finish();
             } else {                 // infoLoad가 false일 경우..(이름과 이메일을 받아오지 못할 경우를 포함해서, 정보가 없을 경우)
-                Toast.makeText(activity,
+                Toast.makeText(getApplicationContext(),
                         "로그인 실패하였습니다.  잠시후 다시 시도해 주세요!!", Toast.LENGTH_SHORT).show();
             }
+
         }
 
         private void Pasingversiondata(String data) { // xml 파싱
@@ -224,11 +231,14 @@ public class MemberNaverLogin extends Activity {
             naverMemberVO.setMname(f_array[6]);     // 이름
             naverMemberVO.setMemail(f_array[7]);    // 이메일
             naverMemberVO.setMbirth(f_array[8]);    // 생일
-            naverMemberVO.setMsns("naver");
+            naverMemberVO.setMsns(naver);
             naverMemberVO.setMsnsid(separateSNSID(f_array[7]));
-            getMemberVO(naverMemberVO);
 
+            memberVO = naverMemberVO;
+
+            // 로그인이 정상적이라면 f_array[i] != null 이 된다.
             for(int i = 0 ; i < 9 ; i++) {
+                Log.v("로그", f_array[i]);
                 if(f_array[i] == null) {
                     checkLoadInfo = false;
                     break;
@@ -250,9 +260,5 @@ public class MemberNaverLogin extends Activity {
         String snsid = temp[0];
 
         return snsid;
-    }
-
-    private void getMemberVO(MemberVO memberVO) {
-        activity.setMemberVO(memberVO);
     }
 }

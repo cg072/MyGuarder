@@ -104,7 +104,6 @@ public class GuarderManager {
                 check = controller.updateServer(sendCV);
                 break;
         }
-
         return check;
     }
 
@@ -115,6 +114,7 @@ public class GuarderManager {
         if(type.equals(TYPE_SELECT_CON)) {
             contentValues.put("gstate", data.getGstate());
         }
+
 
         List<ContentValues> resultList = null;
 

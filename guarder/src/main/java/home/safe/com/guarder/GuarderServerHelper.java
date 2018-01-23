@@ -19,11 +19,11 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
     final static String TAG = "ServerHelpler";
 
     SQLiteDatabase sqLiteDB;
-    final static private String TABLE_NAME = "serverlist";
-    final static private String SEQ = "gseq";
-    final static private String NAME = "gmcname";
-    final static private String PHONE = "gmcphone";
-    final static private String USE = "gstate";
+    final static private String TABLE_NAME = "testServer";
+
+    final static private String GUARDER_COL[] = {"gseq", "gmid", "gmcid", "gstate", "gregday"};
+
+    String data[] = new String[5];
 
     public GuarderServerHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
@@ -35,7 +35,7 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
         sqLiteDB = getWritableDatabase();
 
         // DB에 입력한 값으로 행 추가
-        int check = (int)sqLiteDB.insert(TABLE_NAME, NAME + "," + PHONE + "," + USE, contentValues);
+        int check = (int)sqLiteDB.insert(TABLE_NAME, null, contentValues);
 
         return check;
     }
@@ -49,19 +49,40 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
 
         String sqlSearch = "SELECT * FROM " + TABLE_NAME ;
 
-        if (contentValues.get("type").toString().equals("con")) {
-            sqlSearch += " WHERE " + USE + " = " + (int)(contentValues.get(USE));
+        switch (contentValues.get(GuarderShareWord.SELECT_TYPE).toString()) {
+
+            case GuarderShareWord.TYPE_SELECT_ALL:
+                break;
+            case GuarderShareWord.TYPE_SELECT_CON:
+                sqlSearch = sqlSearch +  " WHERE ";
+
+                setString(contentValues);
+
+                for(int i = 1 ; i < GUARDER_COL.length ; i ++) {
+                    if(data[i] != null) {
+                        sqlSearch = sqlSearch + GUARDER_COL[i] + " = '" + data[i] + "' ";
+
+                        if(i != GUARDER_COL.length - 1) {
+                            for (int j = i + 1; j < GUARDER_COL.length; j++) {
+                                if (data[j] != null) {
+                                    sqlSearch += " and ";
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                break;
         }
 
         Cursor cursor = sqLiteDB.rawQuery(sqlSearch, null);
         while (cursor.moveToNext()) {
             cv = new ContentValues();
 
-            cv.put(SEQ, cursor.getInt(0));
-            cv.put(NAME, cursor.getString(1));
-            cv.put(PHONE, cursor.getString(2));
-            cv.put(USE, cursor.getInt(3));
-
+            for(int i = 0 ; i < GUARDER_COL.length ; i++){
+                cv.put(GUARDER_COL[i], cursor.getInt(i));
+            }
             list.add(cv);
         }
 
@@ -71,15 +92,12 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
     @Override
     public int update(ContentValues contentValues) {
         sqLiteDB = getWritableDatabase();
-
-        String name = String.valueOf(contentValues.get(NAME));
-        String phone = String.valueOf(contentValues.get(PHONE));
-        String use = String.valueOf(contentValues.get(USE));
-        int check = sqLiteDB.update(
+        int check = 0;
+/*        int check = sqLiteDB.update(
                 TABLE_NAME,
                 contentValues,
                 NAME + " = ? and " + PHONE +" = ? " ,
-                new String[]{name, phone});
+                new String[]{name, phone});*/
         return check;
     }
 
@@ -87,10 +105,11 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
     public int remove(ContentValues contentValues) {
         sqLiteDB = getWritableDatabase();
 
-        String name = String.valueOf(contentValues.get(NAME));
+        int check = 0;
+/*        String name = String.valueOf(contentValues.get(NAME));
         String phone = String.valueOf(contentValues.get(PHONE));
 
-        int check = sqLiteDB.delete(TABLE_NAME, "gmcname = ?", new String[]{name});
+        int check = sqLiteDB.delete(TABLE_NAME, "gmcname = ?", new String[]{name});*/
 
         return check;
     }
@@ -119,11 +138,21 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
         this.sqLiteDB = db;
 
         String SQL_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
-                SEQ+" INTEGER PRIMARY KEY AUTOINCREMENT," +
-                NAME + " TEXT," +
-                PHONE + " TEXT," +
-                USE + " INTEGER );";
+                GUARDER_COL[0] +" INTEGER PRIMARY KEY AUTOINCREMENT," +
+                GUARDER_COL[1] + " TEXT," +
+                GUARDER_COL[2] + " TEXT," +
+                GUARDER_COL[3] + " INTEGER, " +
+                GUARDER_COL[4] + " TEXT);";
 
         sqLiteDB.execSQL(SQL_CREATE);
+    }
+
+    private void setString(ContentValues contentValues) {
+        for(int i = 0 ; i < GUARDER_COL.length ; i++) {
+            data[i] = null;
+            if(contentValues.getAsString(GUARDER_COL[i]) != null) {
+                data[i] = contentValues.getAsString(GUARDER_COL[i]);
+            }
+        }
     }
 }

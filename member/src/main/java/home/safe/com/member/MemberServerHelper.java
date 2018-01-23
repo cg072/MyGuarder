@@ -177,8 +177,10 @@ public class MemberServerHelper extends PreTestDBHelper {
     private void setString(ContentValues contentValues){
 
         for(int i = 1 ; i < MEMBER_COL.length ; i++) {
-            if(contentValues.getAsString(MEMBER_COL[i]) != null)
-            data[i] = contentValues.getAsString(MEMBER_COL[i]);
+            data[i] = null;
+            if(contentValues.getAsString(MEMBER_COL[i]) != null) {
+                data[i] = contentValues.getAsString(MEMBER_COL[i]);
+            }
         }
 
 /*        mseq = contentValues.getAsInteger(MEMBER_COL[0]);
