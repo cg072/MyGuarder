@@ -89,9 +89,18 @@ public class TransManager {
             retList.add(vo);
         }
 
-
         return retList;
 
+    }
+
+    public int update(TransIntegratedVO integratedVO){
+        int check = 0;
+        this.integratedVO = integratedVO;
+        ContentValues values = integratedVO.convertDataToContentValues();
+
+        check = controller.update(values);
+
+        return check;
     }
 
 }

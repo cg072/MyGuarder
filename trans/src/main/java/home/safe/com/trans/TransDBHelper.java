@@ -155,12 +155,39 @@ public class TransDBHelper extends ProGuardianDBHelper{
 
     @Override
     public int update(ContentValues contentValues) {
-        return 0;
+        int check = 0;
+        db = getWritableDatabase();
+
+        int tseq = contentValues.getAsInteger(transCol[0]);
+        String ttype = contentValues.getAsString(transCol[3]);
+        String tmemo = contentValues.getAsString(transCol[4]);
+
+        Log.d("업데이트디비헬퍼1", ttype);
+        Log.d("업데이트디비헬퍼2", tmemo);
+
+        check = db.update(TABLE_NAME, contentValues,
+                transCol[0] + " = ? ",
+                new String[]{Integer.toString(tseq)});
+
+        //update trans set ttype = "기타" and tmemo = "ㅋㅋㅋ" where index = 1 ;
+
+
+
+        //////////////////////////////////
+
+        search(contentValues);
+
+        List<ContentValues> upval = search(contentValues);
+
+        for(ContentValues data : upval){
+            Log.d("들어옵니까?", data.getAsString("ttype") + "   " + data.getAsString("tmemo"));
+        }
+
+        return check;
     }
 
     @Override
-    public int remove(ContentValues contentValues) { return 0;
-    }
+    public int remove(ContentValues contentValues) { return 0; }
 
 
 

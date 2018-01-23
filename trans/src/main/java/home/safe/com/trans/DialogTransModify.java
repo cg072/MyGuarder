@@ -1,12 +1,15 @@
 package home.safe.com.trans;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,16 +26,23 @@ import android.widget.Toast;
 
 public class DialogTransModify extends Dialog implements View.OnClickListener{
 
+    Context context;
+
     TextView tvtranstype;
     EditText ettranstmemo;
     Button btnDialCancel;
     Button btnDialConfirm;
 
+    TransIntegratedVO integratedVO;
+
+    String tseq;
     String ttype;
     String tmemo;
 
-    public DialogTransModify(@NonNull Context context, String ttype, String tmemo) {
+    public DialogTransModify(@NonNull Context context, String tseq, String ttype, String tmemo) {
         super(context);
+        this.context = context;
+        this.tseq = tseq;
         this.ttype = ttype;
         this.tmemo = tmemo;
     }
@@ -126,18 +136,43 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
         * */
         if(view == btnDialConfirm){
 
-            String ttype = tvtranstype.getText().toString();
+            final String ttype = tvtranstype.getText().toString();
+
+            final String ttemo = ettranstmemo.getText().toString();
+
+            ///이동수단과 메모가 변경된 사항이 있는지 체크
+            if(this.ttype.equals(ttype) && ttemo.equals("")){
+
+                Toast.makeText(getContext().getApplicationContext(), "변경된 내용이 없습니다", Toast.LENGTH_LONG).show();
+                this.dismiss();
+            }else{
+
+                AlertDialog.Builder modifyAlert = new AlertDialog.Builder(getContext());
+                modifyAlert.setTitle("수정확인");
+                modifyAlert.setMessage(ttype.trim() + "\n" + ttemo.trim() + "\n" + "\n" + "수정 하시겠습니까?");
 
 
+                modifyAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-            if(ttype.contains("클릭")){
-                //클릭 문자를 제거
-                Toast.makeText(getContext().getApplicationContext(), ttype + "클릭포함", Toast.LENGTH_LONG).show();
+                        updateDB(tseq, ttype, ttemo);
+
+                    }
+                });
+
+                modifyAlert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                modifyAlert.create();
+                modifyAlert.show();
             }
 
-            Toast.makeText(getContext().getApplicationContext(), ttype + "클릭미포함", Toast.LENGTH_LONG).show();
-
-            String ttemo = ettranstmemo.getText().toString();
+            //Toast.makeText(getContext().getApplicationContext(), ttype + ttemo, Toast.LENGTH_LONG).show();
 
             this.dismiss();
 
@@ -145,8 +180,25 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
     }
 
     public void setInfo(String ttype, String tmemo){
-        tvtranstype.setText(ttype + " (클릭)");
-        ettranstmemo.setText(tmemo);
+        tvtranstype.setText(ttype);
+        ettranstmemo.setHint(tmemo);
+    }
+
+    public void updateDB(String tseq, String ttype, String tmemo){
+
+        int check = 0;
+
+        TransManager transManager = new TransManager(getContext());
+        integratedVO = new TransIntegratedVO();
+
+        integratedVO.setTseq(Integer.parseInt(tseq));
+        integratedVO.setTtype(ttype);
+        integratedVO.setTmemo(tmemo);
+
+
+        check = transManager.update(integratedVO);
+
+        Log.d("체크값", Integer.toString(check));
 
     }
 }

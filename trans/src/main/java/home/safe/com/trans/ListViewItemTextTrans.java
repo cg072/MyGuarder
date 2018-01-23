@@ -75,7 +75,7 @@ public class ListViewItemTextTrans extends LinearLayout implements View.OnClickL
 
     }
 
-    public void getText(String tseq, String ttype){
+    public void setData(String tseq, String ttype){
         this.recvTseq = tseq;
         this.recvTtype = ttype;
     }
@@ -109,7 +109,9 @@ public class ListViewItemTextTrans extends LinearLayout implements View.OnClickL
     public void onClick(View view) {
         if(view == transBtnMotify){
 
-            DialogTransModify dialog = new DialogTransModify(context, recvTtype, setTmemo);
+            DialogTransModify dialog = new DialogTransModify(context, recvTseq, recvTtype, setTmemo);
+
+
             dialog.show();
 
 

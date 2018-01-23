@@ -107,7 +107,7 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
 
         //itemText.setText(childDto.getText());
         itemText.setText(childDto.getTmemo());
-        itemText.getText(tseq, ttype);
+        itemText.setData(tseq, ttype);
 
         return itemText;
     }

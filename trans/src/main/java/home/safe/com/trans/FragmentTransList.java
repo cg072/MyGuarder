@@ -193,9 +193,6 @@ public class FragmentTransList extends Fragment{
         adapter.notifyDataSetChanged();
     }
 
-
-
-
 }
 
 

@@ -27,7 +27,11 @@ public class TransController implements IProGuardianController{
 
     @Override
     public int update(ContentValues contentValues) {
-        return 0;
+
+        Log.d("업데이트컨트롤", contentValues.getAsString("ttype"));
+        Log.d("업데이트컨트롤", contentValues.getAsString("tmemo"));
+
+        return proGuardianDBHelper.update(contentValues);
     }
 
     @Override
