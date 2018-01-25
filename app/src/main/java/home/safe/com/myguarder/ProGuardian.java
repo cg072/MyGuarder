@@ -462,6 +462,17 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             default:
                 break;
         }
+
+        //http://blog.dramancompany.com/2015/11/%EB%A6%AC%EB%A9%A4%EB%B2%84%EC%9D%98-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-6-0-m%EB%B2%84%EC%A0%84-%EB%8C%80%EC%9D%91%EA%B8%B0/
+
+        //requestCode를 if로 바꾸기
+        for(int i = 0; i < grantResults.length; i++ ) {
+            if (grantResults.length > 0 && grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                //권한 거부한 퍼미션 화면에 필요하다고 토스트 띄우기
+                Toast.makeText(this,permissions[i]+"가 꼭 필요합니다.",Toast.LENGTH_LONG).show();
+            }
+        }
+
         updateLocationUI();
     }
 
