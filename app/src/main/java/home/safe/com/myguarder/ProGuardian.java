@@ -1027,8 +1027,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      * @text
      * 1. 중간에 위치켜면 작동문제 ok
      * 2. 카메라 이후 요청이 되게 ok
-     * 3. 피지킴이 목록 불러오기
-     * 4. 권한 모아서 실행하기
+     * 3. 피지킴이 목록 불러오기 -> 보류
+     * 4. 권한 모아서 실행하기 -> 메일
      * 5. 웹공부
      * @since 2018-01-23 오후 2:13
     **/

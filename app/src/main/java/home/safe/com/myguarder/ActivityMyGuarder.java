@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
 import home.safe.com.guarder.GuarderManager;
+import home.safe.com.guarder.GuarderShareWord;
+import home.safe.com.guarder.GuarderVO;
 
 public class ActivityMyGuarder extends ProGuardian implements View.OnClickListener{
 
@@ -113,7 +115,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         if(view.getId() == btnCivilianList.getId())
         {
             //피지킴이 목록 불러오기
-//            guarderManager.select()
+//            guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderShareWord.TYPE_SELECT_CON,new GuarderVO());
 
             //피지킴이 팝업
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);
@@ -257,3 +259,21 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         finish();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//퍼블릭, 하이퍼래져,
