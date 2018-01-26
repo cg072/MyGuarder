@@ -136,4 +136,33 @@ public class MemberManager {
 
         return requestCode;
     }
+
+    // 아이디, 패스워드 찾기
+    public int sendEMail (String type, MemberVO memberVO) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MemberShareWord.SELECT_TYPE, MemberShareWord.TYPE_SELECT_CON);
+
+        switch (type) {
+            case "id" :
+                contentValues.put("memail", memberVO.getMemail());
+                contentValues.put("mphone", memberVO.getMphone());
+                break;
+            case "pwd" :
+                contentValues.put("mid", memberVO.getMid());
+                contentValues.put("memail", memberVO.getMemail());
+                break;
+        }
+
+        int check = controller.searchServer(contentValues).size();
+
+        Log.v("들어옴?", "값 : " + check);
+
+        if(check == 1) {
+        /*
+         * 이메일 발송
+         */
+        }
+        return check;
+    }
+
 }

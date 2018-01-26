@@ -157,7 +157,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     * */
     private void setNowGuarder(String name , String phone) {
         tvGuarderName.setText(name);
-        tvGuarderPhone.setText(phone);
+        tvGuarderPhone.setText(addHyphen(phone));
     }
 
     /*
@@ -205,7 +205,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
         regAlert.setTitle("지킴이 등록");
         regAlert.setMessage("이름: " + guarderList.get(position).getGmcname().trim() + "\n" +
-                "전화번호: " + guarderList.get(position).getGmcphone() + "\n" + "\n" + DIALOG_TEXT[check]);
+                "전화번호: " + addHyphen(guarderList.get(position).getGmcphone()) + "\n" + "\n" + DIALOG_TEXT[check]);
 
         final GuarderVO guarderVO;
 
@@ -271,6 +271,35 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                 // 취소를 누를땐 별 다른 내용이 없다.
             }
         });
+    }
+
+    /*
+ *  date     : 2017.11.22
+ *  author   : Kim Jong-ha
+ *  title    : addHyphen() 메소드 생성
+ *  comment  : 전화 번호 사이의 '-' 를 추가한다
+ *  return   : String 형태
+ * */
+    private String addHyphen(String phone) {
+
+        String resultString = phone;
+
+        switch(resultString.length()) {
+            case 10 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,6) + "-" +
+                        resultString.substring(6,10);
+                break;
+
+            case 11 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,7) + "-" +
+                        resultString.substring(7,11);
+                break;
+            default :
+                resultString = "Error";
+        }
+        return resultString;
     }
 
     // 1. ArrayList에 있는 것을 저장.

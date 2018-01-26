@@ -243,8 +243,6 @@ public class MemberCheck {
 
         resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
 
-        Log.v("인서트 검색 결과", "응" + resultList.size());
-
         return resultList.size();
     }
 
@@ -292,28 +290,28 @@ public class MemberCheck {
         check = checkExistence(sendMemberVO);
 
         if(check == 0) {
-            Log.v("인서트전", "응" + check);
-            int check2 = memberManager.insert(MemberShareWord.TARGET_SERVER, changeGenderChar(memberVO));
-            if (check2 == 0) {
-                Log.v("가입 실패", "시발");
-            } else {
-                Log.v("가입 성공", "시발");
-            }
+            memberManager.insert(MemberShareWord.TARGET_SERVER, changeGenderChar(memberVO));
         }
 
         return check;
     }
 
     private MemberVO changeGenderChar(MemberVO memberVO) {
-        switch (memberVO.getMgender()) {
-            case "M" : memberVO.setMgender("m");
-            break;
-            case "F" : memberVO.setMgender("f");
-                break;
-            case "W" : memberVO.setMgender("f");
-                break;
-            case "U" : memberVO.setMgender("u");
-                break;
+        if(memberVO.getMgender() != null) {
+            switch (memberVO.getMgender()) {
+                case "M":
+                    memberVO.setMgender("m");
+                    break;
+                case "F":
+                    memberVO.setMgender("f");
+                    break;
+                case "W":
+                    memberVO.setMgender("f");
+                    break;
+                case "U":
+                    memberVO.setMgender("u");
+                    break;
+            }
         }
 
         return memberVO;

@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 
 public class ActivityMemberModify extends AppCompatActivity {
@@ -95,7 +96,8 @@ public class ActivityMemberModify extends AppCompatActivity {
         changeViewContents();
 
         // 기기에서 번호 가져오기
-        MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this, tvPhone);
+        MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this);
+        tvPhone.setText(addHyphen(memberLoadPhoneNumber.getMyPhoneNumber()));
 
         btnCertificationPhone.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -191,7 +193,23 @@ public class ActivityMemberModify extends AppCompatActivity {
         MemberVO memberVO = getUserInfo();
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
+        ArrayList<MemberVO> resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_ALL, null);
+
+        for(MemberVO m : resultList) {
+            Log.v("체크", m.getMid() + " "  +
+                    m.getMpwd() + " " + m.getMsns() + " " + m.getMsnsid() + " " + m.getMname() + " " + m.getMphone() + " " +
+                    m.getMbirth() + " " + m.getMemail() + " " + m.getMgender());
+        }
+
         check = memberManager.update(MemberShareWord.TARGET_SERVER, memberVO);
+
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_ALL, null);
+
+        for(MemberVO m : resultList) {
+            Log.v("체크", m.getMid() + " "  +
+                    m.getMpwd() + " " + m.getMsns() + " " + m.getMsnsid() + " " + m.getMname() + " " + m.getMphone() + " " +
+            m.getMbirth() + " " + m.getMemail() + " " + m.getMgender());
+        }
 
         return check;
     }
@@ -199,7 +217,10 @@ public class ActivityMemberModify extends AppCompatActivity {
     private MemberVO getUserInfo(){
 
         String id = etID.getText().toString().trim();
-        String pwd = etPWD.getText().toString().trim();
+        String pwd = null;
+        if(sns == null || !sns.equals("sns")) {
+            pwd = etPWD.getText().toString().trim();
+        }
         String name = etName.getText().toString().trim();
         String phone = removeHyphen(tvPhone.getText().toString().trim());  // 하이픈 제거해서 세팅
         String birth = etBirth.getText().toString().trim();
@@ -217,32 +238,6 @@ public class ActivityMemberModify extends AppCompatActivity {
         MemberVO memberVO = new MemberVO(id, pwd, name, phone, birth, email, gender);
 
         return memberVO;
-    }
-
-    private void setCertDialog() {
-        recvCodeFromServer();
-        certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
-        certDialog.setCancelable(false);
-        certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
-                certDialog.setRecvCode(settingCode);
-            }
-        }));
-        certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                if (settingCode.equals(certDialog.getSendCode())) {
-                    Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
-                    //tvPhone.setEnabled(false);
-                    btnCertificationPhone.setEnabled(false);
-                    btnModify.setEnabled(true);
-                } else {
-                    Toast.makeText(ActivityMemberModify.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 
     // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
@@ -270,16 +265,20 @@ public class ActivityMemberModify extends AppCompatActivity {
             etName.setText(memberVO.getMname());
             etBirth.setText(memberVO.getMbirth());
             etEMail.setText(memberVO.getMemail());
-            switch (memberVO.getMgender()) {
-                case "m" :
-                    rbMale.setChecked(true);
-                    break;
-                case "f" :
-                    rbFemale.setChecked(true);
-                    break;
-                case "u" :
-                    rbUndefine.setChecked(true);
-                    break;
+            if(memberVO.getMgender() != null) {
+                switch (memberVO.getMgender()) {
+                    case "m":
+                        rbMale.setChecked(true);
+                        break;
+                    case "f":
+                        rbFemale.setChecked(true);
+                        break;
+                    case "u":
+                        rbUndefine.setChecked(true);
+                        break;
+                }
+            } else {
+                rbUndefine.setChecked(true);
             }
         }
     }
@@ -334,11 +333,66 @@ public class ActivityMemberModify extends AppCompatActivity {
                     resultPhone += basePhone[1];
                     break;
                 case 2 :
-                    resultPhone = basePhone[1] + basePhone[2];
+                    resultPhone = resultPhone + basePhone[1] + basePhone[2];
                     break;
             }
         }
         return resultPhone;
+    }
+
+    private void setCertDialog() {
+        recvCodeFromServer();
+        certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
+        certDialog.setCancelable(false);
+        certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                // 서버로부터 받은 값을 셋팅하여 준다. [후에 code에 값을 서버로부터 받은 값으로~!]
+                certDialog.setRecvCode(settingCode);
+            }
+        }));
+        certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (settingCode.equals(certDialog.getSendCode())) {
+                    Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                    //tvPhone.setEnabled(false);
+                    btnCertificationPhone.setEnabled(false);
+                    btnModify.setEnabled(true);
+                } else {
+                    Toast.makeText(ActivityMemberModify.this, "전화번호 인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    /*
+ *  date     : 2017.11.22
+ *  author   : Kim Jong-ha
+ *  title    : addHyphen() 메소드 생성
+ *  comment  : 전화 번호 사이의 '-' 를 추가한다
+ *  return   : String 형태
+ * */
+    private String addHyphen(String phone) {
+
+        String resultString = phone;
+
+        switch(resultString.length()) {
+            case 10 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,6) + "-" +
+                        resultString.substring(6,10);
+                break;
+
+            case 11 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,7) + "-" +
+                        resultString.substring(7,11);
+                break;
+            default :
+                resultString = "Error";
+        }
+        return resultString;
     }
 }
 

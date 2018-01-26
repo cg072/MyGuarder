@@ -95,6 +95,8 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
 
         ArrayList<MemberVO> resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
 
+        Log.v("체크", "sns유무 : " + resultList.get(0).getMsns());
+
         if(resultList.size() == 1) {
             if(resultList.get(0).getMsns() != null) {
                 check = 1;

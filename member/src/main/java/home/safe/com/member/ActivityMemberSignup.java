@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class ActivityMemberSignup extends AppCompatActivity {
 
-    private static final String settingCode = "200";
+    String settingCode;
 
     private static final String typeDuplication = "ID 중복 체크를";
     private static final String typeCertification = "전화 번호 인증을";
@@ -70,7 +70,9 @@ public class ActivityMemberSignup extends AppCompatActivity {
         btnCertificationPhone = (Button)findViewById(R.id.btnCertificationPhone);
 
         // 기기의 PhoneNumber 정보 가져오기
-        MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this, tvPhone);
+        MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this);
+
+        tvPhone.setText(addHyphen(memberLoadPhoneNumber.getMyPhoneNumber()));
 
         // 중복체크
         btnDuplicationID.setOnClickListener(new Button.OnClickListener() {
@@ -122,8 +124,19 @@ public class ActivityMemberSignup extends AppCompatActivity {
         });
     }
 
+    // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
+    private String recvCodeFromServer() {
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        settingCode = memberManager.requestCode();
+
+        return settingCode;
+    }
+
 
     private void setCertDialog() {
+        recvCodeFromServer();
+
         certDialog = new ActivityMemberCertDialog(ActivityMemberSignup.this);
         certDialog.setCancelable(false);
         certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
@@ -145,17 +158,6 @@ public class ActivityMemberSignup extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
-    private String recvCodeFromServer() {
-        String requestCode = "";
-
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        requestCode = memberManager.requestCode();
-
-        return requestCode;
     }
 
     private int sendDataForDuplicationToServer(){
@@ -249,10 +251,39 @@ public class ActivityMemberSignup extends AppCompatActivity {
                     resultPhone += basePhone[1];
                     break;
                 case 2 :
-                    resultPhone = basePhone[1] + basePhone[2];
+                    resultPhone = resultPhone + basePhone[1] + basePhone[2];
                     break;
             }
         }
         return resultPhone;
+    }
+
+    /*
+ *  date     : 2017.11.22
+ *  author   : Kim Jong-ha
+ *  title    : addHyphen() 메소드 생성
+ *  comment  : 전화 번호 사이의 '-' 를 추가한다
+ *  return   : String 형태
+ * */
+    private String addHyphen(String phone) {
+
+        String resultString = phone;
+
+        switch(resultString.length()) {
+            case 10 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,6) + "-" +
+                        resultString.substring(6,10);
+                break;
+
+            case 11 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,7) + "-" +
+                        resultString.substring(7,11);
+                break;
+            default :
+                resultString = "Error";
+        }
+        return resultString;
     }
 }

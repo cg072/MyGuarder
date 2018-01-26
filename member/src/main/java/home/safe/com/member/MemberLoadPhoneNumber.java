@@ -9,8 +9,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -20,14 +18,14 @@ import android.widget.Toast;
 public class MemberLoadPhoneNumber extends AppCompatActivity{
     Activity activity;
     boolean checkPermission = false;
-    String myNumber;
-    TextView tv;
+    String myPhoneNumber;
 
-    public MemberLoadPhoneNumber(Activity activity, TextView tv){
+    public MemberLoadPhoneNumber(Activity activity){
         this.activity = activity;
-        this.tv = tv;
 
-        getMemberPhone();
+        while(myPhoneNumber == null) {
+            getMemberPhone();
+        }
     }
 
     /*
@@ -95,9 +93,8 @@ public class MemberLoadPhoneNumber extends AppCompatActivity{
             TelephonyManager mgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 
             try {
-                myNumber = mgr.getLine1Number();
-                myNumber = myNumber.replace("+82", "0");
-                tv.setText(addHyphen(myNumber));
+                myPhoneNumber = mgr.getLine1Number();
+                myPhoneNumber = myPhoneNumber.replace("+82", "0");
             } catch (Exception e) {
                 Toast.makeText(activity, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
@@ -131,5 +128,9 @@ public class MemberLoadPhoneNumber extends AppCompatActivity{
                 resultString = "Not Mobile";
         }
         return resultString;
+    }
+
+    public String getMyPhoneNumber(){
+        return myPhoneNumber;
     }
 }

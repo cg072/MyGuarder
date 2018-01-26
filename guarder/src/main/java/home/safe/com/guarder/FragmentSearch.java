@@ -80,7 +80,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
         regAlert.setTitle("지킴이 추가");
         regAlert.setMessage("이름: " + selectedGuarderVO.getGmcname() + "\n" +
-                "전화번호: " + selectedGuarderVO.getGmcphone() + "\n" + "\n" + "해당 정보로 지킴이 목록에 추가하시겠습니까?");
+                "전화번호: " + addHyphen(selectedGuarderVO.getGmcphone()) + "\n" + "\n" + "해당 정보로 지킴이 목록에 추가하시겠습니까?");
 
         // 지킴이 추가
         regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -95,15 +95,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
                     GuarderManager guarderManager = new GuarderManager(getContext());
                     int returnDB = 0 ;
                         returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, selectedGuarderVO);
-                    Log.v("인서트 디비 후", selectedGuarderVO.getGmid());
-                    if (returnDB != 0 ) {
-                        Log.v("인서트 성공","디비"+returnDB);
-                    }
-                    if (returnDB != 0 ) {
                         returnDB = guarderManager.insert(GuarderShareWord.TARGET_SERVER, selectedGuarderVO);
-                    } else {
-                        Log.v("인서트 성공","서버"+returnDB);
-                    }
 
                     if(returnDB != 0) {
                         addGuarderList.add(selectedGuarderVO);                       // 지킴이 목록 관리 리스트에 추가
@@ -262,5 +254,34 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     // 외부에서 지킴이 목록을 초기화
     public void resetAddGuarderList(){
         addGuarderList.clear();
+    }
+
+    /*
+*  date     : 2017.11.22
+*  author   : Kim Jong-ha
+*  title    : addHyphen() 메소드 생성
+*  comment  : 전화 번호 사이의 '-' 를 추가한다
+*  return   : String 형태
+* */
+    private String addHyphen(String phone) {
+
+        String resultString = phone;
+
+        switch(resultString.length()) {
+            case 10 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,6) + "-" +
+                        resultString.substring(6,10);
+                break;
+
+            case 11 :
+                resultString =  resultString.substring(0,3) + "-" +
+                        resultString.substring(3,7) + "-" +
+                        resultString.substring(7,11);
+                break;
+            default :
+                resultString = "Error";
+        }
+        return resultString;
     }
 }

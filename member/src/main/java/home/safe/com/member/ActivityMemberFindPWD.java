@@ -39,6 +39,7 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
                     case 1 :
                         Toast.makeText(ActivityMemberFindPWD.this, "해당 e-Mail로 발송하였습니다", Toast.LENGTH_SHORT).show();
                         break;
+                    default:    // 아이디가 여러개 중복될 경우~
                 }
             }
         });
@@ -47,15 +48,15 @@ public class ActivityMemberFindPWD extends AppCompatActivity {
     private int sendDataToServer() {
         int check = 0;
 
-        String id = etID.toString().toString().trim();
+        String id = etID.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
 
         MemberVO memberVO = new MemberVO();
         memberVO.setMid(id);
         memberVO.setMemail(email);
 
-        MemberCheck memberCheck = new MemberCheck(getApplicationContext());
+        MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        return memberCheck.checkExistence(memberVO);
+        return memberManager.sendEMail("pwd", memberVO);
     }
 }

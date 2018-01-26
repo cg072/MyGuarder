@@ -37,6 +37,7 @@ public class ActivityMemberFindID extends AppCompatActivity {
                     case 1 :
                         Toast.makeText(ActivityMemberFindID.this, "해당 e-Mail로 발송하였습니다", Toast.LENGTH_SHORT).show();
                         break;
+                        default:    // 아이디가 여러개 중복될 경우~
                 }
                 // 서버로 보내고 이메일이 발송되으면 발송되었다고, 오류가 났으면 났다고 함
             }
@@ -53,9 +54,8 @@ public class ActivityMemberFindID extends AppCompatActivity {
         memberVO.setMemail(email);
         memberVO.setMphone(phone);
 
-        MemberCheck memberCheck = new MemberCheck(getApplicationContext());
+        MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        return memberCheck.checkExistence(memberVO);
+        return memberManager.sendEMail("id", memberVO);
     }
-
 }

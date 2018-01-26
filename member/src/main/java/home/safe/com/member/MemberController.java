@@ -76,6 +76,35 @@ public class MemberController implements IProGuardianController {
         return contentValues;
     }
 
+    // 비번 생성
+    public ContentValues requestPWD() {
+        String randomStr = new String();
+        Random rnd = new Random();
+        for (int i = 0; i < 20; i++) {
+            int rIndex = rnd.nextInt(3);
+            switch (rIndex) {
+                case 0:
+                    // a-z
+                    randomStr += String.valueOf((char) ((int) (rnd.nextInt(26)) + 97));
+                    break;
+                case 1:
+                    // A-Z
+                    randomStr += String.valueOf((char) ((int) (rnd.nextInt(26)) + 65));
+                    break;
+                case 2:
+                    // 0-9
+                    randomStr += String.valueOf((rnd.nextInt(10)));
+                    break;
+            }
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("pwd", randomStr);
+
+        return contentValues;
+    }
+
+
     @Override
     public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper) {
         this.proGuardianDBHelper = proGuardianDBHelper;
