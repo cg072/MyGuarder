@@ -32,8 +32,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
     private String id;
     private MemberVO memberVO = new MemberVO();
 
-    // 예제용
-    private String settingCode = "200";
+    private String settingCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +55,8 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnCert) {
+            recvCodeFromServer();
+
             certDialog = new ActivityMemberCertDialog(ActivityMemberCertPhone.this);
 
             certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
@@ -95,13 +96,14 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
 
     // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
     private String recvCodeFromServer() {
-        String requestCode = "";
 
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        requestCode = memberManager.requestCode();
+        settingCode = memberManager.requestCode();
 
-        return requestCode;
+
+
+        return settingCode;
     }
 
     private int updatePhone(){

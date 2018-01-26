@@ -58,6 +58,8 @@ public class GuarderDBHelper extends ProGuardianDBHelper {
         // DB에 입력한 값으로 행 추가
         int check = (int)sqLiteDB.insert(TABLE_NAME, NAME + "," + PHONE + "," + USE, contentValues);
 
+        Log.v("디비", "인서트" + check);
+
         return check;
     }
 

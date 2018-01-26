@@ -1,17 +1,13 @@
 package home.safe.com.member;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +22,7 @@ import java.util.ArrayList;
 public class ActivityMemberModify extends AppCompatActivity {
 
 
-    final static String settingCode = "200";
+    String settingCode;
     final static String TAG = "내  정 보  수 정";
 
     private TextView tvTitle;
@@ -138,6 +134,7 @@ public class ActivityMemberModify extends AppCompatActivity {
 
                     if(updateInfomation() == 1) {
                         Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                        saveData();
                         finish();
                     } else {
                         Toast.makeText(ActivityMemberModify.this, "수정이 오류", Toast.LENGTH_SHORT).show();
@@ -165,7 +162,6 @@ public class ActivityMemberModify extends AppCompatActivity {
     private void setID() {
         MemberVO memberVO = new MemberVO();
 
-        etID.setText(id);
         etID.setEnabled(false);
 
         // 버튼 셋팅
@@ -185,13 +181,14 @@ public class ActivityMemberModify extends AppCompatActivity {
         InputMethodManager immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         */
+        setUserInfo(id);
     }
 
     private int updateInfomation() {
 
         int check = 0;
 
-        MemberVO memberVO = setMemberVO();
+        MemberVO memberVO = getUserInfo();
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
         check = memberManager.update(MemberShareWord.TARGET_SERVER, memberVO);
@@ -199,7 +196,7 @@ public class ActivityMemberModify extends AppCompatActivity {
         return check;
     }
 
-    private MemberVO setMemberVO(){
+    private MemberVO getUserInfo(){
 
         String id = etID.getText().toString().trim();
         String pwd = etPWD.getText().toString().trim();
@@ -223,6 +220,7 @@ public class ActivityMemberModify extends AppCompatActivity {
     }
 
     private void setCertDialog() {
+        recvCodeFromServer();
         certDialog = new ActivityMemberCertDialog(ActivityMemberModify.this);
         certDialog.setCancelable(false);
         certDialog.setOnShowListener((new DialogInterface.OnShowListener() {
@@ -247,19 +245,16 @@ public class ActivityMemberModify extends AppCompatActivity {
         });
     }
 
-
     // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
     private String recvCodeFromServer() {
-        String requestCode = "";
-
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        requestCode = memberManager.requestCode();
+        settingCode = memberManager.requestCode();
 
-        return requestCode;
+        return settingCode;
     }
 
-    private void setInformation(String id) {
+    private void setUserInfo(String id) {
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
         MemberVO memberVO = new MemberVO();
@@ -271,6 +266,7 @@ public class ActivityMemberModify extends AppCompatActivity {
 
         if(resultList.size() == 1) {
             memberVO = resultList.get(0);
+            etID.setText(id);
             etName.setText(memberVO.getMname());
             etBirth.setText(memberVO.getMbirth());
             etEMail.setText(memberVO.getMemail());
@@ -286,6 +282,31 @@ public class ActivityMemberModify extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    // 아이디, 비번, 자동 로그인 여부 저장
+    private void saveData() {
+
+        MemberManager memberManager = new MemberManager(getApplicationContext());
+
+        MemberVO memberVO = new MemberVO();
+        memberVO.setMid(id);
+
+        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+
+        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+
+        if(resultList.size() == 1) {
+            memberVO = resultList.get(0);
+            if(memberVO.getMsns() == null) {
+                Log.v("수정","비번");
+                SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("MemberPWD",etPWD.getText().toString().trim());
+                editor.commit();
+            }
+        }
+
     }
 
     /*

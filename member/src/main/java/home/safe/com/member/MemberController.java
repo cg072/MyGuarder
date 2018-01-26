@@ -7,6 +7,7 @@ import com.safe.home.pgchanger.IProGuardianController;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by hotki on 2017-12-26.
@@ -58,6 +59,21 @@ public class MemberController implements IProGuardianController {
     @Override
     public List<ContentValues> searchServer(ContentValues contentValues) {
         return proGuardianServerHelper.search(contentValues);
+    }
+
+    // 랜덤 코드 생성
+    public ContentValues requestCode() {
+
+        String randomStr = "";
+        Random rnd = new Random();
+        for (int i = 0; i < 4; i++) {
+            randomStr += String.valueOf(rnd.nextInt(10));
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("code", randomStr);
+
+        return contentValues;
     }
 
     @Override

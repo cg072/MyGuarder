@@ -102,7 +102,10 @@ public class MemberManager {
 
     public ArrayList<MemberVO> select(String target, String type, MemberVO data) {
         List<ContentValues> resultList = null;
-        ContentValues contentValues = data.convertDataToContentValues();
+        ContentValues contentValues = new ContentValues();
+        if( data != null) {
+            contentValues = data.convertDataToContentValues();
+        }
         contentValues.put(MemberShareWord.SELECT_TYPE, type);
 
         switch (target) {
@@ -127,10 +130,9 @@ public class MemberManager {
     public String requestCode() {
         String requestCode = "";
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("code","request");
+        ContentValues contentValues = controller.requestCode();
 
-        //requestCode = controller.
+        requestCode = contentValues.getAsString("code");
 
         return requestCode;
     }

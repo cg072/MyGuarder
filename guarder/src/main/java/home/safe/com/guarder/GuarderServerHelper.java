@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
@@ -19,11 +20,15 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
     final static String TAG = "ServerHelpler";
 
     SQLiteDatabase sqLiteDB;
-    final static private String TABLE_NAME = "testServer";
+    final static private String TABLE_NAME = "testServerGuarder";
 
-    final static private String GUARDER_COL[] = {"gseq", "gmid", "gmcid", "gstate", "gregday"};
+    final static private String GUARDER_COL_ALL[] = {"gseq", "gmid", "gmcid", "gregday", "gmcname", "gmcphone",  "gstate"};
+    final static private String GUARDER_COL_TEXT[] = { "gmid", "gmcid", "gregday", "gmcname", "gmcphone"};
+    final static private String GUARDER_COL_INTEGER[] = {"gseq", "gstate"};
 
-    String data[] = new String[5];
+
+    String stringData[] = new String[GUARDER_COL_TEXT.length];
+    int intData[] = new int[GUARDER_COL_INTEGER.length];
 
     public GuarderServerHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, int table) {
         super(context, name, factory, version, table);
@@ -31,17 +36,26 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
 
     @Override
     public int insert(ContentValues contentValues) {
-
+        Log.v("서버","인서트");
         sqLiteDB = getWritableDatabase();
 
         // DB에 입력한 값으로 행 추가
         int check = (int)sqLiteDB.insert(TABLE_NAME, null, contentValues);
 
+        Log.v("아이디", contentValues.getAsString(GUARDER_COL_ALL[1]));
+
+        if(check == 0 ) {
+            Log.v("테스트", "삽입실패");
+        } else {
+            Log.v("테스트", ""+check);
+        }
+        Log.v("서버", "인서트" + check);
         return check;
     }
 
     @Override
     public List<ContentValues> search(ContentValues contentValues) {
+        Log.v("서버","3");
         sqLiteDB = getWritableDatabase();
 
         List<ContentValues> list = new ArrayList<>();
@@ -56,15 +70,19 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
             case GuarderShareWord.TYPE_SELECT_CON:
                 sqlSearch = sqlSearch +  " WHERE ";
 
-                setString(contentValues);
+                setData(contentValues);
 
-                for(int i = 1 ; i < GUARDER_COL.length ; i ++) {
-                    if(data[i] != null) {
-                        sqlSearch = sqlSearch + GUARDER_COL[i] + " = '" + data[i] + "' ";
+                int check = 0;
 
-                        if(i != GUARDER_COL.length - 1) {
-                            for (int j = i + 1; j < GUARDER_COL.length; j++) {
-                                if (data[j] != null) {
+                for(int i = 0 ; i < GUARDER_COL_TEXT.length ; i ++) {
+                    if(stringData[i] != null) {
+                        sqlSearch = sqlSearch + GUARDER_COL_TEXT[i] + " = '" + stringData[i] + "' ";
+
+                        check++;
+
+                        if(i != GUARDER_COL_TEXT.length - 1) {
+                            for (int j = i + 1; j < GUARDER_COL_TEXT.length; j++) {
+                                if (stringData[j] != null) {
                                     sqlSearch += " and ";
                                     break;
                                 }
@@ -72,17 +90,27 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
                         }
                     }
                 }
+                if(check > 1 && intData[1] != -1) {
+                    sqlSearch = sqlSearch + " and " + GUARDER_COL_INTEGER[1] + " = " + intData[1] + " ";
+                }
 
                 break;
         }
+
+        Log.v("쿼리", sqlSearch);
 
         Cursor cursor = sqLiteDB.rawQuery(sqlSearch, null);
         while (cursor.moveToNext()) {
             cv = new ContentValues();
 
-            for(int i = 0 ; i < GUARDER_COL.length ; i++){
-                cv.put(GUARDER_COL[i], cursor.getInt(i));
-            }
+            cv.put(GUARDER_COL_ALL[0], cursor.getInt(0));
+            cv.put(GUARDER_COL_ALL[1], cursor.getString(1));
+            cv.put(GUARDER_COL_ALL[2], cursor.getString(2));
+            cv.put(GUARDER_COL_ALL[3], cursor.getString(3));
+            cv.put(GUARDER_COL_ALL[4], cursor.getString(4));
+            cv.put(GUARDER_COL_ALL[5], cursor.getString(5));
+            cv.put(GUARDER_COL_ALL[6], cursor.getInt(6));
+
             list.add(cv);
         }
 
@@ -138,20 +166,29 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
         this.sqLiteDB = db;
 
         String SQL_CREATE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "( " +
-                GUARDER_COL[0] +" INTEGER PRIMARY KEY AUTOINCREMENT," +
-                GUARDER_COL[1] + " TEXT," +
-                GUARDER_COL[2] + " TEXT," +
-                GUARDER_COL[3] + " INTEGER, " +
-                GUARDER_COL[4] + " TEXT);";
+                GUARDER_COL_ALL[0] +" INTEGER PRIMARY KEY AUTOINCREMENT," +
+                GUARDER_COL_ALL[1] + " TEXT," +
+                GUARDER_COL_ALL[2] + " TEXT," +
+                GUARDER_COL_ALL[3] + " TEXT," +
+                GUARDER_COL_ALL[4] + " TEXT," +
+                GUARDER_COL_ALL[5] + " TEXT," +
+                GUARDER_COL_ALL[6] + " INTEGER); ";
+
 
         sqLiteDB.execSQL(SQL_CREATE);
     }
 
-    private void setString(ContentValues contentValues) {
-        for(int i = 0 ; i < GUARDER_COL.length ; i++) {
-            data[i] = null;
-            if(contentValues.getAsString(GUARDER_COL[i]) != null) {
-                data[i] = contentValues.getAsString(GUARDER_COL[i]);
+    private void setData(ContentValues contentValues) {
+        for(int i = 0 ; i < GUARDER_COL_TEXT.length ; i++) {
+            stringData[i] = null;
+            if(contentValues.getAsString(GUARDER_COL_TEXT[i]) != null) {
+                stringData[i] = contentValues.getAsString(GUARDER_COL_TEXT[i]);
+            }
+        }
+        for(int i = 0 ; i < GUARDER_COL_INTEGER.length ; i++) {
+            intData[i] = -1;
+            if(contentValues.getAsInteger(GUARDER_COL_INTEGER[i]) != -1) {
+                intData[i] = contentValues.getAsInteger(GUARDER_COL_INTEGER[i]);
             }
         }
     }

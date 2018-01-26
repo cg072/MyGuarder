@@ -14,8 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class FragmentGuarders extends Fragment implements ListViewAdapterGuarders.GuardersListBtnClickListener {
@@ -23,34 +23,28 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     // 지킴이로 설정되어있다면 use = 1
     // 지킴이로 설정되어있지 않다면 use = 0
 
+    final static String TAG = "GURDERS_LIST";
+
     private ListViewAdapterGuarders lvAdapterGuarders;
     private ListView lvGuarders;
     private ArrayList<GuarderVO> guarderList = new ArrayList<GuarderVO>();
-    String nowGuarderName = "";
-    String nowGuarderPhone = "";
     GuarderManager guarderManager;
     TextView tvGuarderName;
     TextView tvGuarderPhone;
-    int getPostion;
-    GuarderVO dialogSaveGuarderVO;
-    GuarderVO dialogGuarderVO;
+    int nowPosition = -1;
+
+    GuarderVO selectedGuarderVO = new GuarderVO();
+
     final static String DIALOG_TEXT[] = {"지킴이에서 해제하시겠습니까?", "지킴이로 등록하시겠습니까?"} ;
-    int preCheck = 0;
-    int postCheck = 0;
-    final static int TYPE_INSERT = 1;
-    final static int TYPE_DELETE = 2;
-    final static int TYPE_UPDATE = 3;
-    final static int TYPE_SELECT_ALL = 4;
-    final static int TYPE_SELECT_PART = 5;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.v("크레이트뷰","왔냐");
-
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_guarders, container, false);
+
+        guarderManager = new GuarderManager(rootView.getContext());
 
         tvGuarderName = rootView.findViewById(R.id.tvGuarderName);
         tvGuarderPhone = rootView.findViewById(R.id.tvGuarderPhone);
@@ -80,29 +74,14 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     @Override
     public void onGuardersListBtnClick(int position, int count) {
 
-        ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
-
-        GuarderVO guarderVO = new GuarderVO(1);
-        resultList = guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_CON, guarderVO);      // 현재 모든 지킴이들을 "해제" 시키기위한 셋팅
-
-        GuarderVO saveGuarderVO = null;
-
-        for(GuarderVO gv: resultList) {
-            saveGuarderVO = gv;
-            saveGuarderVO.setGstate(0);
-        }                                                                   // 등록된 지킴이의 정보에서 상태값을 "해제"로 저장
+        GuarderVO saveGuarderVO = new GuarderVO();
 
         AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());  // 다이얼로그 생성
 
-        guarderVO = new GuarderVO(guarderList.get(position).getGmcname(), guarderList.get(position).getGmcphone());   // 클릭된 지킴이의 값을 저장
-        dialogGuarderVO = guarderVO;
-        dialogSaveGuarderVO = saveGuarderVO;                              // 먼저 등록된 지킴이의 정보값을 해제상태로 둔채 저장
-        getPostion = position;                                             // 현재 클릭된 곳의 위치값을 저장 (전역변수로)
-
-        if(guarderList.get(getPostion).getGstate() == 1) {                // 해당 포지션의 지킴이가 등록이 된 상태라면
-            setDialog(0,regAlert);                                   //  확인 버튼 클릭시 해제시킨다.
+        if(guarderList.get(position).getGstate() == 1) {                // 해당 포지션의 지킴이가 등록이 된 상태라면
+            setDialog(0, position, regAlert);                                   //  확인 버튼 클릭시 해제시킨다.
         } else {                                                           // 해당 포지션의 지킴이가 등록이 안된 상태라면
-            setDialog(1,regAlert);                                   //  확인 버튼 클릭시 등록시킨다.
+            setDialog(1, position, regAlert);                                   //  확인 버튼 클릭시 등록시킨다.
         }
 
         regAlert.create();          // 해당 정보로 다이얼로그 생성
@@ -129,31 +108,6 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         }
     }
 
-/*    *//*
-    *  date     : 2017.12.15
-    *  author   : Kim Jong-ha
-    *  title    : addGuarder 메소드 생성
-    *  comment  : 외부로부터 GuarderVO를 받아
-    *            1. DB에 추가
-    *            2. 리스트에 추가
-    * *//*
-    public void addGuarderList(ArrayList<GuarderVO> list){
-        if(list != null) {
-            for(GuarderVO guarderVO : list) {
-
-                int check = 0;
-
-                check = guarderManager.insert(GuarderShareWord.TARGET_DB,guarderVO);                                           // guarderManager로 전송
-
-                if (check != 0) {                                                                    // 결과값이 성공적이라면 ( 0 이 아니라면)
-                    guarderList.add(guarderVO);                                                     // 지킴이 리스트에 추가
-                    Collections.sort(guarderList, new sortOrderList());                                  // 지킴이 리스트 이름순 정렬
-                    lvAdapterGuarders.notifyDataSetChanged();                                      // 어댑터 갱신
-                }
-            }
-        }
-    }*/
-
     /*
     *  date     : 2017.01.03
     *  author   : Kim Jong-ha
@@ -162,14 +116,15 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *             현재 지킴이 상태를 나타내는 메소드 사용(setNowGuarder)
     * */
     private ArrayList<GuarderVO> loadGuarderListFromDB() {                                                // DB로 부터 초기 목록화면을 가져온다.
-        ArrayList<GuarderVO> resultList = guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_ALL, new GuarderVO());    // DB selectAll을 위한 매니저로 전송
-        for (GuarderVO gv : resultList) {                                                           // 리스트중 현재 지킴이 상태인 회원을 뽑는다.
-            if(gv.getGstate() == 1) {
-                nowGuarderName = gv.getGmcname();
-                nowGuarderPhone = gv.getGmcphone();
-                setNowGuarder(nowGuarderName, nowGuarderPhone);     // Context 및 텍스트뷰에 현재 지킴이로 등록
+        ArrayList<GuarderVO> resultList = guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_ALL, null);    // DB selectAll을 위한 매니저로 전송
+
+        for (int i = 0 ; i < resultList.size() ; i++) {                                                           // 리스트중 현재 지킴이 상태인 회원을 뽑는다.
+            if(resultList.get(i).getGstate() == 1) {
+                setNowGuarder(resultList.get(i).getGmcname(), resultList.get(i).getGmcphone());     // Context 및 텍스트뷰에 현재 지킴이로 등록
+                nowPosition = i;
             }
         }
+
         return resultList;
     }
 
@@ -185,7 +140,12 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *  comment  : 외부로 지킴이 리스트 전송( FragmentSearch에서 중복 제거를 위해 사용중)
     * */
     public ArrayList<GuarderVO> getGuarderList() {
-        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", new GuarderVO()));  // 지킴이 목록 업데이트
+
+        if(guarderManager != null) {
+            changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB, GuarderManager.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
+        } else {
+            Log.v("매니저값", "널");
+        }
         return guarderList;
     }
 
@@ -195,7 +155,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *  title    : setNowGuarder 메소드 생성
     *  comment  : // 상단의 텍스트뷰에 현재 지킴이 정보 표시
     * */
-    private void setNowGuarder(String name, String phone) {
+    private void setNowGuarder(String name , String phone) {
         tvGuarderName.setText(name);
         tvGuarderPhone.setText(phone);
     }
@@ -241,11 +201,20 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *             2. 해당 포지션의 지킴이의 상태를 update
     *             3. DB로 부터 갱신이 완료된 지킴이리스트를 Load
     * */
-    private void setDialog(int check, AlertDialog.Builder regAlert) {
+    private void setDialog(int check, final int position, AlertDialog.Builder regAlert) {
 
         regAlert.setTitle("지킴이 등록");
-        regAlert.setMessage("이름: " + guarderList.get(getPostion).getGmcname().trim() + "\n" +
-                "전화번호: " + guarderList.get(getPostion).getGmcphone() + "\n" + "\n" + DIALOG_TEXT[check]);
+        regAlert.setMessage("이름: " + guarderList.get(position).getGmcname().trim() + "\n" +
+                "전화번호: " + guarderList.get(position).getGmcphone() + "\n" + "\n" + DIALOG_TEXT[check]);
+
+        final GuarderVO guarderVO;
+
+        if(nowPosition == -1) {
+            guarderVO = guarderList.get(position);
+        } else {
+            guarderVO = guarderList.get(nowPosition);
+        }
+
 
         switch (check) {
             case 0 :
@@ -253,41 +222,44 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(dialogSaveGuarderVO != null) {
-                            preCheck = guarderManager.update(GuarderShareWord.TARGET_DB,dialogSaveGuarderVO);            // 모든 지킴이 해제
-                        }
 
-                        nowGuarderName = "";
-                        nowGuarderPhone = "";
-                        setNowGuarder(nowGuarderName, nowGuarderPhone);                        // 현재 지킴이 정보 삭제
+                        guarderVO.setGstate(0);
 
-                        dialogGuarderVO.setGstate(0);
-                        postCheck = guarderManager.update(GuarderShareWord.TARGET_DB,dialogGuarderVO);                   // 해당 포지션 업데이트
+                        int check = guarderManager.update(GuarderShareWord.TARGET_DB, guarderVO);
 
-                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", null));  // 지킴이 목록 업데이트
+                        setNowGuarder("", "");
+
                         lvAdapterGuarders.notifyDataSetChanged();
-        }
-    });
+
+                        nowPosition = -1;
+
+                        Toast.makeText(getContext(), "현재 등록된 지킴이가 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
             case 1 :
                 // 지킴이 등록
                 regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(dialogSaveGuarderVO != null) {
-                            preCheck = guarderManager.update(GuarderShareWord.TARGET_DB, dialogSaveGuarderVO);          // 모든 지킴이 해제
-                        }
 
-                        nowGuarderName = dialogGuarderVO.getGmcname();
-                        nowGuarderPhone = dialogGuarderVO.getGmcphone();
-                        setNowGuarder(nowGuarderName, nowGuarderPhone);                      // 현재 지킴이 정보 등록
+                        guarderVO.setGstate(0);
 
-                        dialogGuarderVO.setGstate(1);
-                        postCheck = guarderManager.update(GuarderShareWord.TARGET_DB,dialogGuarderVO);                 // 해당 포지션 업데이트
+                        int check = guarderManager.update(GuarderShareWord.TARGET_DB, guarderVO);          // 모든 지킴이 해제
 
-                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", dialogGuarderVO));  // 지킴이 목록 업데이트
+                        GuarderVO selectedGuarderVO = guarderList.get(position);
+                        selectedGuarderVO.setGstate(1);
+
+                        check = guarderManager.update(GuarderShareWord.TARGET_DB, selectedGuarderVO);
+
+                        setNowGuarder(selectedGuarderVO.getGmcname(), selectedGuarderVO.getGmcphone());                      // 현재 지킴이 정보 등록
+
+                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,GuarderManager.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
                         lvAdapterGuarders.notifyDataSetChanged();
-                        Toast.makeText(getContext(), nowGuarderName + " " + nowGuarderPhone, Toast.LENGTH_SHORT).show();
+                        nowPosition = position;
+
+                        Toast.makeText(getContext(), selectedGuarderVO.getGmcname() + " " + selectedGuarderVO.getGmcphone(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;

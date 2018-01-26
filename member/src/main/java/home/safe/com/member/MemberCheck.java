@@ -50,12 +50,12 @@ public class MemberCheck {
                 if(hexLong >= toHex('0') && hexLong <= toHex('9')) { // 숫자
                     checkNum += 1;
                 } else if(hexLong >= toHex('a') && hexLong <= toHex('z') || // 소문자 및
-                           hexLong >= toHex('A') && hexLong <= toHex('Z')) { // 대문자
+                        hexLong >= toHex('A') && hexLong <= toHex('Z')) { // 대문자
                     checkChar += 1;
                 }
             }
             if((checkNum > 0 && checkChar > 0) &&           // 혼합 여부 체크
-               (checkNum + checkChar) == pwd.length()) {
+                    (checkNum + checkChar) == pwd.length()) {
                 if(pwd.equals(pwdCheck)) {
                     check = true;
                 } else {
@@ -243,7 +243,7 @@ public class MemberCheck {
 
         resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
 
-        Log.v("인서트결과", "ㅇ" + resultList.size());
+        Log.v("인서트 검색 결과", "응" + resultList.size());
 
         return resultList.size();
     }
@@ -279,25 +279,44 @@ public class MemberCheck {
 
         int check = 0 ;
 
-        // memberCheck 안의 checkExistence 메소드를 사용하여 서버의 DB에 아이디가 있는지 확인한다.
-        Log.v("인서트전", "ㅇㅇ");
-        //Log.v("인서트전", memberVO.getMpwd());
-        switch (checkExistence(memberVO)) {
-            case 0 :    // 아이디 없음
-                check = memberManager.insert(MemberShareWord.TARGET_SERVER, memberVO);
-                if(check != 0 ) {
-                    check = 1;
-                }
-                break;
-            case 1 :    // 아이디 1개 있음
-                check = 1;
-                break;
-            default:    // 아이디 2개 이상 존재
+        if(memberVO.getMphone() == null) {
+
         }
 
-        Log.v("인서트결과", "응" + check);
+        // memberCheck 안의 checkExistence 메소드를 사용하여 서버의 DB에 아이디가 있는지 확인한다.
+        MemberVO sendMemberVO = new MemberVO();
+        sendMemberVO.setMid(memberVO.getMid());
+        sendMemberVO.setMsns(memberVO.getMsns());
+        sendMemberVO.setMsnsid(memberVO.getMsnsid());
+
+        check = checkExistence(sendMemberVO);
+
+        if(check == 0) {
+            Log.v("인서트전", "응" + check);
+            int check2 = memberManager.insert(MemberShareWord.TARGET_SERVER, changeGenderChar(memberVO));
+            if (check2 == 0) {
+                Log.v("가입 실패", "시발");
+            } else {
+                Log.v("가입 성공", "시발");
+            }
+        }
 
         return check;
+    }
+
+    private MemberVO changeGenderChar(MemberVO memberVO) {
+        switch (memberVO.getMgender()) {
+            case "M" : memberVO.setMgender("m");
+            break;
+            case "F" : memberVO.setMgender("f");
+                break;
+            case "W" : memberVO.setMgender("f");
+                break;
+            case "U" : memberVO.setMgender("u");
+                break;
+        }
+
+        return memberVO;
     }
 
 }

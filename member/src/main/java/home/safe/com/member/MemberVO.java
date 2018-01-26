@@ -20,7 +20,7 @@ public class MemberVO extends ProGuardianVO implements Serializable {
     private String mcertday;
     private String mbirth;
     private String memail;
-    private String mgender;
+    private String mgender = "u";
     private String msns;
     private String msnsid;
     private String mregday;  // 12개의 변수

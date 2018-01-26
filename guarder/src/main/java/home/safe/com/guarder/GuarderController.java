@@ -1,6 +1,7 @@
 package home.safe.com.guarder;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import com.safe.home.pgchanger.IProGuardianController;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
@@ -60,6 +61,7 @@ public class GuarderController implements IProGuardianController {
 
     @Override
     public List<ContentValues> searchServer(ContentValues contentValues) {
+        Log.v("서버","2");
         return proGuardianServerHelper.search(contentValues);
     }
 
@@ -70,7 +72,7 @@ public class GuarderController implements IProGuardianController {
     }
 
     // 테스트
-    public void setDBHelper(ProGuardianDBHelper proGuardianDBHelper, ProGuardianDBHelper proGuardianServerHelper) {
+    public void setHelper(ProGuardianDBHelper proGuardianDBHelper, ProGuardianDBHelper proGuardianServerHelper) {
         this.proGuardianDBHelper = proGuardianDBHelper;
 
         this.proGuardianServerHelper = proGuardianServerHelper;

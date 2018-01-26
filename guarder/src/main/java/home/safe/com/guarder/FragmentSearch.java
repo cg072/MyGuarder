@@ -1,5 +1,6 @@
 package home.safe.com.guarder;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -37,8 +38,8 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     private ArrayList<GuarderVO> addGuarderList = new ArrayList<GuarderVO>();
     GuarderManager guarderManager;
     GuarderVO addGuarderVO = null;
-    int getpostion;
-    GuarderVO getGuarderVO;
+    int nowPosition;
+    GuarderVO selectedGuarderVO;
 
     @Nullable
     @Override
@@ -67,21 +68,19 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         String name = resultSearchList.get(position).getGmcname();       // 삭제 전, 보낼 내용 저장
         String phone = resultSearchList.get(position).getGmcphone();
 
-        getGuarderVO = new GuarderVO(name, phone, 0);
-
-        getpostion = position;
+        selectedGuarderVO = new GuarderVO(name, phone, 0);
 
         AlertDialog.Builder regAlert = new AlertDialog.Builder(getActivity());  // 다이얼로그 생성
-        setDialog(regAlert);        // 다이얼로그 셋팅
+        setDialog(regAlert, position);        // 다이얼로그 셋팅
         regAlert.create();          // 해당 정보로 다이얼로그 생성
         regAlert.show();            // 해당 정보로 다이얼로그 보여줌
     }
 
-    private void setDialog(AlertDialog.Builder regAlert) {
+    private void setDialog(AlertDialog.Builder regAlert, final int position) {
 
         regAlert.setTitle("지킴이 추가");
-        regAlert.setMessage("이름: " + getGuarderVO.getGmcname() + "\n" +
-                "전화번호: " + getGuarderVO.getGmcphone() + "\n" + "\n" + "해당 정보로 지킴이 목록에 추가하시겠습니까?");
+        regAlert.setMessage("이름: " + selectedGuarderVO.getGmcname() + "\n" +
+                "전화번호: " + selectedGuarderVO.getGmcphone() + "\n" + "\n" + "해당 정보로 지킴이 목록에 추가하시겠습니까?");
 
         // 지킴이 추가
         regAlert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -89,24 +88,34 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 // 서버로 전화번호를 보내서, 승인 받았을 경우 addGuarderVO 에 넣는다.
-                if(sendDataToServerForSearch(getGuarderVO) == 1) {
-                    int returnDB = 0;
+                if(sendDataToServerForSearch(selectedGuarderVO) == 1) {
+
+                    selectedGuarderVO.setGstate(0);
 
                     GuarderManager guarderManager = new GuarderManager(getContext());
-
-                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, getGuarderVO);
+                    int returnDB = 0 ;
+                        returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, selectedGuarderVO);
+                    Log.v("인서트 디비 후", selectedGuarderVO.getGmid());
+                    if (returnDB != 0 ) {
+                        Log.v("인서트 성공","디비"+returnDB);
+                    }
+                    if (returnDB != 0 ) {
+                        returnDB = guarderManager.insert(GuarderShareWord.TARGET_SERVER, selectedGuarderVO);
+                    } else {
+                        Log.v("인서트 성공","서버"+returnDB);
+                    }
 
                     if(returnDB != 0) {
-                        addGuarderList.add(getGuarderVO);                       // 지킴이 목록 관리 리스트에 추가
+                        addGuarderList.add(selectedGuarderVO);                       // 지킴이 목록 관리 리스트에 추가
 
-                        allList.remove(resultSearchList.get(getpostion));      // 전체 관리 리스트에서 삭제
+                        allList.remove(resultSearchList.get(position));      // 전체 관리 리스트에서 삭제
 
-                        resultSearchList.remove(getpostion);                    // 결과 관리 리스트에서 삭제
+                        resultSearchList.remove(position);                    // 결과 관리 리스트에서 삭제
 
                         changefinalSearchList(resultSearchList);                 // 전달 관리 리스트 갱신
                         lvAdapterSearch.notifyDataSetChanged();                  // 어댑터 갱신
 
-                        Toast.makeText(getContext(), getGuarderVO.getGmcname() + " 님을 지킴이 목록에 추가하였습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), selectedGuarderVO.getGmcname() + " 님을 지킴이 목록에 추가하였습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -127,7 +136,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
         ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
 
-        resultList = guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderManager.TYPE_SELECT_CON, getGuarderVO);
+        resultList = guarderManager.select(GuarderShareWord.TARGET_DB, GuarderManager.TYPE_SELECT_CON, selectedGuarderVO);
 
         for(GuarderVO g : resultList) {
             if(g.getGmcname().equals(guarderVO.getGmcname()) && g.getGmcphone().equals(guarderVO.getGmcphone())) {
@@ -234,9 +243,15 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     }
 
     // 외부로부터 받은 전화부, 지킴이목록을 셋팅(이후에 중복제거)
-    public void setList(ArrayList<GuarderVO> searchList, ArrayList<GuarderVO> guarderList) {
-        this.guarderList = guarderList;
-        allList = removeDuplication(searchList, guarderList);
+    public void setList(Activity activity) {
+
+        //GuarderLoadPhoneNumber guarderLoadPhoneNumber = new GuarderLoadPhoneNumber(activity);
+        GuarderLoadPhoneNumber guarderLoadPhoneNumber = new GuarderLoadPhoneNumber(activity);
+
+        allList = guarderLoadPhoneNumber.getPhoneList();
+        if(allList != null) {
+            allList = removeDuplication(guarderLoadPhoneNumber.getPhoneList(), guarderList);
+        }
     }
 
     // 외부로 지킴이목록 전달

@@ -10,6 +10,7 @@ import com.safe.home.pgchanger.PreTestDBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by hotki on 2017-12-26.
@@ -18,7 +19,7 @@ import java.util.List;
 public class MemberServerHelper extends PreTestDBHelper {
 
     SQLiteDatabase sqLiteDB;
-    final static private String TABLE_NAME = "testServer";
+    final static private String TABLE_NAME = "testServerMember";
 
     int mseq;
     String mname;
@@ -182,7 +183,6 @@ public class MemberServerHelper extends PreTestDBHelper {
                 data[i] = contentValues.getAsString(MEMBER_COL[i]);
             }
         }
-
 /*        mseq = contentValues.getAsInteger(MEMBER_COL[0]);
         mname = contentValues.getAsString(MEMBER_COL[1]);
         mphone = contentValues.getAsString(MEMBER_COL[2]);

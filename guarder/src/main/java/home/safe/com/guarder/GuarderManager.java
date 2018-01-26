@@ -18,6 +18,11 @@ import java.util.List;
 
 public class GuarderManager {
 
+    // 테스트
+    GuarderServerHelper serverHelper;
+    SQLiteDatabase server;
+    // 테스트
+
     Context context;
     GuarderDBHelper dbHelper;
     SQLiteDatabase db;
@@ -44,13 +49,20 @@ public class GuarderManager {
 
     public void createController() {
         controller = new GuarderController();
-        controller.setDBHelper(dbHelper);
+        //controller.setDBHelper(dbHelper);
+        controller.setHelper(dbHelper, serverHelper);
     }
 
     public void createDB() {
         dbHelper =
                 new GuarderDBHelper(context, ProGuardianDBHelper.DB_NAME,null,ProGuardianDBHelper.DB_VERSION,GuarderDBHelper.PG_GUARDER);
         db = dbHelper.getWritableDatabase();
+
+        // 테스트
+        serverHelper =
+                new GuarderServerHelper(context, ProGuardianDBHelper.DB_NAME, null, ProGuardianDBHelper.DB_VERSION, GuarderDBHelper.PG_GUARDER);
+        server = serverHelper.getWritableDatabase();
+        // 테스트
     }
 
     public void closeDB()
@@ -61,13 +73,15 @@ public class GuarderManager {
     public int insert(String target, GuarderVO guarderVO) {
         int check = 0;
 
-        ContentValues sendCV = guarderVO.convertDataToContentValuesSendDB();
+        ContentValues sendCV;
 
         switch (target) {
             case GuarderShareWord.TARGET_DB :
+                sendCV = guarderVO.convertDataToContentValuesSendDB();
                 check = controller.insert(sendCV);
                 break;
             case GuarderShareWord.TARGET_SERVER:
+                sendCV = guarderVO.convertDataToContentValuesSendServer();
                 check = controller.insertServer(sendCV);
                 break;
         }
@@ -109,12 +123,47 @@ public class GuarderManager {
 
     public ArrayList<GuarderVO> select(String target, String type, GuarderVO data) {
 
+        Log.v("서버","0");
+        ContentValues contentValues = new ContentValues();
+        if(data != null) {
+            contentValues = data.convertDataToContentValues();
+        }
+        contentValues.put(TYPE, type);
+
+        List<ContentValues> resultList = null;
+
+        ArrayList<GuarderVO> guaderList = new ArrayList<GuarderVO>();
+        GuarderVO guarderVO;
+
+        switch (target) {
+            case GuarderShareWord.TARGET_DB :
+                resultList = controller.search(contentValues);
+                break;
+            case GuarderShareWord.TARGET_SERVER:
+                Log.v("서버","1");
+                resultList = controller.searchServer(contentValues);
+                break;
+        }
+
+        for (ContentValues cv : resultList) {
+            guarderVO = new GuarderVO();
+            guarderVO.convertContentValuesToData(cv);
+            guaderList.add(guarderVO);
+        }
+
+
+        Collections.sort(guaderList, new sortOrder());
+
+        return guaderList;
+    }
+
+    public GuarderVO selectOneItem(String target, String type, GuarderVO data) {
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(TYPE, type);
         if(type.equals(TYPE_SELECT_CON)) {
             contentValues.put("gstate", data.getGstate());
         }
-
 
         List<ContentValues> resultList = null;
 
@@ -127,18 +176,13 @@ public class GuarderManager {
                 break;
         }
 
-        GuarderVO guarderVO;
         ArrayList<GuarderVO> guaderList = new ArrayList<GuarderVO>();
 
-        for (ContentValues cv : resultList) {
-            guarderVO = new GuarderVO();
-            guarderVO.convertContentValuesToData(cv);
-            guaderList.add(guarderVO);
+        if(guaderList.size() == 1) {
+            return guaderList.get(0);
         }
 
-        Collections.sort(guaderList, new sortOrder());
-
-        return guaderList;
+        return null;
     }
 
     /*

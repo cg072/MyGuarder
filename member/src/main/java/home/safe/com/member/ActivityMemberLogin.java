@@ -156,6 +156,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
             }
         });
         // 리스너들 끝
+
+        testLoginFlag = true;
     }
 
     // 일반 회원일 경우, 서버로 아이디와 비번을 보내서, 존재 유무를 체크한다.
@@ -184,12 +186,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
         // 테스트가 끝나면 사라질 코딩
 
         return check;
-    }
-
-    // 네이버 로그인 아이디에서 사용할 MemberVO 셋팅 메소드(로그인 정보를 담는다)
-    public void recieveResultData(MemberVO memberVO){
-
-
     }
 
     // 테스트 로그인 후 ~ (서버디비 완성 후 -> 아래의 두 메소드를 사용(주석처리됨))
@@ -244,7 +240,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
                 break;
         }
 
-
         editor.commit();
     }
 
@@ -252,14 +247,15 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private void loadData() {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
 
+        autoLoginCheck = preferences.getBoolean("MemberAuto", false);
+
         sns = preferences.getString("MemberSNS",null);
         snsid = preferences.getString("MemberSNSID",null);
-        if(sns != null) {
+
+        if(sns == null && snsid == null && autoLoginCheck == true) {
             etID.setText(preferences.getString("MemberID",null));
             etPWD.setText(preferences.getString("MemberPWD",null));
         }
-
-        autoLoginCheck = preferences.getBoolean("MemberAuto", false);
 
         cboxCheck.setChecked(autoLoginCheck);
     }
@@ -267,19 +263,15 @@ public class ActivityMemberLogin extends AppCompatActivity {
     private void checkAutoLogin(){
         // 자동로그인 체크
         if(cboxCheck.isChecked() == true) {
-            Log.v("여기", "체크1");
             // 서버에서 ID, PWD 값이 있을 경우, 존재하면 Main으로
             if(searchNomalLoginID() == 1) {
-                Log.v("여기", "체크2");
                 moveToMain();
-                // ID, PWD 값이 없지만, sns계정일 경우
+            // ID, PWD 값이 없지만, sns계정일 경우
             } else if(sns != null && snsid != null) {
-                Log.v("여기", "체크3");
                 MemberVO sendMemberVO = new MemberVO();
                 sendMemberVO.setMsns(sns);
                 sendMemberVO.setMsnsid(snsid);
                 // 존재하면 Main으로
-                Log.v("여기야?","ㅇㅇ");
                 if(memberCheck.checkExistence(sendMemberVO) == 1) {
                     moveToMain();
                 }
@@ -302,7 +294,6 @@ public class ActivityMemberLogin extends AppCompatActivity {
                     Toast.makeText(this, memberVO.getMname() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
 
                     saveData(SNS);
-                    testLoginFlag = true;
 
                     if (memberCheck.checkFirstLogin(memberVO) == true) {
 

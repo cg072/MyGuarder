@@ -1,5 +1,6 @@
 package home.safe.com.guarder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,11 +40,6 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         return 2;
     }
 
-    // FragmentSearch에 전화부, 지킴이 목록을 셋팅(액티비티에서 작업)
-    public void setSearchListInFmSearch(ArrayList<GuarderVO> searchList, ArrayList<GuarderVO> guarderList) {
-        fragmentSearch.setList(searchList, guarderList);
-    }
-
     // FragmentSearch에서 추가된 지킴이들을 담는 리스트 초기화(액티비티에서 작업)
     public void resetAddGuarderVOInFmSearch(){
         fragmentSearch.resetAddGuarderList();
@@ -69,7 +65,8 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     }
 
     // FragmentGuarder에서 GuarderManager를 셋팅(액티비티에서 작업)
-    public void setGuarderManager(Context context) {
-        fragmentGuarders.setGuarderManager(context);
+    public void setActivity(Activity activity) {
+        fragmentGuarders.setGuarderManager(activity.getApplicationContext());
+        fragmentSearch.setList(activity);
     }
 }
