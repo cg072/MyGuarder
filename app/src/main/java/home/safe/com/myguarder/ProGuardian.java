@@ -1,6 +1,7 @@
 package home.safe.com.myguarder;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
@@ -14,8 +15,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -55,7 +54,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         LocationListener
 {
     //퍼미션
-    public static final int MY_PERMISSIONS_FINE_LOCATION = 99;
+    public static final int MY_PERMISSIONS_CODE = 99;
     public static final int MY_PERMISSION_FINE_SMS_SEND = 100;
     boolean mLocationPermissionGranted = false;
 
@@ -251,7 +250,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
 
     /**
-    * 
+    *
     * @author 경창현
     * @version 1.0.0
     * @text fragment 객체 생성 및 container에 올리기, getMapAsync 콜백 지정
@@ -337,7 +336,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-    * 
+    *
     * @author 경창현
     * @version 1.0.0
     * @text GoogleApiClient 생성
@@ -358,7 +357,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-    * 
+    *
     * @author 경창현
     * @version 1.0.0
     * @text 퍼미션 체크
@@ -366,64 +365,21 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     **/
     public void getPermissions()
     {
-        // 퍼미션 체크
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            // 퍼미션 없음
-            Log.d("permission","ACCESS_FINE_LOCATION");
+        RequstPermissionChecker permissionChecker = new RequstPermissionChecker(this);
+        permissionChecker.lacksPermissions(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.SEND_SMS);
+        permissionChecker.getPermission();
+    }
 
+    @SuppressLint("MissingPermission")
+    public void settingLocation()
+    {
+        mLocationPermissionGranted = true;
 
-            //ActivityCompat.shouldShowRequestPermissionRationale 재요청인지 확인
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
-            {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_FINE_LOCATION);
-            }
-            else{   //처음일 경우 퍼미션 요청
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_FINE_LOCATION);
-            }
+        //현재위치 정보 세팅
+        mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
-
-        }
-        else
-        {
-            //퍼미션 있음
-            Log.d("getPermissions","out!!!");
-            mLocationPermissionGranted = true;
-
-            //현재위치 정보 세팅
-            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-            updateLocationUI();
-        }
-
-        // SMS 퍼미션 체크
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            // 퍼미션 없음
-            Log.d("permission","SEND_SMS");
-
-
-            //ActivityCompat.shouldShowRequestPermissionRationale 재요청인지 확인
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS))
-            {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS},
-                        MY_PERMISSION_FINE_SMS_SEND);
-            }
-            else{   //처음일 경우 퍼미션 요청
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS},
-                        MY_PERMISSION_FINE_SMS_SEND);
-            }
-
-        }
-        else
-        {
-            //퍼미션 있음
-        }
+        updateLocationUI();
     }
 
 /**
@@ -438,40 +394,20 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         mLocationPermissionGranted = false;
 
-        switch (requestCode)
+        if(requestCode == MY_PERMISSIONS_CODE)
         {
-            case MY_PERMISSIONS_FINE_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    mLocationPermissionGranted = true;
-                    Log.d("permission","ACCESS_FINE_LOCATION - permission was granted");
+            //로케이션 권한 수락시 해줘야댐
+            mLocationPermissionGranted = true;
 
-                } else {
-                    // permission denied
+            //requestCode를 if로 바꾸기
+            for(int i = 0; i < grantResults.length; i++ ) {
+                if (grantResults.length > 0 && grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    //권한 거부한 퍼미션 화면에 필요하다고 토스트 띄우기
+                    Toast.makeText(this,permissions[i]+"가 꼭 필요합니다.",Toast.LENGTH_LONG).show();
                 }
-                break;
             }
-            case MY_PERMISSION_FINE_SMS_SEND:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    Log.d("permission","SEND_SMS - permission was granted");
-                } else {
-                    // permission denied
-                }
-                break;
-            default:
-                break;
         }
-
         //http://blog.dramancompany.com/2015/11/%EB%A6%AC%EB%A9%A4%EB%B2%84%EC%9D%98-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-6-0-m%EB%B2%84%EC%A0%84-%EB%8C%80%EC%9D%91%EA%B8%B0/
-
-        //requestCode를 if로 바꾸기
-        for(int i = 0; i < grantResults.length; i++ ) {
-            if (grantResults.length > 0 && grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                //권한 거부한 퍼미션 화면에 필요하다고 토스트 띄우기
-                Toast.makeText(this,permissions[i]+"가 꼭 필요합니다.",Toast.LENGTH_LONG).show();
-            }
-        }
 
         updateLocationUI();
     }

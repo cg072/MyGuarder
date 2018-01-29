@@ -1,6 +1,5 @@
 package home.safe.com.myguarder;
 
-import android.*;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -60,9 +59,12 @@ public class RequstPermissionChecker {
 
             // 퍼미션 요청
             ActivityCompat.requestPermissions(activity, permissionList, MY_PERMISSIONS_CODE);
+
         } else {
             //퍼미션 있음
             Log.d("RequstPermissionChecker","getPermission - 퍼미션 있음");
+            ((ProGuardian)activity).settingLocation();
+
         }
     }
 
