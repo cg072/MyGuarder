@@ -20,7 +20,6 @@ public class RequstPermissionChecker {
 
     //퍼미션
     public static final int MY_PERMISSIONS_CODE = 99;
-    public static final int MY_PERMISSION_FINE_SMS_SEND = 100;
 
     public RequstPermissionChecker(Activity activity)
     {
@@ -52,10 +51,6 @@ public class RequstPermissionChecker {
             String[] permissionList = permissionArr.toArray(new String[permissionArr.size()]);
 
             Log.d("RequstPermissionChecker","getPermission - 퍼미션 없음");
-//            if(ActivityCompat.shouldShowRequestPermissionRationale(activity, android.Manifest.permission.ACCESS_FINE_LOCATION))
-//            {
-//                Log.d("RequstPermissionChecker","shouldShowRequestPermissionRationale");
-//            }
 
             // 퍼미션 요청
             ActivityCompat.requestPermissions(activity, permissionList, MY_PERMISSIONS_CODE);
@@ -63,6 +58,7 @@ public class RequstPermissionChecker {
         } else {
             //퍼미션 있음
             Log.d("RequstPermissionChecker","getPermission - 퍼미션 있음");
+            ((ProGuardian)activity).mLocationPermissionGranted = true;
             ((ProGuardian)activity).settingLocation();
 
         }

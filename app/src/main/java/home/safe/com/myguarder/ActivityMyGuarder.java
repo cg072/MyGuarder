@@ -12,6 +12,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
+import java.util.ArrayList;
+
 import home.safe.com.guarder.GuarderManager;
 import home.safe.com.guarder.GuarderShareWord;
 import home.safe.com.guarder.GuarderVO;
@@ -23,6 +25,8 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
     Button btnLocation;
 
     GuarderManager guarderManager;
+    //SELECT Guarder
+    ArrayList<GuarderVO> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +119,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         if(view.getId() == btnCivilianList.getId())
         {
             //피지킴이 목록 불러오기
-//            guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderShareWord.TYPE_SELECT_CON,new GuarderVO());
+            list = guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderShareWord.TYPE_SELECT_CON,new GuarderVO());
 
             //피지킴이 팝업
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);

@@ -49,6 +49,7 @@ public class MyGuarderController implements IProGuardianController{
     @Override
     public int insertServer(ContentValues contentValues) {
         Log.d("MyGuarderController", "insertServer");
+//        result = proGuardianDBHelper.serverInsert(contentValues);
         return 0;
     }
 

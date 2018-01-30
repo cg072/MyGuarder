@@ -185,6 +185,15 @@ public class MyGuarderDBHelper extends ProGuardianDBHelper{
         return result;
     }
 
+
+    public int serverInsert(ContentValues contentValues) {
+        Log.d("MyGuarderDBHelper", "serverInsert");
+        Log.d("MyGuarderDBHelper",contentValues.getAsString(myGuarderCol[1]));
+
+        result = (int)db.insert(TABLE_NAME,myGuarderCol[1]+","+myGuarderCol[2]+","+myGuarderCol[3]+","+myGuarderCol[4]+","+myGuarderCol[5],contentValues);
+        return result;
+    }
+
     public String plusColums(String... nameasd)
     {
         String list = "";
