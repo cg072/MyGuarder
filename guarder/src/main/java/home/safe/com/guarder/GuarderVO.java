@@ -25,8 +25,8 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     private int gstate = -1;
     private String gmcname;
     private String gmcphone;
-    private String gmid = "피지킴이";
-    private String gmcid = "지킴이";
+    private String gmid;
+    private String gmcid;
     private String gregday;
 
     public GuarderVO() {}
@@ -151,7 +151,9 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME, gmcname);
         contentValues.put(PHONE, gmcphone);
-        contentValues.put(USE, gstate);
+        if(gstate != -1) {
+            contentValues.put(USE, gstate);
+        }
 
         return contentValues;
     }
@@ -174,11 +176,19 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
         if(gstate != -1) {
             contentValues.put(USE, gstate);
         }
+        if(gmcname != null) {
+            contentValues.put(NAME, gmcname);
+        }
+        if(gmcphone != null) {
+            contentValues.put(PHONE, gmcphone);
+        }
 
         return contentValues;
     }
 
     public void convertContentValuesToDataRecvServer(ContentValues contentValues) {
+        setGmcphone(contentValues.getAsString(PHONE));
+        setGmcname(contentValues.getAsString(NAME));
         setGmid(contentValues.getAsString(MID));
         setGmcid(contentValues.getAsString(MCID));
         setGstate(contentValues.getAsInteger(USE));

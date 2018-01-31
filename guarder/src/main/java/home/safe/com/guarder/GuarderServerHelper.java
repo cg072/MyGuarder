@@ -42,14 +42,17 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
         // DB에 입력한 값으로 행 추가
         int check = (int)sqLiteDB.insert(TABLE_NAME, null, contentValues);
 
-        Log.v("아이디", contentValues.getAsString(GUARDER_COL_ALL[1]));
-
         if(check == 0 ) {
             Log.v("테스트", "삽입실패");
         } else {
             Log.v("테스트", ""+check);
         }
         Log.v("서버", "인서트" + check);
+
+        for(int i = 0 ; i < 5 ; i++) {
+            Log.v("서버" , "인서트 값 :  " + contentValues.getAsString(GUARDER_COL_TEXT[i]));
+        }
+
         return check;
     }
 
@@ -62,12 +65,13 @@ public class GuarderServerHelper extends ProGuardianDBHelper {
         ContentValues cv;
 
         String sqlSearch = "SELECT * FROM " + TABLE_NAME ;
-
+        Log.v("서버 검색", contentValues.get(GuarderShareWord.SELECT_TYPE).toString() + "1");
         switch (contentValues.get(GuarderShareWord.SELECT_TYPE).toString()) {
 
             case GuarderShareWord.TYPE_SELECT_ALL:
                 break;
             case GuarderShareWord.TYPE_SELECT_CON:
+                Log.v("서버 검색", contentValues.get(GuarderShareWord.SELECT_TYPE).toString());
                 sqlSearch = sqlSearch +  " WHERE ";
 
                 setData(contentValues);

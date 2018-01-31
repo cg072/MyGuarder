@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -45,12 +46,15 @@ public class ActivityGuarder extends AppCompatActivity {
 
         lvGuarders = (ListView) findViewById(R.id.lvGuarders);
 
+        setTest();
+
         fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setActivity(this);
         fragmentAdapter.setGuarderListInFmSearch(fragmentAdapter.getGuarderListInFmGuarder());
         viewPager.setAdapter(fragmentAdapter);
 
         //checkPermission();
+
 
     }
 
@@ -84,6 +88,66 @@ public class ActivityGuarder extends AppCompatActivity {
 
         }
     };
+
+
+    // 테스트
+
+    private void setTest() {
+        GuarderVO guarderVO = new GuarderVO();
+        GuarderManager guarderManager = new GuarderManager(getApplicationContext());
+
+        ArrayList<GuarderVO> resultList = guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderShareWord.TYPE_SELECT_ALL, null);
+
+        Log.v("테스트", "결과 " + resultList.size());
+        if(resultList.size() == 0) {
+            guarderVO.setGmcname("T_NAME_1");
+            guarderVO.setGmcphone("01011112222");
+            guarderVO.setGstate(0);
+            guarderVO.setGmid("T_ID_1");
+
+            guarderManager.insert(GuarderShareWord.TARGET_SERVER, guarderVO);
+            guarderManager.insert(GuarderShareWord.TARGET_DB, guarderVO);
+
+            guarderVO.setGmcname("T_NAME_2");
+            guarderVO.setGmcphone("01022221111");
+            guarderVO.setGstate(0);
+            guarderVO.setGmid("T_ID_2");
+
+            guarderManager.insert(GuarderShareWord.TARGET_SERVER, guarderVO);
+            guarderManager.insert(GuarderShareWord.TARGET_DB, guarderVO);
+
+            guarderVO.setGmcname("T_NAME_3");
+            guarderVO.setGmcphone("01033331111");
+            guarderVO.setGstate(0);
+            guarderVO.setGmid("T_ID_3");
+
+            guarderManager.insert(GuarderShareWord.TARGET_SERVER, guarderVO);
+            guarderManager.insert(GuarderShareWord.TARGET_DB, guarderVO);
+
+            guarderVO.setGmcname("T_NAME_4");
+            guarderVO.setGmcphone("01011113333");
+            guarderVO.setGstate(0);
+            guarderVO.setGmid("T_ID_4");
+
+            guarderManager.insert(GuarderShareWord.TARGET_SERVER, guarderVO);
+            guarderManager.insert(GuarderShareWord.TARGET_DB, guarderVO);
+
+            guarderVO.setGmcname("T_NAME_5");
+            guarderVO.setGmcphone("01033332222");
+            guarderVO.setGstate(0);
+            guarderVO.setGmid("T_ID_5");
+
+            guarderManager.insert(GuarderShareWord.TARGET_SERVER, guarderVO);
+            guarderManager.insert(GuarderShareWord.TARGET_DB, guarderVO);
+        }
+
+
+
+
+
+    }
+
+    // 테스트
 }
 
 

@@ -137,12 +137,12 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *  date     : 2017.01.05
     *  author   : Kim Jong-ha
     *  title    : getGuarderList 메소드 생성
-    *  comment  : 외부로 지킴이 리스트 전송( FragmentSearch에서 중복 제거를 위해 사용중)
+    *  comment  : 외부로 지킴이 리스트 전송( FragmentSearch에서 중복 제거검색를 위해 사용중)
     * */
     public ArrayList<GuarderVO> getGuarderList() {
 
         if(guarderManager != null) {
-            changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB, GuarderManager.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
+            changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB, GuarderShareWord.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
         } else {
             Log.v("매니저값", "널");
         }
@@ -259,7 +259,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
                         setNowGuarder(selectedGuarderVO.getGmcname(), selectedGuarderVO.getGmcphone());                      // 현재 지킴이 정보 등록
 
-                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,GuarderManager.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
+                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
                         lvAdapterGuarders.notifyDataSetChanged();
                         nowPosition = position;
 

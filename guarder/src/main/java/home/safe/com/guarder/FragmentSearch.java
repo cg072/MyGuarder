@@ -94,8 +94,8 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
                     GuarderManager guarderManager = new GuarderManager(getContext());
                     int returnDB = 0 ;
-                        returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, selectedGuarderVO);
-                        returnDB = guarderManager.insert(GuarderShareWord.TARGET_SERVER, selectedGuarderVO);
+                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, selectedGuarderVO);
+                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_SERVER, selectedGuarderVO);
 
                     if(returnDB != 0) {
                         addGuarderList.add(selectedGuarderVO);                       // 지킴이 목록 관리 리스트에 추가
@@ -128,7 +128,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
         ArrayList<GuarderVO> resultList = new ArrayList<GuarderVO>();
 
-        resultList = guarderManager.select(GuarderShareWord.TARGET_DB, GuarderManager.TYPE_SELECT_CON, selectedGuarderVO);
+        //resultList = guarderManager.select(GuarderShareWord.TARGET_DB, GuarderShareWord.TYPE_SELECT_CON, selectedGuarderVO);
 
         for(GuarderVO g : resultList) {
             if(g.getGmcname().equals(guarderVO.getGmcname()) && g.getGmcphone().equals(guarderVO.getGmcphone())) {

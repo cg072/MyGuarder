@@ -28,18 +28,6 @@ public class GuarderManager {
     SQLiteDatabase db;
     GuarderController controller;
 
-    final static String COL_NAME = "gmcname";
-    final static String COL_PHONE = "gmcphone";
-    final static String COL_USE = "gstate";
-    final static String SELECT = "select";
-    final static String UPDATE = "update";
-    final static String INSERT = "insert";
-    final static String DELETE = "delete";
-    final static String QUERY_TYPE = "type";
-    final static String TYPE = "type";
-    final static String TYPE_SELECT_ALL = "all";
-    final static String TYPE_SELECT_CON = "con";
-
     public GuarderManager(Context context) {
         this.context = context;
 
@@ -86,6 +74,8 @@ public class GuarderManager {
                 break;
         }
 
+        Log.v("검색 결과" , "삽입 "+ check);
+
         return check;
     }
 
@@ -128,7 +118,7 @@ public class GuarderManager {
         if(data != null) {
             contentValues = data.convertDataToContentValues();
         }
-        contentValues.put(TYPE, type);
+        contentValues.put(GuarderShareWord.SELECT_TYPE, type);
 
         List<ContentValues> resultList = null;
 
@@ -149,19 +139,22 @@ public class GuarderManager {
             guarderVO = new GuarderVO();
             guarderVO.convertContentValuesToData(cv);
             guaderList.add(guarderVO);
+            Log.v("검색 결과",guarderVO.getGmcname()+ " " + guarderVO.getGmcphone() + " " + guarderVO.getGstate());
         }
 
-
-        Collections.sort(guaderList, new sortOrder());
+        for(GuarderVO g : guaderList) {
+            Log.v("검색 결과2",g.getGmcname()+ " " + g.getGmcphone() + " " + g.getGstate());
+        }
+        //Collections.sort(guaderList, new sortOrder());
 
         return guaderList;
-    }
+}
 
     public GuarderVO selectOneItem(String target, String type, GuarderVO data) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TYPE, type);
-        if(type.equals(TYPE_SELECT_CON)) {
+        contentValues.put(GuarderShareWord.SELECT_TYPE, type);
+        if(type.equals(GuarderShareWord.TYPE_SELECT_CON)) {
             contentValues.put("gstate", data.getGstate());
         }
 
@@ -185,16 +178,16 @@ public class GuarderManager {
         return null;
     }
 
-    /*
-    *  date     : 2017.11.22
-    *  author   : Kim Jong-ha
-    *  title    : sortOrder, NameDescCompareSearch 메소드 생성
-    *  comment  : 이름순 정렬
-    * */
-    private class sortOrder implements Comparator<GuarderVO> {
-        @Override
-        public int compare(GuarderVO arg0, GuarderVO arg1) {
-            return  arg0.getGmcname().compareTo(arg1.getGmcname());
-        }
+/*
+*  date     : 2017.11.22
+*  author   : Kim Jong-ha
+*  title    : sortOrder, NameDescCompareSearch 메소드 생성
+*  comment  : 이름순 정렬
+* */
+private class sortOrder implements Comparator<GuarderVO> {
+    @Override
+    public int compare(GuarderVO arg0, GuarderVO arg1) {
+        return  arg0.getGmcname().compareTo(arg1.getGmcname());
     }
+}
 }
