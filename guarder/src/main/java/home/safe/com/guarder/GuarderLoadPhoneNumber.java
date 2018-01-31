@@ -49,9 +49,9 @@ public class GuarderLoadPhoneNumber extends AppCompatActivity {
 
     private void loadPhoneList() {
 
-        checkPermission();
+        //checkPermission();
 
-        if(checkPermission == true) {
+        //if(checkPermission == true) {
             phoneList = new ArrayList<GuarderVO>();
 
             String[] projection = {
@@ -93,7 +93,7 @@ public class GuarderLoadPhoneNumber extends AppCompatActivity {
             }// end while
 
             c.close();
-        }
+        //}
     }
 
     /*private void loadPhoneList() {
@@ -147,13 +147,13 @@ public class GuarderLoadPhoneNumber extends AppCompatActivity {
         }
     }
 */
-    /*
+/*    *//*
       *  date     : 2017.11.12
       *  author   : Kim Jong-ha
       *  title    : checkPermission 메소드 생성
       *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
       *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
-      * */
+      * *//*
     private void checkPermission()
     {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -169,22 +169,22 @@ public class GuarderLoadPhoneNumber extends AppCompatActivity {
         } else {
             //퍼미션이 있는 경우 - 쭉 하고 싶은 일을 한다.
             checkPermission = true;
-/*            loadPhoneList();
+*//*            loadPhoneList();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     // 당겨서 새로고침
                 }
-            }, 2000);*/
+            }, 2000);*//*
         }
     }
 
-    /*
+    *//*
     *  date     : 2017.11.12
     *  author   : Kim Jong-ha
     *  title    : onRequestPermissionResult 메소드 불러옴
     *  comment  : 권한 사용or거부 요청창을 띄워 사용자가 권한을 동의, 비동의 때의 Perform을 둠
-    * */
+    * *//*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -203,7 +203,7 @@ public class GuarderLoadPhoneNumber extends AppCompatActivity {
                 }
                 return;
         }
-    }
+    }*/
 
     /*
       *  date     : 2017.11.22

@@ -1,6 +1,7 @@
 package home.safe.com.member;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -27,14 +28,14 @@ public class MemberLoadPhoneNumber extends AppCompatActivity{
             getMemberPhone();
         }
     }
-
-    /*
+/*
+    *//*
     *  date     : 2017.11.12
     *  author   : Kim Jong-ha
     *  title    : checkPermission 메소드 생성
     *  comment  : 권한이 부여되었는지, 없다면 권한 재요청인지, 첫요청인지를 판단함
     *             첫요청인지 재요청인지를 판단하는 부분은 당장은 필요한 부분이 아니나, 남겨둠
-    * */
+    * *//*
     private void checkPermission()
     {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -52,12 +53,12 @@ public class MemberLoadPhoneNumber extends AppCompatActivity{
         }
     }
 
-    /*
+    *//*
     *  date     : 2017.11.12
     *  author   : Kim Jong-ha
     *  title    : onRequestPermissionResult 메소드 불러옴
     *  comment  : 권한 사용or거부 요청창을 띄워 사용자가 권한을 동의, 비동의 때의 Perform을 둠
-    * */
+    * *//*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -73,7 +74,7 @@ public class MemberLoadPhoneNumber extends AppCompatActivity{
                 }
                 return;
         }
-    }
+    }*/
 
     /*
     *  date     : 2017.11.12
@@ -81,14 +82,15 @@ public class MemberLoadPhoneNumber extends AppCompatActivity{
     *  title    : getMemnerPhone 메소드 생성
     *  comment  : 권한이 부여가 되어있다면 User의 기기에서 PhoneNumber을 불러옴
     * */
+    @SuppressLint("MissingPermission")
     private void getMemberPhone()
     {
-        checkPermission();
+        //checkPermission();
 
         TelephonyManager telephonyManager = (TelephonyManager) activity.getApplicationContext().getSystemService(activity.getApplicationContext().TELEPHONY_SERVICE);
 
-        if(checkPermission == true) {
-            String phoneNum = telephonyManager.getLine1Number();
+        //if(checkPermission == true) {
+            @SuppressLint("MissingPermission") String phoneNum = telephonyManager.getLine1Number();
 
             TelephonyManager mgr = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -98,7 +100,7 @@ public class MemberLoadPhoneNumber extends AppCompatActivity{
             } catch (Exception e) {
                 Toast.makeText(activity, "전화번호 가져오기 실패", Toast.LENGTH_SHORT).show();
             }
-        }
+        //}
     }
 
     /*
