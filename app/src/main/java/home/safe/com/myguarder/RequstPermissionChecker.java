@@ -42,7 +42,7 @@ public class RequstPermissionChecker {
         return ContextCompat.checkSelfPermission(activity.getApplicationContext(), permission) == PackageManager.PERMISSION_DENIED;
     }
 
-    public void getPermission()
+    public boolean getPermission()
     {
         Log.d("Permission","ACCESS_FINE_LOCATION");
         // 퍼미션 체크
@@ -55,12 +55,13 @@ public class RequstPermissionChecker {
             // 퍼미션 요청
             ActivityCompat.requestPermissions(activity, permissionList, MY_PERMISSIONS_CODE);
 
+            return false;
         } else {
             //퍼미션 있음
             Log.d("RequstPermissionChecker","getPermission - 퍼미션 있음");
             ((ProGuardian)activity).mLocationPermissionGranted = true;
-            ((ProGuardian)activity).settingLocation();
 
+            return true;
         }
     }
 

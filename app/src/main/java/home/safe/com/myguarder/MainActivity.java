@@ -55,12 +55,12 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
 
         saveStateData(true);
 
+
 //        StateChecker stateChecker = new StateChecker(getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE));
 
 
         Intent intent = new Intent(MainActivity.this, ActivityMemberLogin.class);
         startActivityForResult(intent, MAIN_REQUEST_MEMBER_CODE);
-
 
         //errer - Performing stop of activity that is not resumed
         //지연시켜서 해결

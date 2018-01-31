@@ -136,6 +136,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     boolean RequestState;
 
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -363,11 +364,18 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     * @text 퍼미션 체크
     * @since 2017-11-22 오후 4:25
     **/
-    public void getPermissions()
+    public boolean getPermissions()
     {
         RequstPermissionChecker permissionChecker = new RequstPermissionChecker(this);
-        permissionChecker.lacksPermissions(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.SEND_SMS);
-        permissionChecker.getPermission();
+        permissionChecker.lacksPermissions(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.READ_PHONE_STATE
+
+        );
+
+        return permissionChecker.getPermission();
     }
 
     @SuppressLint("MissingPermission")
@@ -482,7 +490,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         Log.d("onConnected", " Connected");
 
         //권한
-        getPermissions();
+        if(getPermissions())
+        {
+            settingLocation();
+        }
 
         //콘넥트후 프레그먼트 생성
         initFragment();

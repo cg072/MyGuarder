@@ -1,7 +1,8 @@
 package home.safe.com.myguarder;
 
-import android.content.ContentValues;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
 
     GuarderManager guarderManager;
     //SELECT Guarder
+    String guarderID;
     ArrayList<GuarderVO> list;
 
     @Override
@@ -42,6 +44,7 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         first = System.currentTimeMillis();
 
         //로그인시 DB생성 및 연결
+        locationManage = new LocationManage(getApplicationContext());
         guarderManager = new GuarderManager(getApplicationContext());
 
 //        btnGuarderLog = (Button)findViewById(R.id.btnGuarderLog);
@@ -73,7 +76,10 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         if(mGoogleApiClient.isConnected())
         {
             Log.d("onResume","isConnected");
-            getPermissions();
+            if(getPermissions())
+            {
+                settingLocation();
+            }
         }
         super.onResume();
         Log.d("onResume","in");
@@ -118,11 +124,23 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
 //        }
         if(view.getId() == btnCivilianList.getId())
         {
+            loadData();
             //피지킴이 목록 불러오기
-            list = guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderShareWord.TYPE_SELECT_CON,new GuarderVO());
+            list = guarderManager.select(GuarderShareWord.TARGET_SERVER, GuarderShareWord.TYPE_SELECT_CON,new GuarderVO(guarderID,1));
+            //지킴이 아이디or 이름 가져와서 목록 불러오기
+            Log.d("CivilianList-q",""+list.size());
+            ArrayList<CharSequence> dateList = new ArrayList<>();
+
+
+            for(GuarderVO fList : list)
+            {
+                Log.d("CivilianList-q",""+fList.getGmcid());
+                dateList.add(fList.getGmcid());
+            }
 
             //피지킴이 팝업
             Intent intent = new Intent(this,ActivityPopupCivilianList.class);
+            intent.putCharSequenceArrayListExtra("CivilianList",dateList);
             startActivityForResult(intent, MYGUARDER_REQUEST_CIVILIAN_LIST_CODE);
 
         }
@@ -262,22 +280,10 @@ public class ActivityMyGuarder extends ProGuardian implements View.OnClickListen
         setResult(MY_CIVILIAN_CODE, intentData);
         finish();
     }
+
+    private void loadData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        guarderID = preferences.getString("MemberID","-");
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//퍼블릭, 하이퍼래져,

@@ -2,7 +2,6 @@ package home.safe.com.myguarder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -30,6 +29,7 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
     Button btnCivilianEnter;
 
     String selectCivilianID;
+    ArrayList<CharSequence> dateList;
 
     private final static String DATA_CIVILIAN_NAME = "civilianName";
 
@@ -40,7 +40,7 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
         setContentView(R.layout.activity_popup_civilian_list);
 
         //피지킴이 목록 추가
-        insertCivilianList();
+        showCivilianList();
 
         adapterCivilianList = new AdapterCivilianList(alData);
 
@@ -53,10 +53,12 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
         btnCivilianEnter.setOnClickListener(this);
     }
 
-    private void insertCivilianList() {
+    private void showCivilianList() {
 
         // DB에서 피지킴이 목록을 가져옴
         //피지킴이iD 는 이름으로 치환하여 가져옴
+        Intent intent = getIntent();
+        dateList = intent.getCharSequenceArrayListExtra("CivilianList");
 
         //ArrayList에 목록을 추가한다.
         alData = new ArrayList<GuarderVO>();

@@ -110,7 +110,10 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         if(mGoogleApiClient.isConnected())
         {
             Log.d("onResume","isConnected");
-            getPermissions();
+            if(getPermissions())
+            {
+                settingLocation();
+            }
         }
         super.onResume();
         Log.d("onResume","in");
