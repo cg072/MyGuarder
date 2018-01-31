@@ -60,12 +60,13 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
         Intent intent = getIntent();
         dateList = intent.getCharSequenceArrayListExtra("CivilianList");
 
-        //ArrayList에 목록을 추가한다.
         alData = new ArrayList<GuarderVO>();
-        alData.add(new GuarderVO("경창현",1));
-        alData.add(new GuarderVO("박준규",1));
-        alData.add(new GuarderVO("김종하",0));
-        alData.add(new GuarderVO("김진복",0));
+
+        for(CharSequence id : dateList)
+        {
+            alData.add(new GuarderVO(id.toString(),1));
+        }
+
     }
 
     @Override
