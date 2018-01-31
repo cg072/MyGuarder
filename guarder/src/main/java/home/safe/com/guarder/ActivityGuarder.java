@@ -1,6 +1,8 @@
 package home.safe.com.guarder;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -20,6 +22,8 @@ public class ActivityGuarder extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    String id;
 
     private boolean checkPermission = false;
 
@@ -48,7 +52,7 @@ public class ActivityGuarder extends AppCompatActivity {
 
         setTest();
 
-        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
+        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), id);
         fragmentAdapter.setActivity(this);
         fragmentAdapter.setGuarderListInFmSearch(fragmentAdapter.getGuarderListInFmGuarder());
         viewPager.setAdapter(fragmentAdapter);
@@ -89,6 +93,12 @@ public class ActivityGuarder extends AppCompatActivity {
         }
     };
 
+    // 아이디, 비번 불러옴
+    private void loadData() {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+
+        id =  preferences.getString("MemberID",null);
+    }
 
     // 테스트
 
@@ -132,10 +142,11 @@ public class ActivityGuarder extends AppCompatActivity {
             guarderManager.insert(GuarderShareWord.TARGET_SERVER, guarderVO);
             guarderManager.insert(GuarderShareWord.TARGET_DB, guarderVO);
 
-            guarderVO.setGmcname("T_NAME_5");
+            guarderVO.setGmcname("root");
             guarderVO.setGmcphone("01033332222");
-            guarderVO.setGstate(0);
-            guarderVO.setGmid("T_ID_5");
+            guarderVO.setGstate(1);
+            guarderVO.setGmcid("root");
+            guarderVO.setGmid("root");
 
             guarderManager.insert(GuarderShareWord.TARGET_SERVER, guarderVO);
             guarderManager.insert(GuarderShareWord.TARGET_DB, guarderVO);

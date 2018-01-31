@@ -257,6 +257,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
             etPWD.setText(preferences.getString("MemberPWD",null));
         }
 
+        Log.v("불러온데이터",preferences.getString("MemberID","없음"));
+
         cboxCheck.setChecked(autoLoginCheck);
     }
 

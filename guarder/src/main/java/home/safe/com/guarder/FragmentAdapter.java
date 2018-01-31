@@ -17,8 +17,13 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     FragmentSearch fragmentSearch = new FragmentSearch();
     FragmentGuarders fragmentGuarders = new FragmentGuarders();
 
-    public FragmentAdapter(FragmentManager fm) {
+    String id;
+
+    public FragmentAdapter(FragmentManager fm, String id) {
         super(fm);
+
+        this.id = id;
+        fragmentSearch.setID(this.id);
     }
 
     @Override

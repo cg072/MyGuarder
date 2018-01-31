@@ -41,6 +41,8 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
     int nowPosition;
     GuarderVO selectedGuarderVO;
 
+    String id;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
                 if(sendDataToServerForSearch(selectedGuarderVO) == 1) {
 
                     selectedGuarderVO.setGstate(0);
+                    selectedGuarderVO.setGmid(id);
 
                     GuarderManager guarderManager = new GuarderManager(getContext());
                     int returnDB = 0 ;
@@ -283,5 +286,9 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
                 resultString = "Error";
         }
         return resultString;
+    }
+
+    public void setID(String id) {
+        this.id =  id;
     }
 }
