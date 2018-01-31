@@ -157,7 +157,11 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     * */
     private void setNowGuarder(String name , String phone) {
         tvGuarderName.setText(name);
-        tvGuarderPhone.setText(addHyphen(phone));
+        if(phone.equals("")) {
+            tvGuarderPhone.setText(phone);
+        }else {
+            tvGuarderPhone.setText(addHyphen(phone));
+        }
     }
 
     /*

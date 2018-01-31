@@ -226,10 +226,10 @@ public class MemberNaverLogin extends Activity {
 
             // 받은 값을 member에 셋팅
             MemberVO naverMemberVO = new MemberVO();
-            naverMemberVO.setMid(f_array[7]);
+            naverMemberVO.setMid(f_array[6]);
             naverMemberVO.setMgender(f_array[4]);   // 성별
-            naverMemberVO.setMname(f_array[6]);     // 이름
-            naverMemberVO.setMemail(f_array[7]);    // 이메일
+            naverMemberVO.setMname(f_array[7]);     // 이름
+            naverMemberVO.setMemail(f_array[6]);    // 이메일
             naverMemberVO.setMbirth(f_array[8]);    // 생일
             naverMemberVO.setMsns(naver);
             naverMemberVO.setMsnsid(separateSNSID(f_array[7]));
@@ -238,7 +238,7 @@ public class MemberNaverLogin extends Activity {
 
             // 로그인이 정상적이라면 f_array[i] != null 이 된다.
             for(int i = 0 ; i < 9 ; i++) {
-                Log.v("로그", f_array[i]);
+                Log.v("로그", f_array[i] + " 순서 : " + i);
                 if(f_array[i] == null) {
                     checkLoadInfo = false;
                     break;

@@ -180,7 +180,6 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
 
     public void convertContentValuesToDataRecvServer(ContentValues contentValues) {
         setGmid(contentValues.getAsString(MID));
-        setGmcname(contentValues.getAsString(NAME));
         setGmcid(contentValues.getAsString(MCID));
         setGstate(contentValues.getAsInteger(USE));
     }

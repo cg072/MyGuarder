@@ -292,7 +292,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
                     memberVO = (MemberVO) data.getSerializableExtra(USER_INFO);
 
                     Toast.makeText(this, memberVO.getMname() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
-
+                    Log.v(memberVO.getMname(), "이름");
                     saveData(SNS);
 
                     if (memberCheck.checkFirstLogin(memberVO) == true) {
