@@ -622,11 +622,25 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
         if(now - first > cycleCivilian )
         {
-            //서버에 위치 전송할 메서드
-            sendLocation();
 
             Log.d("TimeMillis", "now - first");
             first = now;
+
+            //웹과 연동
+            sendLocation();
+            HttpResultListener listener = new HttpResultListener() {
+                @Override
+                public void onPost(String result) {
+                    Log.d("HttpResultListener"," onPost - "+result);
+                }
+            };
+
+            NetworkTask networkTask = new NetworkTask(this, listener);
+            networkTask.strUrl = "http://192.168.219.105:8080/study/";
+//            networkTask.params = "map.do?method=getMapList&lid=kch";
+            networkTask.params ="map.do?method=addMap&llat="+vo.getLlat()+"&llong="+vo.getLlong()+"&ltime="+vo.getLtime()+"&lid="+vo.getLid();
+            networkTask.execute();
+
 
 
             //이동경로 그리기
