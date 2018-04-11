@@ -39,12 +39,63 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
     final static String DIALOG_TEXT[] = {"지킴이에서 해제하시겠습니까?", "지킴이로 등록하시겠습니까?"} ;
 
+    //kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
+    String id;
+    ArrayList<GuarderVO> allList = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+
+                ArrayList<GuarderVO> resultList  = new ArrayList<>();
+
+                Log.d("kch",result.replace("/n",""));
+
+                if(!"401".equals(result.replace("/n",""))) {
+
+                    String[] str = (result.replace("/n", "")).split("&");
+
+                    for (String s : str) {
+                        String[] cul = s.split(":");
+
+                        GuarderVO vo = new GuarderVO();
+                        vo.setGmcid(cul[0]);
+                        vo.setGstate(Integer.parseInt(cul[1]));
+                        vo.setGmcname(cul[2]);
+                        vo.setGmcphone(cul[3]);
+                        resultList.add(vo);
+
+                        Log.d("kch", vo.getGmcid() + " - " + vo.getGstate() + " - " + vo.getGmcname() + " - " + vo.getGmcphone());
+                    }
+                }
+
+
+                for (int i = 0 ; i < resultList.size() ; i++) {                                                           // 리스트중 현재 지킴이 상태인 회원을 뽑는다.
+                    if(resultList.get(i).getGstate() == 1) {
+                        setNowGuarder(resultList.get(i).getGmcname(), resultList.get(i).getGmcphone());     // Context 및 텍스트뷰에 현재 지킴이로 등록
+                        nowPosition = i;
+                    }
+                }
+
+                allList.clear();
+                allList.addAll(resultList);
+
+                changeGurderList(resultList);
+                lvAdapterGuarders.notifyDataSetChanged();
+            }
+        };
+
+
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_guarders, container, false);
+
+        SharedPreferences preferences = rootView.getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        id =  preferences.getString("MemberID",null);
 
         guarderManager = new GuarderManager(rootView.getContext());
 
@@ -56,10 +107,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         lvAdapterGuarders = new ListViewAdapterGuarders(rootView.getContext(), R.layout.listview_item_search, guarderList, this);
         lvGuarders.setAdapter(lvAdapterGuarders);
 
-        if(loadGuarderListFromDB() != null) {
-            changeGurderList(loadGuarderListFromDB());
-            lvAdapterGuarders.notifyDataSetChanged();
-        }
+        loadGuarderListFromDB();
 
         return rootView;
     }
@@ -118,21 +166,22 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     *             현재 지킴이 상태를 나타내는 메소드 사용(setNowGuarder)
     * */
     private ArrayList<GuarderVO> loadGuarderListFromDB() {                                                // DB로 부터 초기 목록화면을 가져온다.
-        ArrayList<GuarderVO> resultList = guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_ALL, null);    // DB selectAll을 위한 매니저로 전송
+        ArrayList<GuarderVO> resultList = allList;    // DB selectAll을 위한 매니저로 전송
 
-        for (int i = 0 ; i < resultList.size() ; i++) {                                                           // 리스트중 현재 지킴이 상태인 회원을 뽑는다.
-            if(resultList.get(i).getGstate() == 1) {
-                setNowGuarder(resultList.get(i).getGmcname(), resultList.get(i).getGmcphone());     // Context 및 텍스트뷰에 현재 지킴이로 등록
-                nowPosition = i;
-            }
-        }
+        networkTask = new NetworkTask(getContext(), listener);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params = NetworkTask.CONTROLLER_GUARDER_DO + NetworkTask.METHOD_GET_GUARDER_LIST + "&gmcid=" +id;
+        networkTask.execute();
+
+
 
         return resultList;
     }
 
+
+
     public void updateGuarderList() {
-        changeGurderList(loadGuarderListFromDB());
-        lvAdapterGuarders.notifyDataSetChanged();
+        loadGuarderListFromDB();
     }
 
     /*
@@ -144,7 +193,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
     public ArrayList<GuarderVO> getGuarderList() {
 
         if(guarderManager != null) {
-            changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB, GuarderShareWord.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
+            changeGurderList(allList);  // 지킴이 목록 업데이트
         } else {
             Log.v("매니저값", "널");
         }
@@ -222,6 +271,7 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
         }
 
 
+        //kch - 지킴이 등록 해제
         switch (check) {
             case 0 :
                 // 지킴이 해제
@@ -231,10 +281,21 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
                         guarderVO.setGstate(0);
 
-                        int check = guarderManager.update(GuarderShareWord.TARGET_DB, guarderVO);
+                        GuarderVO selectedGuarderVO = guarderList.get(position);
 
-                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", null));  // 지킴이 목록 업데이트
+                        //kch -  state 변경할부분
+//                        int check = guarderManager.update(GuarderShareWord.TARGET_DB, guarderVO);
+                        networkTask = new NetworkTask(getContext());
+                        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                        networkTask.params= NetworkTask.CONTROLLER_GUARDER_DO + NetworkTask.METHOD_UPDATE_STATE + "&gmid=" +selectedGuarderVO.getGmcid()+"&gmcid="+id+"&gstate=0";
+                        networkTask.execute();
+
+                        //kch - 목록 업데이트 생각해봐야함
+                        changeGurderList(allList);
+//                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,"all", null));  // 지킴이 목록 업데이트
                         setNowGuarder("", "");
+
+                        Log.d("kch",guarderVO.getGmcid());
 
                         lvAdapterGuarders.notifyDataSetChanged();
 
@@ -252,16 +313,28 @@ public class FragmentGuarders extends Fragment implements ListViewAdapterGuarder
 
                         guarderVO.setGstate(0);
 
-                        int check = guarderManager.update(GuarderShareWord.TARGET_DB, guarderVO);          // 모든 지킴이 해제
+//                        int check = guarderManager.update(GuarderShareWord.TARGET_DB, guarderVO);          // 모든 지킴이 해제
+                        networkTask = new NetworkTask(getContext());
+                        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                        networkTask.params= NetworkTask.CONTROLLER_GUARDER_DO + NetworkTask.METHOD_SET_ALL_STATE + "&gmcid=" +id+"&gstate=0";
+                        networkTask.execute();
 
                         GuarderVO selectedGuarderVO = guarderList.get(position);
                         selectedGuarderVO.setGstate(1);
 
-                        check = guarderManager.update(GuarderShareWord.TARGET_DB, selectedGuarderVO);
+                        networkTask = new NetworkTask(getContext());
+                        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                        networkTask.params= NetworkTask.CONTROLLER_GUARDER_DO + NetworkTask.METHOD_UPDATE_STATE + "&gmid=" +selectedGuarderVO.getGmcid()+"&gmcid="+id+"&gstate=1";
+                        networkTask.execute();
+
+//                        check = guarderManager.update(GuarderShareWord.TARGET_DB, selectedGuarderVO);
+
+                        Log.d("kch",guarderVO.getGmcid());
 
                         setNowGuarder(selectedGuarderVO.getGmcname(), selectedGuarderVO.getGmcphone());                      // 현재 지킴이 정보 등록
 
-                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
+                        changeGurderList(allList);
+//                        changeGurderList(guarderManager.select(GuarderShareWord.TARGET_DB,GuarderShareWord.TYPE_SELECT_ALL, null));  // 지킴이 목록 업데이트
                         lvAdapterGuarders.notifyDataSetChanged();
                         nowPosition = position;
 

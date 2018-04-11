@@ -1,22 +1,14 @@
 package home.safe.com.member;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class ActivityMemberCertPhone extends AppCompatActivity implements View.OnClickListener{
 
@@ -34,6 +26,10 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
 
     private String settingCode;
 
+    //kch
+    HttpResultListener listener;
+    String phoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,10 +44,17 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
         btnCert = (Button) findViewById(R.id.btnCert);
 
         MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this);
-
+        phoneNumber=memberLoadPhoneNumber.getMyPhoneNumber();
         tvPhone.setText(addHyphen(memberLoadPhoneNumber.getMyPhoneNumber()));
 
         btnCert.setOnClickListener(this);
+
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                certDialog.setRecvCode(result.replace("/n",""));
+            }
+        };
     }
 
     @Override
@@ -72,7 +75,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
             certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
-                    if(settingCode.equals(certDialog.getSendCode()))
+                    if(certDialog.getResultCode())
                     {
                         updatePhone();
                         //Toast.makeText(ActivityMemberCertPhone.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
@@ -92,6 +95,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
                     finish();
                 }
             });
+            certDialog.setPhoneNumber(phoneNumber);
             certDialog.show();
         }
     }
@@ -101,7 +105,7 @@ public class ActivityMemberCertPhone extends AppCompatActivity implements View.O
 
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        settingCode = memberManager.requestCode();
+        settingCode = memberManager.requestCode(phoneNumber, listener);
 
 
 

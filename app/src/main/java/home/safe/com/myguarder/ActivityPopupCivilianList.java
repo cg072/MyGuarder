@@ -3,6 +3,7 @@ package home.safe.com.myguarder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -29,7 +30,7 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
     Button btnCivilianEnter;
 
     String selectCivilianID;
-    ArrayList<CharSequence> dateList;
+    ArrayList<GuarderVO> dateList;
 
     private final static String DATA_CIVILIAN_NAME = "civilianName";
 
@@ -58,21 +59,20 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
         // DB에서 피지킴이 목록을 가져옴
         //피지킴이iD 는 이름으로 치환하여 가져옴
         Intent intent = getIntent();
-        dateList = intent.getCharSequenceArrayListExtra("CivilianList");
+        dateList = intent.getParcelableArrayListExtra("CivilianList");
 
         alData = new ArrayList<GuarderVO>();
 
-        for(CharSequence id : dateList)
+        for(GuarderVO vo : dateList)
         {
-            alData.add(new GuarderVO(id.toString(),1));
+            Log.d("showCivilianList",vo.getGmcid());
+            alData.add(new GuarderVO(vo.getGmcname(),vo.getGmcphone(),vo.getGmcid(),vo.getGstate()));
         }
 
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this,alData.get(i).getGmcid(),Toast.LENGTH_SHORT).show();
-
 
         switch (alData.get(i).getGstate())
         {
@@ -90,13 +90,8 @@ public class ActivityPopupCivilianList extends Activity implements AdapterView.O
     @Override
     public void onClick(View view) {
 
-
-        // 피지킴이 아이디로 지도에 위치정보 뿌리기
-        //polylinesRequestLocation을 이용 해야할듯, 그리고 현재 위치정보를 주기마다 뿌려주는것을 설계해야함
-
         if(null != selectCivilianID)
         {
-            Toast.makeText(this,""+selectCivilianID,Toast.LENGTH_SHORT).show();
             returnCivilianListData(selectCivilianID);
         }
     }

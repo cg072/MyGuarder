@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 public class ActivityMemberLogin extends AppCompatActivity {
 
+
     final String TAG = "로그인";
 
     private final static int REQUEST_CODE_LOGIN_SUCCESS = 1;
@@ -60,6 +61,12 @@ public class ActivityMemberLogin extends AppCompatActivity {
     // 체크에 필요한 메소드들
     MemberCheck memberCheck;
 
+    //kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
+
+    int code;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,10 +97,31 @@ public class ActivityMemberLogin extends AppCompatActivity {
         loadData();
 
         // 자동로그인 체크 및 메인 이동
-        checkAutoLogin();
+//        checkAutoLogin();
 
         //테스트
-        test();
+//        test();
+
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                if(code==1000&&null!=result)
+                {
+                    if("1".equals(result.replace("/n","")) ) {
+                        saveData(NOMAL);
+                        moveToMain();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    code = 1111;
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "서버 접속이 불가능합니다. 다시 시도해주세요", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+
 
         // 리스너들
         // 구글 로그인 버튼 리스너
@@ -119,13 +147,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
         btnLogin.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(searchNomalLoginID() == 1) {
-                    saveData(NOMAL);
-                    moveToMain();
-                } else {
-                    Toast.makeText(getApplicationContext(), "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
-                }
+                code = 1000;
+                searchNomalLoginID();
             }
         });
 
@@ -161,7 +184,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
     }
 
     // 일반 회원일 경우, 서버로 아이디와 비번을 보내서, 존재 유무를 체크한다.
-    private int searchNomalLoginID() {
+    private void searchNomalLoginID() {
 
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
@@ -170,22 +193,11 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
         MemberVO sendMemberVO = new MemberVO(id, pwd);
 
-        int check = memberCheck.checkExistence(sendMemberVO);
-
-        // 테스트가 끝나면 사라질 코딩
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, sendMemberVO);
-
-        for(MemberVO m : resultList) {
-            if (m.getMid().equals("test")) {
-                testLoginFlag = false;
-            } else {
-                testLoginFlag = true;
-            }
-        }
-        // 테스트가 끝나면 사라질 코딩
-
-        return check;
+        //kch - 로그인 아이디 비밀번호 체크
+        networkTask = new NetworkTask(this, listener);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params= NetworkTask.CONTROLLER_MEMBER_DO + NetworkTask.METHOD_LOGIN_MEMBER + "&mid=" +id+"&mpwd="+pwd;
+        networkTask.execute();
     }
 
     // 테스트 로그인 후 ~ (서버디비 완성 후 -> 아래의 두 메소드를 사용(주석처리됨))
@@ -262,26 +274,26 @@ public class ActivityMemberLogin extends AppCompatActivity {
         cboxCheck.setChecked(autoLoginCheck);
     }
 
-    private void checkAutoLogin(){
-        // 자동로그인 체크
-        if(cboxCheck.isChecked() == true) {
-            // 서버에서 ID, PWD 값이 있을 경우, 존재하면 Main으로
-            if(searchNomalLoginID() == 1) {
-                moveToMain();
-            // ID, PWD 값이 없지만, sns계정일 경우
-            } else if(sns != null && snsid != null) {
-                MemberVO sendMemberVO = new MemberVO();
-                sendMemberVO.setMsns(sns);
-                sendMemberVO.setMsnsid(snsid);
-                // 존재하면 Main으로
-                if(memberCheck.checkExistence(sendMemberVO) == 1) {
-                    moveToMain();
-                }
-            } else {
-                Toast.makeText(this, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    private void checkAutoLogin(){
+//        // 자동로그인 체크
+//        if(cboxCheck.isChecked() == true) {
+//            // 서버에서 ID, PWD 값이 있을 경우, 존재하면 Main으로
+//            if(searchNomalLoginID() == 1) {
+//                moveToMain();
+//            // ID, PWD 값이 없지만, sns계정일 경우
+//            } else if(sns != null && snsid != null) {
+//                MemberVO sendMemberVO = new MemberVO();
+//                sendMemberVO.setMsns(sns);
+//                sendMemberVO.setMsnsid(snsid);
+//                // 존재하면 Main으로
+//                if(memberCheck.checkExistence(sendMemberVO) == 1) {
+//                    moveToMain();
+//                }
+//            } else {
+//                Toast.makeText(this, "로그인 정보가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
     // 구글 로그인 반환코드, 폰인증 반환코드를 다룬다.
     @Override
@@ -292,6 +304,8 @@ public class ActivityMemberLogin extends AppCompatActivity {
             case REQUEST_CODE_LOGIN_SUCCESS :
                 if(data != null) {
                     memberVO = (MemberVO) data.getSerializableExtra(USER_INFO);
+
+                    //kch - 구글,네이버 로그인 및 정보
 
                     Toast.makeText(this, memberVO.getMname() + " 님 환영합니다.", Toast.LENGTH_SHORT).show();
                     Log.v(memberVO.getMname(), "이름");
@@ -313,7 +327,7 @@ public class ActivityMemberLogin extends AppCompatActivity {
                     memberVO.setMphone(data.getStringExtra("phone"));
                     Intent intentData = new Intent();
                     setResult(MY_LOGIN_SUCCESS_CODE, intentData);
-                    finish();;
+                    finish();
                 } else {
                     Toast.makeText(this, "인증에 실패하였습니다", Toast.LENGTH_SHORT).show();
                 }
@@ -348,39 +362,39 @@ public class ActivityMemberLogin extends AppCompatActivity {
 
     }
 
-    // 테스트
-    private void test() {
-        int check = 0;
-        MemberVO serverMember = new MemberVO();
-
-        String rootID = "root";
-        String rootPWD = "11111";
-
-        serverMember.setMid(rootID);
-        serverMember.setMpwd(rootPWD);
-
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        Log.v(rootID, rootPWD);
-        Log.v(serverMember.getMid(), serverMember.getMpwd());
-
-        if(memberCheck.checkExistence(serverMember) == 0 ) {
-            check = memberManager.insert(MemberShareWord.TARGET_SERVER, serverMember);
-        }
-
-        serverMember = new MemberVO();
-
-        String testID = "test";
-        String testPWD = "11111";
-
-        serverMember.setMid(testID);
-        serverMember.setMpwd(testPWD);
-
-
-        if(memberCheck.checkExistence(serverMember) == 0 ) {
-            check = memberManager.insert(MemberShareWord.TARGET_SERVER, serverMember);
-        }
-    }
+//    // 테스트
+//    private void test() {
+//        int check = 0;
+//        MemberVO serverMember = new MemberVO();
+//
+//        String rootID = "root";
+//        String rootPWD = "11111";
+//
+//        serverMember.setMid(rootID);
+//        serverMember.setMpwd(rootPWD);
+//
+//        MemberManager memberManager = new MemberManager(getApplicationContext());
+//
+//        Log.v(rootID, rootPWD);
+//        Log.v(serverMember.getMid(), serverMember.getMpwd());
+//
+//        if(memberCheck.checkExistence(serverMember) == 0 ) {
+//            check = memberManager.insert(MemberShareWord.TARGET_SERVER, serverMember);
+//        }
+//
+//        serverMember = new MemberVO();
+//
+//        String testID = "test";
+//        String testPWD = "11111";
+//
+//        serverMember.setMid(testID);
+//        serverMember.setMpwd(testPWD);
+//
+//
+//        if(memberCheck.checkExistence(serverMember) == 0 ) {
+//            check = memberManager.insert(MemberShareWord.TARGET_SERVER, serverMember);
+//        }
+//    }
 }
 
 // 네이버 로그인 실패 원인은 2가지가 잇다.

@@ -20,6 +20,31 @@
             android:paddingTop="30dp"
             android:paddingBottom="10dp"
             >
+            <!--안보이게함-->
+            <RelativeLayout
+                android:id="@+id/btnGoogleLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/btn_round_login_google"
+                android:visibility="invisible">
+                <ImageView
+                    android:scaleType="centerInside"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_margin="3dp"
+                    android:background="@drawable/google_login"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GOOGLE"
+                    android:letterSpacing="0.2"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorNaverText"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:textSize="@dimen/textSize"></TextView>
+            </RelativeLayout>
 
             <EditText
                 android:id="@+id/etID"
@@ -80,56 +105,7 @@
                 android:layout_marginBottom="10dp"/>
 
 
-            <RelativeLayout
-                android:id="@+id/btnNaverLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/btn_round_login_naver"
-                android:layout_marginBottom="10dp">
-                <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
-                    android:id="@+id/buttonOAuthLoginImg"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_margin="3dp"
-                    android:scaleType="centerInside"
-                    android:background="@drawable/naver_login">
-                </com.nhn.android.naverlogin.ui.view.OAuthLoginButton>
-                <TextView
-                    android:id="@+id/tvNaver"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="NAVER"
-                    android:letterSpacing="0.2"
-                    android:textColor="@color/colorNaverText"
-                    android:gravity="center"
-                    android:textSize="@dimen/textSize">
-                </TextView>
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/btnGoogleLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/btn_round_login_google">
-                <ImageView
-                    android:scaleType="centerInside"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_margin="3dp"
-                    android:background="@drawable/google_login"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="GOOGLE"
-                    android:letterSpacing="0.2"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorNaverText"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:textSize="@dimen/textSize"></TextView>
-            </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,6 +153,37 @@
                     android:text="비밀번호"
                     android:clickable="true"/>
             </LinearLayout>
+
+            <!--안보이게함-->
+            <RelativeLayout
+                android:id="@+id/btnNaverLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/btn_round_login_naver"
+                android:layout_marginBottom="10dp"
+                android:visibility="invisible">
+                <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+                    android:id="@+id/buttonOAuthLoginImg"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_margin="3dp"
+                    android:scaleType="centerInside"
+                    android:background="@drawable/naver_login">
+                </com.nhn.android.naverlogin.ui.view.OAuthLoginButton>
+                <TextView
+                    android:id="@+id/tvNaver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="NAVER"
+                    android:letterSpacing="0.2"
+                    android:textColor="@color/colorNaverText"
+                    android:gravity="center"
+                    android:textSize="@dimen/textSize">
+                </TextView>
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

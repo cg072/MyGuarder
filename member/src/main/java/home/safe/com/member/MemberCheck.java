@@ -197,6 +197,7 @@ public class MemberCheck {
     public int checkMember(MemberVO memberVO) {
         int checkMember = 0;
 
+        //kch - 회원 아이디 체크
         ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
         resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
 
@@ -237,6 +238,7 @@ public class MemberCheck {
         return checkSNS;
     }
 
+    //kch - 아이디 중복 체크  memberVo에 id값만 있음
     public int checkExistence (MemberVO memberVO) {
 
         ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();

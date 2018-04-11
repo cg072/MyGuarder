@@ -18,7 +18,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class ActivityMemberSignup extends AppCompatActivity {
@@ -47,6 +49,11 @@ public class ActivityMemberSignup extends AppCompatActivity {
 
     MemberCheck memberCheck;
 
+    //kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
+    String phoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +78,7 @@ public class ActivityMemberSignup extends AppCompatActivity {
 
         // 기기의 PhoneNumber 정보 가져오기
         MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this);
-
+        phoneNumber = memberLoadPhoneNumber.getMyPhoneNumber();
         tvPhone.setText(addHyphen(memberLoadPhoneNumber.getMyPhoneNumber()));
 
         // 중복체크
@@ -122,13 +129,26 @@ public class ActivityMemberSignup extends AppCompatActivity {
                 }
             }
         });
+
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                if(null!=result) {
+                    certDialog.setRecvCode(result.replace("/n", ""));
+                }
+                else
+                {
+                    Toast.makeText(ActivityMemberSignup.this, "네트워크 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
     }
 
     // 서버에 랜덤으로 조합된 인증코드를 요청하고 받은 값을 리턴 (settingCode를 이것으로 해주면됨)
     private String recvCodeFromServer() {
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        settingCode = memberManager.requestCode();
+        settingCode = memberManager.requestCode(phoneNumber,listener);
 
         return settingCode;
     }
@@ -149,8 +169,8 @@ public class ActivityMemberSignup extends AppCompatActivity {
         certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                if (settingCode.equals(certDialog.getSendCode())) {
-                    Toast.makeText(ActivityMemberSignup.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                if (certDialog.getResultCode()) {
+                    Toast.makeText(ActivityMemberSignup.this, "인증에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                     btnCertificationPhone.setEnabled(false);
                     btnSignup.setEnabled(true);
                 } else {
@@ -158,6 +178,7 @@ public class ActivityMemberSignup extends AppCompatActivity {
                 }
             }
         });
+        certDialog.setPhoneNumber(phoneNumber);
     }
 
     private int sendDataForDuplicationToServer(){
@@ -175,11 +196,25 @@ public class ActivityMemberSignup extends AppCompatActivity {
 
         int check = 0;
 
-        MemberManager memberManager = new MemberManager(getApplicationContext());
+//        MemberManager memberManager = new MemberManager(getApplicationContext());
+//
+//        check = memberManager.insert(MemberShareWord.TARGET_SERVER, memberVO);
 
-        check = memberManager.insert(MemberShareWord.TARGET_SERVER, memberVO);
+        networkTask = new NetworkTask(this);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params= NetworkTask.CONTROLLER_MEMBER_DO + NetworkTask.METHOD_ADD_MEMBER + "&" +
+                "mname="+memberVO.getMname()+"&" +
+                "mphone="+memberVO.getMphone()+"&" +
+                "mid="+memberVO.getMid()+"&" +
+                "mpwd="+memberVO.getMpwd()+"&" +
+                "mcertday="+memberVO.getMcertday()+"&" +
+                "mbirth="+memberVO.getMbirth()+"&" +
+                "memail="+memberVO.getMemail()+"&" +
+                "mgender="+memberVO.getMgender();
+        networkTask.execute();
 
-        return check;
+
+        return networkTask.isCancelled()? 0:1;
     }
 
     private MemberVO setMemberVO(){
@@ -191,6 +226,12 @@ public class ActivityMemberSignup extends AppCompatActivity {
         String birth = etBirth.getText().toString().trim();
         String email = etEMail.getText().toString().trim();
         String gender = "u";
+
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String certdaty = sdf.format(date);
+
         // 성별 판단 f,m,u
         if (rbFemale.isChecked()) {
             gender = "f";
@@ -200,7 +241,7 @@ public class ActivityMemberSignup extends AppCompatActivity {
             gender = "u";
         }
 
-        MemberVO memberVO = new MemberVO(id, pwd, name, phone, birth, email, gender);
+        MemberVO memberVO = new MemberVO(id, pwd, name, phone, birth, email, gender, certdaty);
 
         return memberVO;
     }

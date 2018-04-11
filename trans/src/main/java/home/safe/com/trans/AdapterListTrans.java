@@ -1,6 +1,7 @@
 package home.safe.com.trans;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,11 +88,13 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
         ListViewItemBasicTrans itemBasic = new ListViewItemBasicTrans(parentContext);
 
         //TestListViewDTO parDto = parentItems.get(i);
-        TransIntegratedVO parDto = parentItems.get(i);
+        TransIntegratedVO parDto = parentItems.get(i);  //kch 3개ㅑ나오는곳
 
         //itemBasic.setText(parDto.getNum(), parDto.getTranName(), parDto.getTime(), parDto.getAuthor());
-        itemBasic.setText(Integer.toString(parDto.getTseq()), parDto.getTtype());
-        passToCheckData(Integer.toString(parDto.getTseq()), parDto.getTtype());
+        itemBasic.setText(Integer.toString(i), parDto.getTtype(),parDto.getTday());
+        passToCheckData(Integer.toString(i), parDto.getTtype());
+
+        Log.d("kch","getGroupView "+i+" "+parDto.getTtype());
 
         return itemBasic;
     }
@@ -107,7 +110,10 @@ public class AdapterListTrans extends BaseExpandableListAdapter{
 
         //itemText.setText(childDto.getText());
         itemText.setText(childDto.getTmemo());
-        itemText.setData(tseq, ttype);
+        itemText.setData(childDto.getTday(), ttype);
+
+
+        Log.d("kch","getChildView "+i+" "+childDto.getTtype());
 
         return itemText;
     }

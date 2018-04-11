@@ -43,6 +43,12 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
 
     String id;
 
+    //kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
+    HttpResultListener insertListener;
+    int position;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,11 +67,69 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         etSearch.setOnEditorActionListener(this);
         btnSearch.setOnClickListener(this);
 
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String str) {
+                //kch - 지킴이 번호가 있는지 확인
+                // 서버로 전화번호를 보내서, 승인 받았을 경우 addGuarderVO 에 넣는다.
+
+                String result = str.replace("/n","");
+
+                Log.d("HttpResultListener",result);
+
+                if("0".equals(result))
+                {
+                    Toast.makeText(getContext(),"없는 회원입니다.",Toast.LENGTH_SHORT).show();
+                }
+                else if("2".equals(result))
+                {
+                    Toast.makeText(getContext(),"이미 지킴이인 회원입니다.",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getContext(),result,Toast.LENGTH_SHORT).show();
+
+                    selectedGuarderVO.setGstate(0);
+                    selectedGuarderVO.setGmid(id);
+                    selectedGuarderVO.setGmcid(result);
+
+                    GuarderManager guarderManager = new GuarderManager(getContext());
+                    int returnDB = 0 ;
+                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, selectedGuarderVO);
+                    //kch - 지킴이 번호가 있다면 지킴이로 등록
+                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_SERVER, selectedGuarderVO);
+
+                    networkTask = new NetworkTask(getContext(), insertListener);
+                    networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                    networkTask.params= NetworkTask.CONTROLLER_GUARDER_DO + NetworkTask.METHOD_ADD_GUARDER + "&gmid=" +result+"&gmcid="+id;
+                    networkTask.execute();
+                }
+            }
+        };
+
+        insertListener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                if("1".equals(result.replace("/n",""))) {
+                    addGuarderList.add(selectedGuarderVO);                       // 지킴이 목록 관리 리스트에 추가
+
+                    allList.remove(resultSearchList.get(position));      // 전체 관리 리스트에서 삭제
+
+                    resultSearchList.remove(position);                    // 결과 관리 리스트에서 삭제
+
+                    changefinalSearchList(resultSearchList);                 // 전달 관리 리스트 갱신
+                    lvAdapterSearch.notifyDataSetChanged();                  // 어댑터 갱신
+
+                    Toast.makeText(getContext(), selectedGuarderVO.getGmcname() + " 님을 지킴이 목록에 추가하였습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
         return rootView;
     }
 
     @Override
     public void onSearchListBtnClick(int position) {
+        this.position = position;
 
         String name = resultSearchList.get(position).getGmcname();       // 삭제 전, 보낼 내용 저장
         String phone = resultSearchList.get(position).getGmcphone();
@@ -78,6 +142,7 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
         regAlert.show();            // 해당 정보로 다이얼로그 보여줌
     }
 
+    //kch - 지킴이 추가
     private void setDialog(AlertDialog.Builder regAlert, final int position) {
 
         regAlert.setTitle("지킴이 추가");
@@ -89,30 +154,10 @@ public class FragmentSearch extends Fragment implements ListViewAdapterSearch.Se
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                // 서버로 전화번호를 보내서, 승인 받았을 경우 addGuarderVO 에 넣는다.
-                if(sendDataToServerForSearch(selectedGuarderVO) == 1) {
-
-                    selectedGuarderVO.setGstate(0);
-                    selectedGuarderVO.setGmid(id);
-
-                    GuarderManager guarderManager = new GuarderManager(getContext());
-                    int returnDB = 0 ;
-                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_DB, selectedGuarderVO);
-                    returnDB = guarderManager.insert(GuarderShareWord.TARGET_SERVER, selectedGuarderVO);
-
-                    if(returnDB != 0) {
-                        addGuarderList.add(selectedGuarderVO);                       // 지킴이 목록 관리 리스트에 추가
-
-                        allList.remove(resultSearchList.get(position));      // 전체 관리 리스트에서 삭제
-
-                        resultSearchList.remove(position);                    // 결과 관리 리스트에서 삭제
-
-                        changefinalSearchList(resultSearchList);                 // 전달 관리 리스트 갱신
-                        lvAdapterSearch.notifyDataSetChanged();                  // 어댑터 갱신
-
-                        Toast.makeText(getContext(), selectedGuarderVO.getGmcname() + " 님을 지킴이 목록에 추가하였습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                networkTask = new NetworkTask(getContext(), listener);
+                networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                networkTask.params= NetworkTask.CONTROLLER_GUARDER_DO+ NetworkTask.METHOD_CHECK_GUARDER + "&mphone=" +selectedGuarderVO.getGmcphone()+"&mid="+id;
+                networkTask.execute();
             }
         });
 

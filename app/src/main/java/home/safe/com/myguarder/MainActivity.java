@@ -137,9 +137,13 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
             }
         }
 
-
-
         if(resultCode == MY_END_CODE) {
+            //전역변수 초기화
+            ActivityLocal local = (ActivityLocal) getApplication();
+            local.setEnd();
+            //SharedPreferences 초기화
+            deleteData();
+
             finish();
         }
     }
@@ -232,6 +236,15 @@ public class MainActivity extends ProGuardian implements IProGuardian, View.OnCl
             Toast.makeText(this,""+btnTransChanger.getText(),Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void deleteData()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("TransName");
+        editor.remove("TransMemo");
+        editor.commit();
     }
 
 /**

@@ -28,6 +28,8 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
 
     Context context;
 
+//    TextView transitem;
+//    TextView transitemtype;
     TextView tvtranstype;
     EditText ettranstmemo;
     Button btnDialCancel;
@@ -38,6 +40,10 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
     String tseq;
     String ttype;
     String tmemo;
+
+    //kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
 
     public DialogTransModify(@NonNull Context context, String tseq, String ttype, String tmemo) {
         super(context);
@@ -60,6 +66,8 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
         ettranstmemo = (EditText)findViewById(R.id.ettranstmemo);
         btnDialCancel = (Button)findViewById(R.id.btnDialCancel);
         btnDialConfirm = (Button)findViewById(R.id.btnDialConfirm);
+//        transitemseq = (TextView) findViewById(R.id.transitemseq);
+//        transitemtype = (TextView)findViewById(R.id.transitemtype);
 
         setInfo(ttype, tmemo);
 
@@ -68,6 +76,20 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
         btnDialCancel.setOnClickListener(this);
         btnDialConfirm.setOnClickListener(this);
 
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                String str = result.replace("/n","");
+
+                if("1".equals(str))
+                {
+                    Toast.makeText(getContext(),"수정이 완료되었습니다.",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "수정 실패", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
     }
 
     @Override
@@ -137,8 +159,10 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
         if(view == btnDialConfirm){
 
             final String ttype = tvtranstype.getText().toString();
-
             final String ttemo = ettranstmemo.getText().toString();
+
+            Log.d("kch",""+ttype);
+            Log.d("kch",""+ttemo);
 
             ///이동수단과 메모가 변경된 사항이 있는지 체크
             if(this.ttype.equals(ttype) && ttemo.equals("")){
@@ -156,7 +180,14 @@ public class DialogTransModify extends Dialog implements View.OnClickListener{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        updateDB(tseq, ttype, ttemo);
+//                        updateDB(tseq, ttype, ttemo);
+                        // kch - 이동수단 업데이트
+                        networkTask = new NetworkTask(getContext(), listener);
+                        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                        networkTask.params= NetworkTask.CONTROLLER_TRANS_DO+ NetworkTask.METHOD_UPDATE_TRANS + "&rtype=" +ttype+"&rmemo="+ttemo+"&rday="+tseq;
+                        networkTask.execute();
+                        Log.d("kch tseq",tseq);
+
 
                     }
                 });

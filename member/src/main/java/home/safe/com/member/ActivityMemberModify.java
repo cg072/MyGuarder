@@ -17,8 +17,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Member;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ActivityMemberModify extends AppCompatActivity {
 
@@ -54,6 +55,13 @@ public class ActivityMemberModify extends AppCompatActivity {
 
     MemberCheck memberCheck;
 
+    // kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
+    HttpResultListener selectListener;
+    HttpResultListener updateListener;
+    String phoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +92,36 @@ public class ActivityMemberModify extends AppCompatActivity {
         btnModify = (Button)findViewById(R.id.btnSignup);
         btnDuplicationID = (Button) findViewById(R.id.btnDuplicationID);
 
+        selectListener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                Log.d("kchListner","selectListener");
+                String str = result.replace("/n","");
+                String[] arrStr = str.split("/");
+
+                if(arrStr.length > 0) {
+                    etID.setText(arrStr[0]);
+                    etName.setText(arrStr[1]);
+                    etBirth.setText(arrStr[2]);
+                    etEMail.setText(arrStr[3]);
+
+                    switch (arrStr[4]) {
+                        case "m":
+                            rbMale.setChecked(true);
+                            break;
+                        case "f":
+                            rbFemale.setChecked(true);
+                            break;
+                        case "u":
+                            rbUndefine.setChecked(true);
+                            break;
+                    }
+
+                }
+
+            }
+        };
+
         if(sns != null && sns.equals("sns")) {
             etPWD.setText("SNS 계정은 지원하지 않는 기능입니다.");
             etPWD.setInputType(0);
@@ -97,6 +135,7 @@ public class ActivityMemberModify extends AppCompatActivity {
 
         // 기기에서 번호 가져오기
         MemberLoadPhoneNumber memberLoadPhoneNumber = new MemberLoadPhoneNumber(this);
+        phoneNumber = memberLoadPhoneNumber.getMyPhoneNumber();
         tvPhone.setText(addHyphen(memberLoadPhoneNumber.getMyPhoneNumber()));
 
         btnCertificationPhone.setOnClickListener(new Button.OnClickListener() {
@@ -113,6 +152,7 @@ public class ActivityMemberModify extends AppCompatActivity {
 
                 int check = 0;
 
+                String id = etID.getText().toString().trim();
                 String pwd = etPWD.getText().toString().trim();
                 String checkPWD = etCheckPWD.getText().toString().trim();
                 String name     = etName.getText().toString().trim();
@@ -134,18 +174,37 @@ public class ActivityMemberModify extends AppCompatActivity {
                    memberCheck.checkBirth(birth)            == true &&
                    memberCheck.checkEmail(email)            == true ) {
 
-                    if(updateInfomation() == 1) {
-                        Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                        saveData();
-                        finish();
-                    } else {
-                        Toast.makeText(ActivityMemberModify.this, "수정이 오류", Toast.LENGTH_SHORT).show();
-                    }
+                    memberVO = getUserInfo();
+
+                    updateInfomation(memberVO);
+
                     // 서버로 memberVO를 보냄(update)
 
                 }
             }
         });
+
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                Log.d("kchListner","listener");
+                certDialog.setRecvCode(result.replace("/n",""));
+            }
+        };
+
+        updateListener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                if("1".equals(result.replace("/n",""))) {
+                    Toast.makeText(ActivityMemberModify.this, "수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+//                        saveData();
+                    finish();
+                } else {
+                    Toast.makeText(ActivityMemberModify.this, "수정이 오류", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
     }
 
     private void phoneCompare() {
@@ -186,32 +245,25 @@ public class ActivityMemberModify extends AppCompatActivity {
         setUserInfo(id);
     }
 
-    private int updateInfomation() {
+    private void updateInfomation(MemberVO memberVO) {
 
-        int check = 0;
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String certdaty = sdf.format(date);
 
-        MemberVO memberVO = getUserInfo();
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        ArrayList<MemberVO> resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_ALL, null);
-
-        for(MemberVO m : resultList) {
-            Log.v("체크", m.getMid() + " "  +
-                    m.getMpwd() + " " + m.getMsns() + " " + m.getMsnsid() + " " + m.getMname() + " " + m.getMphone() + " " +
-                    m.getMbirth() + " " + m.getMemail() + " " + m.getMgender());
-        }
-
-        check = memberManager.update(MemberShareWord.TARGET_SERVER, memberVO);
-
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_ALL, null);
-
-        for(MemberVO m : resultList) {
-            Log.v("체크", m.getMid() + " "  +
-                    m.getMpwd() + " " + m.getMsns() + " " + m.getMsnsid() + " " + m.getMname() + " " + m.getMphone() + " " +
-            m.getMbirth() + " " + m.getMemail() + " " + m.getMgender());
-        }
-
-        return check;
+        networkTask = new NetworkTask(this, updateListener);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params= NetworkTask.CONTROLLER_MEMBER_DO + NetworkTask.METHOD_UPDATE_MEMBER +
+                "&mname="+ memberVO.getMname() +
+                "&mphone="+ memberVO.getMphone() +
+                "&mid=" + memberVO.getMid()+
+                "&mpwd="+ memberVO.getMpwd() +
+                "&mcertday="+ certdaty +
+                "&mbirth="+ memberVO.getMbirth() +
+                "&memail="+ memberVO.getMemail() +
+                "&mgender="+ memberVO.getMgender();
+        networkTask.execute();
     }
 
     private MemberVO getUserInfo(){
@@ -244,67 +296,42 @@ public class ActivityMemberModify extends AppCompatActivity {
     private String recvCodeFromServer() {
         MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        settingCode = memberManager.requestCode();
+        settingCode = memberManager.requestCode(phoneNumber, listener);
 
         return settingCode;
     }
 
     private void setUserInfo(String id) {
-        MemberManager memberManager = new MemberManager(getApplicationContext());
 
-        MemberVO memberVO = new MemberVO();
-        memberVO.setMid(id);
-
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
-
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
-
-        if(resultList.size() == 1) {
-            memberVO = resultList.get(0);
-            etID.setText(id);
-            etName.setText(memberVO.getMname());
-            etBirth.setText(memberVO.getMbirth());
-            etEMail.setText(memberVO.getMemail());
-            if(memberVO.getMgender() != null) {
-                switch (memberVO.getMgender()) {
-                    case "m":
-                        rbMale.setChecked(true);
-                        break;
-                    case "f":
-                        rbFemale.setChecked(true);
-                        break;
-                    case "u":
-                        rbUndefine.setChecked(true);
-                        break;
-                }
-            } else {
-                rbUndefine.setChecked(true);
-            }
-        }
+        networkTask = new NetworkTask(this, selectListener);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params= NetworkTask.CONTROLLER_MEMBER_DO + NetworkTask.METHOD_GET_MEMBER_INFO + "&mid=" +id;
+        networkTask.execute();
     }
 
     // 아이디, 비번, 자동 로그인 여부 저장
     private void saveData() {
 
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        MemberVO memberVO = new MemberVO();
-        memberVO.setMid(id);
-
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
-
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
-
-        if(resultList.size() == 1) {
-            memberVO = resultList.get(0);
-            if(memberVO.getMsns() == null) {
-                Log.v("수정","비번");
-                SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("MemberPWD",etPWD.getText().toString().trim());
-                editor.commit();
-            }
-        }
+        //kch - 굳이 서버에서 검색할 필요가 없다. 삭제 대상
+//        MemberManager memberManager = new MemberManager(getApplicationContext());
+//
+//        MemberVO memberVO = new MemberVO();
+//        memberVO.setMid(id);
+//
+//        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
+//
+//        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
+//
+//        if(resultList.size() == 1) {
+//            memberVO = resultList.get(0);
+//            if(memberVO.getMsns() == null) {
+//                Log.v("수정","비번");
+//                SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.putString("MemberPWD",etPWD.getText().toString().trim());
+//                editor.commit();
+//            }
+//        }
 
     }
 
@@ -354,8 +381,8 @@ public class ActivityMemberModify extends AppCompatActivity {
         certDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                if (settingCode.equals(certDialog.getSendCode())) {
-                    Toast.makeText(ActivityMemberModify.this, settingCode + "같아" + certDialog.getSendCode(), Toast.LENGTH_SHORT).show();
+                if (certDialog.getResultCode()) {
+                    Toast.makeText(ActivityMemberModify.this, "인증에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                     //tvPhone.setEnabled(false);
                     btnCertificationPhone.setEnabled(false);
                     btnModify.setEnabled(true);
@@ -364,6 +391,7 @@ public class ActivityMemberModify extends AppCompatActivity {
                 }
             }
         });
+        certDialog.setPhoneNumber(phoneNumber);
     }
 
     /*

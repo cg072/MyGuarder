@@ -80,7 +80,6 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tvJikimNameGuarder"
                     android:gravity="center_horizontal"
-                    android:text="경 창현"
                     android:textSize="20dp" />
 
                 <TextView
@@ -90,7 +89,6 @@
                     android:layout_below="@+id/tvJikimNameThisGuarder"
                     android:layout_toRightOf="@+id/tvTransNameGuarder"
                     android:gravity="center_horizontal"
-                    android:text="택시"
                     android:textSize="20dp" />
 
                 <TextView
@@ -100,7 +98,6 @@
                     android:layout_below="@+id/tvTransNameThisGuarder"
                     android:layout_toRightOf="@+id/tvMemoGuarder"
                     android:gravity="center_horizontal"
-                    android:text="서울 1003"
                     android:textSize="20dp" />
 
             </RelativeLayout>

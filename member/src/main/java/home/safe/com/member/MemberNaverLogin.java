@@ -1,5 +1,6 @@
 package home.safe.com.member;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -71,6 +72,7 @@ public class MemberNaverLogin extends Activity {
     *  title    : OAuthLoginHandler 생성
     *  comment  : Naver 로그인 핸들러
     * */
+    @SuppressLint("HandlerLeak")
     private OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
 
         @Override

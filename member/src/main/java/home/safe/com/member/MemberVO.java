@@ -42,6 +42,17 @@ public class MemberVO extends ProGuardianVO implements Serializable {
         this.setMgender(gender);
     }
 
+    public MemberVO(String id, String pwd, String name, String phone, String birth, String email, String gender, String certday) {
+        this.setMid(id);
+        this.setMpwd(pwd);
+        this.setMphone(phone);
+        this.setMname(name);
+        this.setMbirth(birth);
+        this.setMemail(email);
+        this.setMgender(gender);
+        this.setMcertday(certday);
+    }
+
     public MemberVO(String gender, String name, String email, String birth, String sns) {
         this.setMid(email);
         this.setMgender(gender);

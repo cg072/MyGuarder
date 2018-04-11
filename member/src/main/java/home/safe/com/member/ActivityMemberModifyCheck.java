@@ -1,6 +1,7 @@
 package home.safe.com.member;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,6 +30,10 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
     String sns;
     String snsid;
 
+    //kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,71 +44,57 @@ public class ActivityMemberModifyCheck extends AppCompatActivity {
             moveNextActivity("sns");
         }
 
+        id = getId();
+
         etPWD = (EditText) findViewById(R.id.etPWD);
         btnCheckPWD = (Button) findViewById(R.id.btnCheckPWD);
 
-        btnCheckPWD.setOnClickListener(new Button.OnClickListener() {
-
+        listener = new HttpResultListener() {
             @Override
-            public void onClick(View view) {
-
-                String pwd = etPWD.getText().toString().trim();
-
-                if(recvPWDToServer() == 1) {
+            public void onPost(String result) {
+                if("1".equals(result.replace("/n",""))) {
                     moveNextActivity("nomal");
                 } else {
                     Toast.makeText(ActivityMemberModifyCheck.this, "Password를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
-    }
+        };
 
-    private int recvPWDToServer() {
+        btnCheckPWD.setOnClickListener(new Button.OnClickListener() {
 
-        int check = 0;
+                    @Override
+                    public void onClick(View view) {
 
-        MemberVO memberVO = new MemberVO();
+                        String pwd = etPWD.getText().toString().trim();
 
-        String pwd = etPWD.getText().toString().trim();
-
-        memberVO.setMid(id);
-        memberVO.setMpwd(pwd);
-        ArrayList<MemberVO> resultList = new ArrayList<MemberVO>();
-
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
-
-        if(resultList.size() != 0) {
-            if (resultList.get(0).getMid().equals(id) && resultList.get(0).getMpwd().equals(pwd)) {
-                check = 1;
+                        networkTask = new NetworkTask(getApplicationContext(), listener);
+                        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                        networkTask.params=NetworkTask.CONTROLLER_MEMBER_DO + NetworkTask.METHOD_LOGIN_MEMBER + "&mid="+id+"&mpwd="+pwd;
+                        networkTask.execute();
             }
-        }
-        return check;
+        });
+
     }
+
 
     private int checkSNS(){
         int check = 0;
+        String memberSNSID;
 
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        id = preferences.getString("MemberID",null);
+        memberSNSID = preferences.getString("MemberSNSID","empty");
 
-        MemberVO memberVO = new MemberVO();
-        memberVO.setMid(id);
-
-        MemberManager memberManager = new MemberManager(getApplicationContext());
-
-        ArrayList<MemberVO> resultList = memberManager.select(MemberShareWord.TARGET_SERVER, MemberShareWord.TYPE_SELECT_CON, memberVO);
-
-        Log.v("체크", "sns유무 : " + resultList.get(0).getMsns());
-
-        if(resultList.size() == 1) {
-            if(resultList.get(0).getMsns() != null) {
-                check = 1;
-            }
-        }
+        if(!"empty".equals(memberSNSID))
+            check = 1;
 
         return check;
+    }
+
+    private String getId() {
+        String id;
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        id = preferences.getString("MemberID","empty");
+        return "empty".equals(id) ? preferences.getString("MemberSNSID","empty") : id;
     }
 
     private void moveNextActivity(String type){

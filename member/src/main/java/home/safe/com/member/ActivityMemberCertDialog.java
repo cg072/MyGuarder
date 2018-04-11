@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -13,8 +14,11 @@ import android.widget.TextView;
 
 public class ActivityMemberCertDialog extends Dialog {
 
+    Context context;
+
     public ActivityMemberCertDialog(@NonNull Context context) {
         super(context);
+        this.context = context;
     }
 
     private TextView tvCertCode;
@@ -25,6 +29,12 @@ public class ActivityMemberCertDialog extends Dialog {
     private String sendCode;
 
     ActivityMemberCertDialog certDialog = this;
+
+    //kch
+    NetworkTask networkTask;
+    HttpResultListener listener;
+    boolean resultCode;
+    String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +50,38 @@ public class ActivityMemberCertDialog extends Dialog {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                if(null!=result && "1".equals(result.replace("/n","")))
+                    resultCode=true;
+                else
+                    resultCode=false;
+
+                dismiss();
+            }
+        };
+
         btnCheckCode.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                confirmCode(phoneNumber,etCertCode.getText().toString(),listener);
             }
         });
     }
+
+    public void confirmCode(String phoneNumber,String code,HttpResultListener listener) {
+
+        networkTask = new NetworkTask(context,listener);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params= NetworkTask.CONTROLLER_SECURE_DO + NetworkTask.METHOD_CONFIRM_KEY + "&mphone=" +phoneNumber+"&securekey="+code;
+        networkTask.execute();
+    }
+
+    public boolean getResultCode() {
+        return resultCode;
+    }
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
 
     // 서버로 부터 받은 코드를 TextView에 셋팅
     public void setRecvCode(String recvCode) {

@@ -1,6 +1,8 @@
 package home.safe.com.guarder;
 
 import android.content.ContentValues;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.safe.home.pgchanger.PreTestVO;
 import com.safe.home.pgchanger.ProGuardianVO;
@@ -11,7 +13,7 @@ import java.io.Serializable;
  * Created by hotki on 2017-11-28.
  */
 
-public class GuarderVO extends ProGuardianVO implements Serializable {
+public class GuarderVO extends ProGuardianVO implements Serializable, Parcelable {
 
     final static private String SEQ = "gseq";
     final static private String NAME = "gmcname";
@@ -42,10 +44,44 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     public GuarderVO(int use) {
         this.gstate = use;
     }
-    public GuarderVO(String gmcid, int gstate) {
+    public GuarderVO(String name, String phone,String gmcid, int gstate) {
+        this.gmcname = name;
+        this.gmcphone = phone;
         this.gmcid = gmcid;
         this.gstate = gstate;
     }
+
+    public GuarderVO(int gseq, int gstate, String gmcname, String gmcphone, String gmid, String gmcid, String gregday) {
+        this.gseq = gseq;
+        this.gstate = gstate;
+        this.gmcname = gmcname;
+        this.gmcphone = gmcphone;
+        this.gmid = gmid;
+        this.gmcid = gmcid;
+        this.gregday = gregday;
+    }
+
+    protected GuarderVO(Parcel in) {
+        gseq = in.readInt();
+        gstate = in.readInt();
+        gmcname = in.readString();
+        gmcphone = in.readString();
+        gmid = in.readString();
+        gmcid = in.readString();
+        gregday = in.readString();
+    }
+
+    public static final Creator<GuarderVO> CREATOR = new Creator<GuarderVO>() {
+        @Override
+        public GuarderVO createFromParcel(Parcel in) {
+            return new GuarderVO(in);
+        }
+
+        @Override
+        public GuarderVO[] newArray(int size) {
+            return new GuarderVO[size];
+        }
+    };
 
     public String getGmcname() {
         return gmcname;
@@ -199,4 +235,22 @@ public class GuarderVO extends ProGuardianVO implements Serializable {
     public String getDetails() {
         return null;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(gseq);
+        parcel.writeInt(gstate);
+        parcel.writeString(gmcname);
+        parcel.writeString(gmcphone);
+        parcel.writeString(gmid);
+        parcel.writeString(gmcid);
+        parcel.writeString(gregday);
+    }
+
+
 }

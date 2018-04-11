@@ -8,7 +8,6 @@ import android.util.Log;
 import com.safe.home.pgchanger.ProGuardianDBHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,6 +24,8 @@ public class MemberManager {
     MemberServerHelper serverHelper;
     SQLiteDatabase server;
 
+    //kch
+    NetworkTask networkTask;
 
     public MemberManager(Context context) {
         this.context = context;
@@ -127,15 +128,18 @@ public class MemberManager {
         return memberList;
     }
 
-    public String requestCode() {
+    public String requestCode(String phoneNumber, HttpResultListener listener) {
         String requestCode = "";
 
-        ContentValues contentValues = controller.requestCode();
-
-        requestCode = contentValues.getAsString("code");
+        networkTask = new NetworkTask(context,listener);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params= NetworkTask.CONTROLLER_SECURE_DO + NetworkTask.METHOD_CREATE_KEY + "&mphone=" +phoneNumber;
+        networkTask.execute();
 
         return requestCode;
     }
+
+
 
     // 아이디, 패스워드 찾기
     public int sendEMail (String type, MemberVO memberVO) {

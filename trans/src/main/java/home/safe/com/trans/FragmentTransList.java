@@ -69,6 +69,7 @@ public class FragmentTransList extends Fragment{
         /*adapter.addItem(new TestListViewDTO("1", "택시", "2017.05.1", "jdkd", "대중교통"));
         adapter.addItem(new TestListViewDTO("3", "택시", "2017.05.1", "jdkd", "대중교통"));*/
 
+
         lvtrans.setAdapter(adapter);
 
 

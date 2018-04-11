@@ -73,7 +73,6 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tvJikimNameCivilian"
                     android:gravity="center_horizontal"
-                    android:text="경 창현"
                     android:textSize="20dp" />
 
                 <TextView

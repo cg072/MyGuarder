@@ -2,16 +2,12 @@ package home.safe.com.trans;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-
-import home.safe.com.trans.R;
 
 /**
  * Created by plupin724 on 2017-11-30.
@@ -86,6 +80,10 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     TransDBHelper transDBHelper;
 
 
+    //kch
+    String id;
+    NetworkTask networkTask;
+    HttpResultListener listener;
 
 /*    @Override
     public void onAttach(Context context) {
@@ -123,6 +121,31 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
         etTextTrans = (EditText) rootView.findViewById(R.id.etTextTrans);
         btnRegTrans = (Button) rootView.findViewById(R.id.btnRegTrans);
 
+        SharedPreferences preferences = rootView.getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        id = preferences.getString("MemberID","-");
+
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                String str = result.replace("/n","");
+                if(null!= str)
+                {
+                    if(str.equals("1")) {
+                        Toast.makeText(getContext().getApplicationContext(), "등록되었습니다", Toast.LENGTH_LONG).show();
+                        tvtranskind.setText("이동수단 종류 선택");
+                        etTextTrans.setText(null);
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext().getApplicationContext(), "등록이 실패하였습니다.", Toast.LENGTH_LONG).show();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getContext().getApplicationContext(), "서버연결 실패", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
 
         tvtransstat.setText("피지킴이 입니다 : 자신의 이동수단을 등록하세요");
 
@@ -212,9 +235,14 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
                         //sharedpreference를 호출
                         //toShared(kind, text);
 
-                        Toast.makeText(getContext().getApplicationContext(), "등록되었습니다", Toast.LENGTH_LONG).show();
-                        tvtranskind.setText("이동수단 종류 선택");
-                        etTextTrans.setText(null);
+                        // kch - 서버에 보내기
+                        networkTask = new NetworkTask(getContext(),listener);
+                        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+                        networkTask.params= NetworkTask.CONTROLLER_TRANS_DO + NetworkTask.METHOD_ADD_TRANS + "&rtype=" +ttype+"&rmemo="+tname+"&rmid="+id;
+                        networkTask.execute();
+
+                        saveData(ttype,tname);
+
 
                     }
                 });
@@ -304,6 +332,15 @@ public class FragmentTransReg extends Fragment implements View.OnClickListener {
     public void setTransManager(TransManager transManager){
         this.transManager = transManager;
 
+    }
+
+    private void saveData(String ttype, String tname)
+    {
+        SharedPreferences preferences = getContext().getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("TransName",ttype);
+        editor.putString("TransMemo",tname);
+        editor.commit();
     }
 
 }

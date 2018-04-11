@@ -31,7 +31,7 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
     Button btnGuarderSetting;
     Button btnTransSetting;
     Button btnMyInfoSetting;
-    Button btnNoticeSetting;
+//    Button btnNoticeSetting;
     Button btnSignOutSetting;
 
     ToggleButton tbCivilianMode;
@@ -60,7 +60,7 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
         btnGuarderSetting = (Button)findViewById(R.id.btnGuarderSetting);
         btnTransSetting = (Button)findViewById(R.id.btnTransSetting);
         btnMyInfoSetting = (Button)findViewById(R.id.btnMyInfoSetting);
-        btnNoticeSetting = (Button)findViewById(R.id.btnNoticeSetting);
+//        btnNoticeSetting = (Button)findViewById(R.id.btnNoticeSetting);
         btnSignOutSetting = (Button)findViewById(R.id.btnSignOutSetting);
 
         tbCivilianMode = (ToggleButton)findViewById(R.id.tbCivilianMode);
@@ -85,7 +85,7 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
         btnGuarderSetting.setOnClickListener(this);
         btnTransSetting.setOnClickListener(this);
         btnMyInfoSetting.setOnClickListener(this);
-        btnNoticeSetting.setOnClickListener(this);
+//        btnNoticeSetting.setOnClickListener(this);
         btnSignOutSetting.setOnClickListener(this);
 
         tbCivilianMode.setOnClickListener(this);
@@ -114,10 +114,10 @@ public class ActivitySetting extends AppCompatActivity implements View.OnClickLi
                 intent = new Intent(this, ActivityMemberModifyCheck.class);
                 startActivity(intent);
                 break;
-            case R.id.btnNoticeSetting:
-                intent = new Intent(this, ActivityNotice.class);
-                startActivity(intent);
-                break;
+//            case R.id.btnNoticeSetting:
+//                intent = new Intent(this, ActivityNotice.class);
+//                startActivity(intent);
+//                break;
             case R.id.tbCivilianMode:
 
 

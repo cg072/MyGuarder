@@ -1,4 +1,4 @@
-package home.safe.com.myguarder;
+package home.safe.com.member;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,6 +17,8 @@ import java.net.URL;
  */
 
 public class NetworkTask extends AsyncTask<Void, Void, String>{
+
+
 
     HttpResultListener listener;
     Context context;
@@ -48,9 +50,6 @@ public class NetworkTask extends AsyncTask<Void, Void, String>{
     public static final String METHOD_LOGIN_MEMBER = "method=loginMember";
     public static final String METHOD_UPDATE_MEMBER = "method=updateMember";
     public static final String METHOD_GET_MEMBER_INFO = "method=getMemberInfo";
-
-    public static final String CONTROLLER_TRANS_DO = "trans.do?";
-    public static final String METHOD_GET_TRANS_INFO = "method=getTransInfo";
 
     public NetworkTask(Context context) {
         this.context = context;

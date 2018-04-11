@@ -41,7 +41,7 @@ public class ListViewItemBasicTrans extends LinearLayout{
         transitemseq = (TextView)findViewById(R.id.transitemseq);
         transitemtype = (TextView)findViewById(R.id.transitemtype);
         transitemtime = (TextView)findViewById(R.id.transitemtime);
-
+        transitemtime.setTextSize(13);
 
     }
 
@@ -52,10 +52,10 @@ public class ListViewItemBasicTrans extends LinearLayout{
 
     }*/
 
-    public void setText(String tseq, String ttype){
+    public void setText(String tseq, String ttype, String ttime){
         transitemseq.setText(tseq);
         transitemtype.setText(ttype);
-
+        transitemtime.setText(ttime);
     }
 
 }

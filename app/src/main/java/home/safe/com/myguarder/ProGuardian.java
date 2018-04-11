@@ -83,6 +83,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     List<Polyline> polylinesLocation = new ArrayList<>();
     //polyline 요청위치
     List<Polyline> polylinesRequestLocation = new ArrayList<>();
+    //polyline 피지킴이 위치
+    List<Polyline> polylinesCivilianLocation = new ArrayList<>();
 
     boolean isStartPLLocation = false;  //startPL 값이 들어왔는지 확인
     private LatLng startPL = new LatLng(0, 0);        //polyline 시작점
@@ -99,6 +101,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     //Location
     // Location 현재위치
     ArrayList locationList = new ArrayList<Location>();
+
+    //전역변수
+    ActivityLocal local;
 
     //intent key code
     public final static int MAIN_REQUEST_SETTING_CODE = 1111;
@@ -135,6 +140,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     //State
     boolean RequestState;
 
+    String guarderID;
 
 
     @Override
@@ -190,18 +196,14 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        String txt = null;
 
         switch (id)
         {
             case R.id.action_setting:
-                txt = "action_setting";
                 Intent intent = new Intent(this,ActivitySetting.class);
                 startActivityForResult(intent, MAIN_REQUEST_SETTING_CODE);
                 break;
         }
-
-        Toast.makeText(this,txt,Toast.LENGTH_SHORT).show();
 
         return super.onOptionsItemSelected(item);
     }
@@ -426,6 +428,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     @SuppressWarnings("MissingPermission")
     public void updateLocationUI()
     {
+        Log.d("updateLocationUI", " ------------");
         if(googleMap == null)
             return;
         if (mLocationPermissionGranted)
@@ -446,6 +449,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                         line.remove();
                     }
                     polylinesRequestLocation.clear();
+
+                    for(Polyline line : polylinesCivilianLocation)
+                    {
+                        line.remove();
+                    }
+                    polylinesCivilianLocation.clear();
 
                     reDrawPolyline();
 
@@ -547,7 +556,7 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
         Log.d("TimeMillisNow",String.valueOf(now));
 
-        if(null != googleMap) {
+        if(null != googleMap && null != guarderID) {
             //위치 저장
             locationList.add(mCurrentLocation); // 1. 위치를 저장해서 폴리라인을 추가하는 방법
             //polylinesLocation 치환 가능   ->  2. polylinesLocation을 보내서 폴리라인을 그려주는 방법(위치정보까지 들어있음 getPoint())
@@ -558,7 +567,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
                     String.valueOf(mCurrentLocation.getLongitude()),
                     dateFormat.format(date),
                     timeFormat.format(date),
-                    "civilianID");
+                    guarderID);
+
+            Log.d("guarderID",guarderID);
 
             //insert
             int res = locationManage.controller.insert(vo.locationDataToContentValues());
@@ -566,6 +577,10 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 
 
             drawThisLocation();
+        }
+        else
+        {
+            Log.d("onLocationChanged","googleMap,guarderID null");
         }
     }
 
@@ -636,9 +651,9 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
             };
 
             NetworkTask networkTask = new NetworkTask(this, listener);
-            networkTask.strUrl = "http://192.168.219.105:8080/study/";
+            networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
 //            networkTask.params = "map.do?method=getMapList&lid=kch";
-            networkTask.params ="map.do?method=addMap&llat="+vo.getLlat()+"&llong="+vo.getLlong()+"&ltime="+vo.getLtime()+"&lid="+vo.getLid();
+            networkTask.params = NetworkTask.CONTROLLER_MAP_DO + NetworkTask.METHOD_ADD_MAP + "&llat=" +vo.getLlat()+"&llong="+vo.getLlong()+"&ltime="+vo.getLtime()+"&lid="+vo.getLid();
             networkTask.execute();
 
 
@@ -703,8 +718,18 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     **/
     public void drawPolyline(LatLng start, LatLng end,List<Polyline> polylines)
     {
+        if(polylines.equals(polylinesLocation)) {
+            local = (ActivityLocal) getApplication();
+            polylines = local.getPolylinesLocation();
+        }
+
         PolylineOptions polylineOptions = new PolylineOptions().add(start).add(end).width(15).color(Color.RED).geodesic(true);
         polylines.add(googleMap.addPolyline(polylineOptions));
+
+        if(polylines.equals(polylinesLocation)) {
+            local.setPolylinesLocation(polylines);
+            local.getPolylinesLocationSize();
+        }
     }
 
     /**
@@ -718,9 +743,19 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
      **/
     public void drawMarker(LatLng start, List<Marker> markers)
     {
+        if(markers.equals(markersLocation)) {
+            local = (ActivityLocal) getApplication();
+            markers = local.getMarkersLocation();
+        }
+
         MarkerOptions markerOptions = new MarkerOptions().position(start).draggable(true);
         //icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_point)
         markers.add(googleMap.addMarker(markerOptions));
+
+        if(markers.equals(markersLocation)) {
+            local.setMarkersLocation(markers);
+            local.getMarkersLocationSize();
+        }
     }
 
 /**
@@ -732,6 +767,8 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
 **/
     public void reDrawPolyline()
     {
+        Log.d("ProGuardian","reDrawPolyline - polylinesLocation : "+polylinesLocation.size());
+
         List<LatLng> points;
 
         //맵 클리어 해주고
@@ -784,6 +821,12 @@ public class ProGuardian extends AppCompatActivity implements OnMapReadyCallback
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
         RequestState = preferences.getBoolean("RequestState",false);
+    }
+
+    public void loadID()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
+        guarderID = preferences.getString("MemberID","-");
     }
 
 

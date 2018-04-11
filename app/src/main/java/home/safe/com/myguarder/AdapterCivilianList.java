@@ -46,10 +46,10 @@ public class AdapterCivilianList extends BaseAdapter{
         view = inflater.inflate(R.layout.item_civilian_list,viewGroup,false);
 
         TextView tvCivilianName = (TextView)view.findViewById(R.id.tvCivilianName);
-        TextView tvCivilianState = (TextView)view.findViewById(R.id.tvCivilianState);
+        TextView tvCivilianPhone = (TextView)view.findViewById(R.id.tvCivilianPhone);
 
-        tvCivilianName.setText(alData.get(position).getGmcid());
-        tvCivilianState.setText(""+ alData.get(position).getGstate());
+        tvCivilianName.setText(alData.get(position).getGmcname());
+        tvCivilianPhone.setText(""+ alData.get(position).getGmcphone());
 
         return view;
     }

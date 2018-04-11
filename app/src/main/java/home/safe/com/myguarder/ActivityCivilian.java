@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
@@ -43,10 +44,21 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     //Location LL
     ArrayList<LatLng> LastLocationList;
 
+    NetworkTask networkTask;
+    HttpResultListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("onCreate","in");
+        Log.d("ActivityCivilian","onCreate");
+
+        local = (ActivityLocal) getApplication();
+        polylinesLocation = local.getPolylinesLocation();
+        markersLocation = local.getMarkersLocation();
+        local.getPolylinesLocationSize();
+        local.getMarkersLocationSize();
+
+        loadID();
 
         if(savedInstanceState != null)
         {
@@ -62,6 +74,24 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
 
         //로그인시 DB생성 및 연결
         locationManage = new LocationManage(getApplicationContext());
+
+        //서버에서 유저 정보 가져옴
+        listener = new HttpResultListener() {
+            @Override
+            public void onPost(String result) {
+                String str = result.replace("/n","");
+                String[] arrStr = str.split("/");
+
+                if(arrStr.length > 0) {
+                    tvJikimNameThisCivilian.setText(arrStr[1]);
+                }
+            }
+        };
+
+        networkTask = new NetworkTask(this, listener);
+        networkTask.strUrl = NetworkTask.HTTP_IP_PORT_PACKAGE_STUDY;
+        networkTask.params= NetworkTask.CONTROLLER_MEMBER_DO + NetworkTask.METHOD_GET_MEMBER_INFO + "&mid=" +guarderID;
+        networkTask.execute();
 
         //어플 시작시 2일전 DB 데이터 삭제
         Date date = new Date(first);
@@ -93,13 +123,13 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("onStart","in");
+        Log.d("ActivityCivilian","onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("onRestart","in");
+        Log.d("ActivityCivilian","onRestart");
     }
 
     @Override
@@ -113,17 +143,17 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
             if(getPermissions())
             {
                 settingLocation();
+                Log.d("onResume", " updateLocationUI");
             }
         }
         super.onResume();
-        Log.d("onResume","in");
-//        super.reDrawPolyline();
+        Log.d("ActivityCivilian","onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("onPause","in");
+        Log.d("ActivityCivilian","onPause");
         if(mGoogleApiClient.isConnected())
         {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -137,7 +167,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("onStop","in");
+        Log.d("ActivityCivilian","onStop");
     }
 
     @Override
@@ -147,7 +177,7 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
         locationManage.closeDB();
 
         saveActivityStateData(false);
-        Log.d("onDestroy","in");
+        Log.d("ActivityCivilian","onDestroy");
     }
 
     @Override
@@ -300,8 +330,8 @@ public class ActivityCivilian extends ProGuardian implements View.OnClickListene
     private void loadData()
     {
         SharedPreferences preferences = getSharedPreferences("MyGuarder", Activity.MODE_PRIVATE);
-        tvTransNameThisCivilian.setText(preferences.getString("TransName","택시(기본값)"));
-        tvMemoThisCivilian.setText(preferences.getString("TransMemo","기본값"));
+        tvTransNameThisCivilian.setText(preferences.getString("TransName","-"));
+        tvMemoThisCivilian.setText(preferences.getString("TransMemo","-"));
         cycleCivilian = preferences.getInt("cycleCivilian", 10000);
     }
 

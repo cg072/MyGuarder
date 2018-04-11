@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="home.safe.com.myguarder">
 
     <!-- ACCESS_FINE_LOCATION , ACCESS_COARSE_LOCATION 둘중 하나 사용 -->
@@ -20,6 +21,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".ActivityLocal"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

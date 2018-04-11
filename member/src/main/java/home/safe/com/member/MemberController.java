@@ -21,6 +21,8 @@ public class MemberController implements IProGuardianController {
 
     ProGuardianDBHelper proGuardianDBHelper;
 
+
+
     @Override
     public int insert(ContentValues contentValues) {
         return proGuardianDBHelper.insert(contentValues);
@@ -61,20 +63,7 @@ public class MemberController implements IProGuardianController {
         return proGuardianServerHelper.search(contentValues);
     }
 
-    // 랜덤 코드 생성
-    public ContentValues requestCode() {
 
-        String randomStr = "";
-        Random rnd = new Random();
-        for (int i = 0; i < 4; i++) {
-            randomStr += String.valueOf(rnd.nextInt(10));
-        }
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("code", randomStr);
-
-        return contentValues;
-    }
 
     // 비번 생성
     public ContentValues requestPWD() {

@@ -40,6 +40,8 @@ public class ActivityGuarder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guarder);
 
+        loadData();
+
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
@@ -50,12 +52,13 @@ public class ActivityGuarder extends AppCompatActivity {
 
         lvGuarders = (ListView) findViewById(R.id.lvGuarders);
 
-        setTest();
+//        setTest();
 
         fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), id);
         fragmentAdapter.setActivity(this);
         fragmentAdapter.setGuarderListInFmSearch(fragmentAdapter.getGuarderListInFmGuarder());
         viewPager.setAdapter(fragmentAdapter);
+
 
         //checkPermission();
 
